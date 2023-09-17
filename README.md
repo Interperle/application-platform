@@ -82,12 +82,10 @@ Bewerbungsprozess easy aufsetzen als GenD IT Team mitglied
 import.py => config.file -1-> model -2-> DB
 
 1. Json Syntax Check:
-
-- Model Check
-- Key Words
-- Values
-- Mandatory Key Words
-
+  1.1 Model Check
+  1.2 Key Words
+  1.3 Values
+  1.4 Mandatory Key Words
 2. All Good
 
 Routing:
