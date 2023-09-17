@@ -1,5 +1,29 @@
 # application-platform
 
+## Naming Convention
+
+- Everything in english (naming, comments, commits, ...)
+- we strictly follow [PEP8](https://peps.python.org/pep-0008) naming convention for everything <https://peps.python.org/pep-0008/#prescriptive-naming-conventions>
+- names end with the top level relation, e.g.:
+  - short_text_question for the short text questions database table
+  - short_text_answer for the short text answers database table
+  - application_table for the list of all applications
+  - variable names contain the datatype if it is a "complex" data type (e.g., list, dict, ...)
+
+### "portected" keywords
+
+| Keyword | Explanation |
+| :-- | :-- |
+| _question | everything related to a question (e.g., ) |
+| _answer | an answer to a question for a specific application |
+| _table | for tables (database) |
+| _list | for lists in the code (instead of plural, easier to read) |
+| _dict | for dictionaries |
+| choice | multiple choice selection possibility |
+| db| database |
+
+--> short_text_question_table for the db table containing all short questions
+
 ## Problem Domain
 
 ### Was muss das Tool können?
