@@ -8,7 +8,7 @@
   - Freitext (kurz und lang)
 - User management
   - Email verification
-    - https://supabase.com/docs/guides/functions/examples/send-emails
+    - <https://supabase.com/docs/guides/functions/examples/send-emails>
   - Password reset
   - Admin / Rights Management
 - Encryption
@@ -32,7 +32,7 @@
     - Zahlen
     - Regex
   - file upload
-    - https://github.com/supabase/supabase/tree/master/examples/edge-functions/supabase/functions/file-upload-storage
+    - <https://github.com/supabase/supabase/tree/master/examples/edge-functions/supabase/functions/file-upload-storage>
 - infobox
 - conditional text based on date + …
 - doku
