@@ -1,3 +1,5 @@
 # VS Code
 
 .vscode
+backend/.env.local
+backend/backend/__pycache__/
