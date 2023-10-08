@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image'
 import React from 'react';
 
 const Apl_Header: React.FC = () => {
@@ -6,7 +7,7 @@ const Apl_Header: React.FC = () => {
     <div className="w-full bg-white h-24 flex items-center justify-between p-4 md:p-6">
         <div className="min-w-[20px] max-w-[200px]">
             <Link href="https://generation-d.org" target="_blank">
-                <img src="/logos/gend_img_font.png" alt="Generation-D Logo" className="max-w-full h-auto" />
+                <Image src="/logos/gend_img_font.png" alt="Generation-D Logo" className="max-w-full h-auto" />
             </Link>
         </div>
 
