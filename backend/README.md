@@ -29,6 +29,7 @@ erDiagram
         string userId FK
         datetime last_login
         datetime last_update
+        datetime created
         string name
         string phone
     }
@@ -38,6 +39,7 @@ erDiagram
         string questionType
         string order
         string phase
+        boolean mandatory
     }
     
     ANSWER-TABLE {
