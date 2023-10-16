@@ -4,3 +4,4 @@
 backend/.env.local
 backend/backend/__pycache__/
 backend/README.md
+*.pdf
