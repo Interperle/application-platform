@@ -1,6 +1,9 @@
+import datetime
 from backend.utils.question_type import QuestionType
 import yaml
 from typing import Any, Dict
+from utils.dt_utils import is_iso8601
+
 
 def validate_yaml_structure(yaml_data: Dict[str, Any]) -> None:
     # Check if 'questions' is in the YAML
@@ -12,10 +15,15 @@ def validate_yaml_structure(yaml_data: Dict[str, Any]) -> None:
         raise ValueError("No Phases found in 'questions'.")
 
     # Check for necessary fields in each question
-    print(yaml_data)
-    for phase in yaml_data['questions']:
+    for phase_name, phase in yaml_data['questions'].items():
+        if 'startDate' not in phase or not isinstance(phase['startDate'], datetime.date):
+            raise ValueError(f"The phase {phase_name} is missing the 'startDate' field or 'startDate' is not in ISO8601 standard: %Y-%m-%dT%H:%M:%S.")
+
+        if 'endDate' not in phase or not isinstance(phase['endDate'], datetime.date):
+            raise ValueError(f"The phase {phase_name} is missing the 'endDate' field or 'endDate' is not in ISO8601 standard: %Y-%m-%dT%H:%M:%S.")
+
         seen_orders_in_phase = set()
-        for question in yaml_data['questions'][phase]:
+        for question in phase["questions"]:
             if 'questionType' not in question:
                 raise ValueError("A question is missing the 'questionType' field.")
 
@@ -61,7 +69,7 @@ def read_yaml_file(filename):
 
 
 def main():
-    yaml_content = read_yaml_file("apl_config.yml")
+    yaml_content = read_yaml_file("../apl_config.yml")
 
     # Validate the structure of the YAML content
     try:
