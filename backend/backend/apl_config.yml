@@ -1,0 +1,54 @@
+
+### Uncomment to configure additional attributes of Application. -> Adds to APPLICATION_TABLE
+# application:
+#   firstName: string
+#   surName: string
+#   profilePicture: picture
+#   logo: picture
+
+# application_table:
+questions:
+  phase_1:
+    - questionType: shortText
+      order: 1
+      question: "What's your name?"
+      mandatory: true
+    - questionType: longText
+      order: 2
+      question: "What's your name and birthday?"
+      mandatory: true
+    - questionType: multipleChoice
+      order: 4
+      question: "What's your name and birthday?"
+      numberOfPossibleAnswers: 2
+      Answers:
+        - "Possible Answer 1"
+        - "Possible Answer 2"
+        - "Possible Answer 3"
+      mandatory: false
+    - questionType: videoQuestion
+      order: 3
+      question: "Please Upload this Video"
+      mandatory: false
+  phase_2:
+    - questionType: shortText
+      order: 1
+      question: "What's your name?"
+      mandatory: true
+    - questionType: longText
+      order: 2
+      question: "What's your name and birthday?"
+      mandatory: true
+    - questionType: multipleChoice
+      order: 4
+      question: "What's your name and birthday?"
+      numberOfPossibleAnswers: 2
+      Answers:
+        - "Possible Answer 1"
+        - "Possible Answer 2"
+        - "Possible Answer 3"
+      mandatory: false
+    - questionType: videoQuestion
+      order: 3
+      question: "Please Upload this Video"
+      mandatory: false
