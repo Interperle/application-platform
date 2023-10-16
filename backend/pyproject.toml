@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.scripts]
 logging_test = 'backend.logger:run'
+validate_test = 'backend.validate_config:main'
 
 [tool.poetry.dependencies]
 python = "^3.11"
