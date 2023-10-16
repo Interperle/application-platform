@@ -1,7 +1,5 @@
-# VS Code
-
 .vscode
 backend/.env.local
-backend/backend/__pycache__/
 backend/README.md
 *.pdf
+**/__pycache__
