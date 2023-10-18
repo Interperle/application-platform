@@ -4,7 +4,7 @@
 
 ```mermaid
 erDiagram
-    APL-AUTHENTICATION ||--|{ APPLICATION-TABLE : has
+    AUTHENTICATION ||--|{ APPLICATION-TABLE : has
     APPLICATION-TABLE ||--|| QUESTION-TABLE : contains
     QUESTION-TABLE ||--|| PHASE-TABLE : is_divided_in
     QUESTION-TABLE ||--|| ANSWER-TABLE : has
