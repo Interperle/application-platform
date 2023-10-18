@@ -9,6 +9,8 @@
   - short_text_answer for the short text answers database table
   - application_table for the list of all applications
   - variable names contain the datatype if it is a "complex" data type (e.g., list, dict, ...)
+- datetime format in scripts is "%Y-%m-%dT%H:%M:%S"
+- date format in scripts is "%Y-%m-%d"
 
 ### "portected" keywords
 
