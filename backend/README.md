@@ -18,6 +18,7 @@ erDiagram
     QUESTION-TABLE ||--|{ VIDEO-QUESTION-TABLE : is_type
     MULTIPLE-CHOICE-QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE : has
 
+    %% default Supabase Authentication Table
     AUTHENTICATION {
         string userId PK
         string email
