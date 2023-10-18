@@ -52,7 +52,7 @@ def process_config():
 def create_data_phase_table(phasename: str, ordernumber: int, startdate: datetime, enddate: datetime):
     return {
         "phasename": phasename,
-        "phaseOrder": ordernumber,
+        "phaseorder": ordernumber,
         "startdate": startdate.strftime(DATETIME_FORMAT),
         "enddate": enddate.strftime(DATETIME_FORMAT),
     }
@@ -61,7 +61,7 @@ def create_data_phase_table(phasename: str, ordernumber: int, startdate: datetim
 def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool):
     return {
         "questiontype": str(questiontype),
-        "questionOrder": ordernumber,
+        "questionorder": ordernumber,
         "phaseid": phaseid,
         "mandatory": 1 if mandatory else 0,
     }
