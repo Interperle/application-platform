@@ -18,7 +18,7 @@ erDiagram
     QUESTION-TABLE ||--|{ VIDEO-QUESTION-TABLE : is_type
     MULTIPLE-CHOICE-QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE : has
 
-    APL-AUTHENTICATION {
+    AUTHENTICATION {
         string userId PK
         string email
         string password
