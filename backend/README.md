@@ -4,7 +4,7 @@
 
 ```mermaid
 erDiagram
-    AUTHENTICATION ||--|{ APPLICATION-TABLE : has
+    AUTHENTICATION-TABLE ||--|{ APPLICATION-TABLE : has
     APPLICATION-TABLE ||--|| QUESTION-TABLE : contains
     QUESTION-TABLE ||--|| PHASE-TABLE : is_divided_in
     QUESTION-TABLE ||--|| ANSWER-TABLE : has
@@ -19,7 +19,7 @@ erDiagram
     MULTIPLE-CHOICE-QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE : has
 
     %% default Supabase Authentication Table
-    AUTHENTICATION {
+    AUTHENTICATION-TABLE {
         string userId PK
         string email
         string password
