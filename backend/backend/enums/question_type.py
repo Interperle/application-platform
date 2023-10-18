@@ -17,8 +17,11 @@ class QuestionType(Enum):
     def str_to_enum(cls, str_value):
         """Convert a string to the corresponding Enum value."""
         # Look up the enum by name. If not found, default to None.
-        for name, member in cls.__members__.items():
+        for member in cls.__members__.values():
             if member.value == str_value:
                 return member
         # If not found, return None
         return None
+    
+    def __str__(self):
+        return self.value
