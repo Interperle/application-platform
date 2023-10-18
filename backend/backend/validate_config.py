@@ -1,11 +1,12 @@
 import datetime
-from backend.utils.question_type import QuestionType
-import yaml
+from backend.utils.consts import DATETIME_FORMAT
+from backend.enums.question_type import QuestionType
 from typing import Any, Dict
-from utils.dt_utils import is_iso8601
+
+from backend.utils.utils_file import read_yaml_file
 
 
-def validate_yaml_structure(yaml_data: Dict[str, Any]) -> None:
+def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
     # Check if 'questions' is in the YAML
     if 'questions' not in yaml_data:
         raise ValueError("'questions' not found in the YAML data.")
@@ -17,10 +18,10 @@ def validate_yaml_structure(yaml_data: Dict[str, Any]) -> None:
     # Check for necessary fields in each question
     for phase_name, phase in yaml_data['questions'].items():
         if 'startDate' not in phase or not isinstance(phase['startDate'], datetime.date):
-            raise ValueError(f"The phase {phase_name} is missing the 'startDate' field or 'startDate' is not in ISO8601 standard: %Y-%m-%dT%H:%M:%S.")
+            raise ValueError(f"The phase {phase_name} is missing the 'startDate' field or 'startDate' is not in ISO8601 standard: {DATETIME_FORMAT}.")
 
         if 'endDate' not in phase or not isinstance(phase['endDate'], datetime.date):
-            raise ValueError(f"The phase {phase_name} is missing the 'endDate' field or 'endDate' is not in ISO8601 standard: %Y-%m-%dT%H:%M:%S.")
+            raise ValueError(f"The phase {phase_name} is missing the 'endDate' field or 'endDate' is not in ISO8601 standard: {DATETIME_FORMAT}.")
 
         seen_orders_in_phase = set()
         for question in phase["questions"]:
@@ -53,30 +54,11 @@ def validate_yaml_structure(yaml_data: Dict[str, Any]) -> None:
                     raise ValueError("A multipleChoice question is missing the 'Answers' field or it's not a list.")
 
 
-def read_yaml_file(filename):
-    """
-    Read the content of a YAML file and return the data.
-
-    :param filename: str, the name (and path) of the YAML file.
-    :return: dict, the data from the YAML file.
-    """
-    with open(filename, 'r') as stream:
-        try:
-            return yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-            return None
-
-
-def main():
-    yaml_content = read_yaml_file("../apl_config.yml")
-
+def validate_config_structure():
+    yaml_content = read_yaml_file("apl_config.yml")
     # Validate the structure of the YAML content
     try:
-        validate_yaml_structure(yaml_content)
+        run_structure_checks(yaml_content)
         print("YAML is valid.")
     except ValueError as e:
         print(f"YAML validation error: {e}")
-
-if __name__ == "__main__":
-    main()
