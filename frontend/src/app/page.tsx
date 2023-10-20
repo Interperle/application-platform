@@ -1,29 +1,11 @@
+import Apl_Header from '@/components/header'
 import Link from 'next/link'
 
 export default function Home() {
-  const handlePostRequest = async () => {
-    try {
-      const response = await fetch('/auth/signout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // Your POST request payload goes here
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  };
-
   return (
     <main className="grid-cols-1 flex flex-col items-start justify-between p-24 max-w-5xl bg-[#FFFFFF] text-[#153757] space-y-4">
         <div className='flex flex-col items-start justify-between space-y-4'>
+          <Apl_Header/>
           <h1 className="text-lg font-bold">
             Herzlich willkommen zur Generation-D Bewerbung 2023!
           </h1>

@@ -23,7 +23,6 @@ export default function RootLayout({
       <body className={`${inter.className} bg-[#FDCC89]`}>
         <ReduxProvider>
           <div className="flex flex-col min-h-screen">
-            <Apl_Header />
             <div className="flex-grow">
               {children}
             </div>
