@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Apl_Header from '@/components/header'
+import Apl_Footer from "@/components/footer";
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +25,7 @@ export default function RootLayout({
           <div className="flex-grow">
             {children}
           </div>
+          <Apl_Footer />
         </div>
       </body>
     </html>
