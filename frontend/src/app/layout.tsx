@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { ReduxProvider } from '@/store/provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,11 +18,13 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={`${inter.className} bg-[#FDCC89]`}>
-        <div className="flex flex-col min-h-screen justify-center">
-          <div className="flex-grow flex items-center justify-center">
-            {children}
+        <ReduxProvider>
+          <div className="flex flex-col min-h-screen justify-center">
+            <div className="flex-grow flex items-center justify-center">
+              {children}
+            </div>
           </div>
-        </div>
+        </ReduxProvider>
       </body>
     </html>
   )
