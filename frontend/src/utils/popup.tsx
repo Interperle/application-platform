@@ -1,14 +1,12 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { closePopup } from '../store/slices/popupSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';
 
-type PopupProps = {
-  children: ReactNode;
-};
 
-const Popup: FC<PopupProps> = ({ children }) => {
+const Popup: FC = () => {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector((state) => state.popupReducer.isOpen);
+  const content = useAppSelector((state) => state.popupReducer.content);
 
   if (!isOpen) {
     return null;
@@ -40,7 +38,7 @@ const Popup: FC<PopupProps> = ({ children }) => {
             {/* Popup content */}
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                {children}
+                {content}
               </div>
             </div>
           </div>
