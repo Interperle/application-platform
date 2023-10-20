@@ -4,7 +4,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from '../../types/supabase'
 
-export default function PasswordResetForm() {
+export default function ForgottenPasswordForm() {
   const supabase = createClientComponentClient<Database>()
 
   return (
@@ -27,7 +27,7 @@ export default function PasswordResetForm() {
       }}
       showLinks={false}
       providers={[]}
-      redirectTo="http://localhost:3000/auth/callback"
+      redirectTo="http://localhost:3000/"
       localization={{
         variables: {
           forgotten_password: {

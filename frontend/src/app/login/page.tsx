@@ -5,7 +5,7 @@ import { openPopup } from "@/store/slices/popupSlice";
 import { useAppDispatch } from "@/store/store";
 import SignInForm from "@/utils/forms/signin-form";
 import SignUpForm from "@/utils/forms/signup-form";
-import PasswordResetForm from "@/utils/forms/passwortreset-form";
+import ForgottenPasswordForm from "@/utils/forms/forgottenpassword-form";
 import Popup from '@/utils/popup';
 
 export default function Login() {
@@ -32,7 +32,7 @@ export default function Login() {
         <div className='text-left'>
           <SignInForm/>
         </div>
-        <button type="button" onClick={() => dispatch(openPopup(<PasswordResetForm/>))} className="border rounded px-4 py-2 text-[#FDCC89] bg-[#153757]">
+        <button type="button" onClick={() => dispatch(openPopup(<ForgottenPasswordForm/>))} className="border rounded px-4 py-2 text-[#FDCC89] bg-[#153757]">
             Passwort vergessen
         </button>
       </div>

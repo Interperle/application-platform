@@ -8,10 +8,9 @@ export async function POST(request: Request) {
   const requestUrl = new URL(request.url)
   const cookieStore = cookies()
   const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
+  await supabase.auth.signOut();
 
-  await supabase.auth.signOut()
-
-  return NextResponse.redirect(`${requestUrl.origin}/login`, {
+  return NextResponse.redirect(`http://localhost:3000/login`, {
     status: 301,
   })
 }
