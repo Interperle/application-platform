@@ -20,7 +20,7 @@ export default function Home() {
           </strong>
           <ul className="list-none pl-5">
             <li>
-              …in welchen ein Teammitglied aktueller oder ehemaliger Stipendiat*in der Bayerischen EliteAkademie ist, 
+              …in welchen ein Teammitglied aktueller oder ehemaliger Stipendiat*in der Bayerischen EliteAkademie ist,
             </li>
             <li>
               …das Projekt bereits in einem Generation-D Finale gewesen ist,
@@ -35,10 +35,10 @@ export default function Home() {
           <p>
             Weitere Details zum Ablauf und der Bewertung könnt Ihr auch nochmal in unserem <Link href="https://generation-d.org/wp-content/uploads/2022/12/Ablauf_des_Bewerbungsprozesses_2023.pdf" target='_blank' className="font-bold font-underline">Leitfaden</Link> nachlesen.
           </p>
-          
+
           <h2 className="font-bold">Kurz noch einige allgemeine Hinweise:</h2>
           <p>
-            Alle eure Angaben werden automatisch gespeichert. Ihr könnt eure Antworten aber vor der Deadline (<strong>18.02.2023</strong>) so oft Ihr wollt weiterhin bearbeiten. 
+            Alle eure Angaben werden automatisch gespeichert. Ihr könnt eure Antworten aber vor der Deadline (<strong>18.02.2023</strong>) so oft Ihr wollt weiterhin bearbeiten.
           </p>
           <p>
             Eine Bewerbung wird erst berücksichtigt, wenn sie vollständig ist. Vollständig ist eine Bewerbung, wenn alle Fragen beantwortet wurden. Den Status eurer Bewerbung könnt Ihr auch immer auf dieser Übersichtsseite einsehen.

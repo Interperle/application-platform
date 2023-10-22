@@ -26,7 +26,7 @@ export default function RootLayout({
             <div className="flex-grow">
               {children}
             </div>
-            <Apl_Footer />
+            <Apl_Footer/>
           </div>
         </ReduxProvider>
       </body>
