@@ -119,6 +119,24 @@ Routing:
 - /phase-x
 - /admin
 
+## Logging
+Using Pino and Logflare for logging.
+Set the following Environment Variables:
+- NEXT_PUBLIC_LOGFLARE_API_TOKEN
+- NEXT_PUBLIC_LOGFLARE_CLIENT_TOKEN
+- LOGFLARE_API_TOKEN
+- LOGFLARE_SERVER_TOKEN
+
+The code is located under /src/logger/logger.ts
+
+How to use it:
+```ts
+import Logger from '@/logger/logger';
+
+const log = new Logger("CURRENT_MODULE")
+log.debug("MSG", "USER_ID");
+```
+
 ## Next Steps
 
 Marib: Erstellt Github Issues
