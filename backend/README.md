@@ -26,7 +26,7 @@ erDiagram
         datetime lastLogin
         boolean emailVerified
     }
-    
+
     APPLICATION-TABLE {
         string applicationId PK
         string userId FK
@@ -52,7 +52,7 @@ erDiagram
         string phaseId FK
         boolean mandatory
     }
-    
+
     ANSWER-TABLE {
         string answerId PK
         string questionId FK
@@ -64,12 +64,12 @@ erDiagram
         string questionId PK
         string questionText
     }
-    
+
     LONG-TEXT-QUESTION-TABLE {
         string questionId PK
         string questionText
     }
-    
+
     MULTIPLE-CHOICE-QUESTION-TABLE {
         string questionId PK
         string questionText
@@ -81,7 +81,7 @@ erDiagram
         string questionId FK
         string choiceText
     }
-    
+
     VIDEO-QUESTION-TABLE {
         string questionId PK
         string questionText
@@ -91,7 +91,7 @@ erDiagram
         string answerId PK
         string answerText
     }
-    
+
     LONG-TEXT-ANSWER-TABLE {
         string answerId PK
         string answerText
@@ -101,7 +101,7 @@ erDiagram
         string answerId PK
         string[] selectedChoice
     }
-    
+
     VIDEO-ANSWER-TABLE {
         string answerId PK
         string videoUrl

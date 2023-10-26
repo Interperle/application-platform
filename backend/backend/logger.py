@@ -3,7 +3,7 @@ import logging
 import requests
 
 class Logger:
-    
+
     def __init__(self, module: str):
         self.api_url = f"https://api.logflare.app/api/logs?source={os.environ['LOGFLARE_BACKEND_SOURCE_TOKEN']}"
         self.HEADER = {
@@ -18,7 +18,7 @@ class Logger:
 
     def info(self, message):
         self.__send_log_to_log_flare(message, "info")
-    
+
     def warning(self, message):
         self.__send_log_to_log_flare(message, "warning")
 

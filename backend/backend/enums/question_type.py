@@ -22,6 +22,6 @@ class QuestionType(Enum):
                 return member
         # If not found, return None
         return None
-    
+
     def __str__(self):
         return self.value

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { init } from 'next/dist/compiled/webpack/webpack';
 
 
 type InitialState = {
