@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import QuestionTypes, { QuestionTypeProps } from './questiontypes';
 
-interface PDFUploadProps extends QuestionTypeProps {
+export interface PDFUploadQuestionTypeProps extends QuestionTypeProps {
   maxSizeInMB: number;
 }
 
-const PDFUpload: React.FC<PDFUploadProps> = ({ id, mandatory, question_text, maxSizeInMB }) => {
-  const fileInputRef = useRef(null);
-  const [fileSizeError, setFileSizeError] = useState<string | null>(null);
+const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ id, mandatory, question_text, maxSizeInMB }) => {
+  const fileInputRef = null;
+  const [fileSizeError, setFileSizeError] = [null, console.log];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -16,7 +16,7 @@ const PDFUpload: React.FC<PDFUploadProps> = ({ id, mandatory, question_text, max
       if (fileSizeInMB > maxSizeInMB) {
         setFileSizeError(`File size exceeds ${maxSizeInMB}MB`);
         // Clear the file input for new selection
-        if (fileInputRef.current){
+        if (fileInputRef){
             
         }
       } else {
@@ -35,7 +35,7 @@ const PDFUpload: React.FC<PDFUploadProps> = ({ id, mandatory, question_text, max
           name={id}
           accept="application/pdf"
           required={mandatory}
-          onChange={handleFileChange}
+          //onChange={handleFileChange}
           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
         />
       {fileSizeError && <p className="text-red-500 text-xs mt-1">{fileSizeError}</p>}
@@ -43,4 +43,4 @@ const PDFUpload: React.FC<PDFUploadProps> = ({ id, mandatory, question_text, max
   );
 };
 
-export default PDFUpload;
+export default PDFUploadQuestionType;

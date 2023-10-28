@@ -1,9 +1,9 @@
 import React from 'react';
 import QuestionTypes, { QuestionTypeProps } from './questiontypes';
 
-interface ShortTextQuestionProps extends QuestionTypeProps {}
+export interface VideoUploadQuestionTypeProps extends QuestionTypeProps {}
 
-const VideoUploadQuestionType: React.FC<ShortTextQuestionProps> = ({ id, mandatory, question_text }) => {
+const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({ id, mandatory, question_text }) => {
     const uploading = false;
     const videoUrl = ""
     return (

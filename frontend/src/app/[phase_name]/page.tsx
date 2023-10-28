@@ -3,49 +3,91 @@ import LongTextQuestionType from "@/components/questiontypes/longtext_questionty
 import VideoUploadQuestionType from "@/components/questiontypes/videoupload_questiontype";
 import DateTimePickerQuestionType from "@/components/questiontypes/datetimepicker_questiontype";
 import DatePickerQuestionType from "@/components/questiontypes/datepicker_questiontype";
-import NumberPickerQuestionType from "@/components/questiontypes/numberpicker_questiontype";
-import ImageUploadQuestionType from "@/components/questiontypes/imageupload_questiontype";
+import Questionnaire from "@/components/questions";
+import { QuestionType } from "@/components/questiontypes/questiontype_selector";
+
+
+
 
 export default function Page({ params }: { params: { phase_name: string } }) {
+  const questionsData = [
+    {
+      id: '1',
+      questionType: QuestionType.ShortText,
+      questionOrder: 1,
+      phaseID: "phase-1",
+      mandatory: true,
+      questionText: 'What is your name?',
+      params: {}
+    },
+    {
+      id: '2',
+      questionType: QuestionType.LongText,
+      questionOrder: 2,
+      phaseID: "phase-1",
+      mandatory: true,
+      questionText: 'What is your name?',
+      params: {}
+    },
+    {
+      id: '2',
+      questionType: QuestionType.NumberPicker,
+      questionOrder: 3,
+      phaseID: "phase-1",
+      mandatory: false,
+      questionText: 'How old are you?',
+      params: { min: 0, max: 120 }
+    },
+    {
+      id: '3',
+      questionType: QuestionType.DatePicker,
+      questionOrder: 4,
+      phaseID: "phase-1",
+      mandatory: false,
+      questionText: 'How old are you?',
+      params: {}
+    },
+    {
+      id: '4',
+      questionType: QuestionType.ImageUpload,
+      questionOrder: 5,
+      phaseID: "phase-1",
+      mandatory: true,
+      questionText: 'Please upload your profile picture.',
+      params: {}
+    },
+    {
+      id: '5',
+      questionType: QuestionType.DateTimePicker,
+      questionOrder: 6,
+      phaseID: "phase-1",
+      mandatory: true,
+      questionText: 'Please upload your profile picture.',
+      params: {}
+    },
+    {
+      id: '6',
+      questionType: QuestionType.VideoUpload,
+      questionOrder: 7,
+      phaseID: "phase-1",
+      mandatory: true,
+      questionText: 'Please upload your profile picture.',
+      params: {}
+    },
+    {
+      id: '6',
+      questionType: QuestionType.PDFUpload,
+      questionOrder: 8,
+      phaseID: "phase-1",
+      mandatory: true,
+      questionText: 'Please upload your profile picture.',
+      params: {maxSizeInMB: 2}
+    },
+  ];
+
   return <div>My Phase: {params.phase_name}
   <form>
-      <ShortTextQuestionType
-        id="question1"
-        mandatory={true}
-        question_text="What is your name?"
-      />
-      <LongTextQuestionType
-        id="question2"
-        mandatory={true}
-        question_text="Describe where you're coming from!"
-      />
-      <VideoUploadQuestionType
-        id="question3"
-        mandatory={true}
-        question_text="Please upload your interview!"
-      />
-      <DateTimePickerQuestionType
-        id="dateTimePicker1"
-        mandatory={true}
-        question_text="Please pick a date and time"
-      />
-      <DatePickerQuestionType
-        id="datePicker1"
-        mandatory={true}
-        question_text="Please pick a date"
-      />
-      <NumberPickerQuestionType
-        id="numberPicker1"
-        mandatory={true}
-        question_text="Please pick a number"
-        min={1}
-        max={100}
-      />
-      <ImageUploadQuestionType
-        id="imageUpload1"
-        mandatory={true}
-        question_text="Please upload an image"
-      />
+      <Questionnaire questions={questionsData} />
     </form>
   </div>
 }
