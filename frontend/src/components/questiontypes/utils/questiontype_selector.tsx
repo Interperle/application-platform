@@ -9,6 +9,7 @@ import ImageUploadQuestionType, { ImageUploadQuestionTypeProps } from "@/compone
 import PDFUploadQuestionType, { PDFUploadQuestionTypeProps } from '@/components/questiontypes/pdfupload_questiontype';
 import MultipleChoiceQuestionType, { MultipleChoiceQuestionTypeProps } from '../multiplechoice_questiontype';
 import { ChoiceProps } from './multiplechoice_choice';
+import DropdownQuestionType, { DropdownQuestionTypeProps } from '../dropdown_questiontype';
 
 export enum QuestionType {
     ShortText = "shortText",
@@ -20,6 +21,7 @@ export enum QuestionType {
     VideoUpload = "videoUpload",
     PDFUpload = "pdfUpload",
     MultipleChoice = "multipleChoice",
+    Dropdown = "dropdown",
 }
 
 type QuestionTypeSelectorProps = {
@@ -32,6 +34,7 @@ type QuestionTypeSelectorProps = {
     imageUpload: FC<ImageUploadQuestionTypeProps>,
     pdfUpload: FC<PDFUploadQuestionTypeProps>,
     multipleChoice: FC<MultipleChoiceQuestionTypeProps>,
+    dropdown: FC<DropdownQuestionTypeProps>,
 }
 
 
@@ -45,6 +48,7 @@ const QuestionTypeSelector: QuestionTypeSelectorProps = {
     imageUpload: ImageUploadQuestionType,
     pdfUpload: PDFUploadQuestionType,
     multipleChoice: MultipleChoiceQuestionType,
+    dropdown: DropdownQuestionType,
   };
 
 const getQuestionComponent = (questionType: keyof QuestionTypeSelectorProps) => {

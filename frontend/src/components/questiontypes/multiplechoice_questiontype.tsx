@@ -12,7 +12,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     <QuestionTypes id={id} mandatory={mandatory} question_text={question_text}>
       <div role="group" aria-labelledby={id} className="mt-2">
         {choices.map(choice => (
-          <Choice choiceId={choice.choiceId} choiceText={choice.choiceText} />
+          <Choice key={choice.choiceId} choiceId={choice.choiceId} choiceText={choice.choiceText} />
         ))}
       </div>
     </QuestionTypes>
