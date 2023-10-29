@@ -1,8 +1,3 @@
-import ShortTextQuestionType from "@/components/questiontypes/shorttext_questiontype";
-import LongTextQuestionType from "@/components/questiontypes/longtext_questiontype"
-import VideoUploadQuestionType from "@/components/questiontypes/videoupload_questiontype";
-import DateTimePickerQuestionType from "@/components/questiontypes/datetimepicker_questiontype";
-import DatePickerQuestionType from "@/components/questiontypes/datepicker_questiontype";
 import Questionnaire from "@/components/questions";
 import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
 
