@@ -1,38 +1,116 @@
 import Questionnaire from "@/components/questions";
+import { Question } from "@/components/questions";
 import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { RedirectType, redirect } from "next/navigation";
-import { NextResponse } from "next/server";
 
+
+type IdType = {
+  id: string;
+  [key: string]: any;
+};
 
 export default async function Page({ params }: { params: { phase_name: string } }) {
-  const phase_name = params.phase_name
+  const phaseName = params.phase_name
   const supabase = createClientComponentClient()
-  const { data, error } = await supabase
-    .from('phase_table')
-    .select('*')
-    .eq('phasename', phase_name)
-    .single();
-  // Redirection if error
-  if (error){
-    return redirect("/", RedirectType.replace)
-  }
-  // Redirection if no phase_name
-  if (!data){
-    return redirect("/", RedirectType.replace)
+  console.log("Phasename: " && phaseName)
+  async function fetch_phase_table(){
+    const {data: phaseData, error: phaseError} = await supabase
+      .from('phase_table')
+      .select('*')
+      .eq('phasename', phaseName)
+      .single();
+    // Redirection if error
+    if (phaseError){
+      console.log(phaseError)
+      console.log("Error -> Redirect")
+      redirect("/", RedirectType.replace)
+    }
+    // Redirection if no phaseName
+    if (!phaseData){
+      console.log("No data -> Redirect")
+      redirect("/", RedirectType.replace)
+    }
+    return phaseData
   }
 
+  const phaseData = await fetch_phase_table()
+  const phaseId = phaseData.phaseid
   const currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 2); // UTC+2
 
-  const startDate = new Date(data.startdate);
-  const endDate = new Date(data.enddate);
-
+  const phaseOrder = phaseData.phaseorder
+  const startDate = new Date(phaseData.startdate);
+  const endDate = new Date(phaseData.enddate);
   const isEditable = (currentDate >= startDate) && (currentDate <= endDate);
 
   if (currentDate < startDate) {
+    console.log("Phase didn't start yet")
     return redirect("/", RedirectType.replace)
   }
+
+  async function fetch_question_type_table(questiontype: string, table_name: string, questions: Question[]){
+    const { data: questionTypeData, error: questionTypeError } = await supabase
+    .from(table_name)
+    .select('*')
+    .in('id', questions.filter(q => q.questionType === questiontype).map(q => q.id)).single();
+
+    if (questionTypeError) {
+      console.error(questionTypeError);
+      return null;
+    }
+    if (questionTypeData) {
+      return questionTypeData;
+    }
+    return {};
+  }
+
+  function append_params(question_type_questions: any, question: Question){
+    const question_type_params = question_type_questions!.find((params: IdType) => params.id === question.id) || {};
+    const { id, ...rest } = question_type_params;
+    return {
+      ...question,
+      params: rest,
+    };
+  }
+
+  async function fetch_question_table(){
+    const { data: questionData, error: errorData } = await supabase
+      .from('question_table')
+      .select('*')
+      .eq('phaseid', phaseId);
+    //TODO
+    if (errorData){
+      console.log("Error:" && errorData)
+      return null
+    }
+    //TODO
+    if (!questionData){
+      console.log("No Data")
+      return null
+    }
+
+    // TODO also fetch all other question types
+    const long_text_questions = await fetch_question_type_table("longText", "long_text_question_table", questionData)
+    const short_text_questions = await fetch_question_type_table("shortText", "short_text_question_table", questionData)
+
+    console.log("Print Questions:" && questionData)
+    const combinedQuestions = questionData.map(question => {
+      if (question.questionType === 'longText') {
+        return append_params(long_text_questions, question)
+      }
+      if (question.questionType === 'shortText') {
+        return append_params(short_text_questions, question)
+      }
+      
+      return question;
+    });
+  
+    return combinedQuestions;
+  }
+
+  console.log("Test")
+  await fetch_question_table()
 
   const questionsData = [
     {
@@ -140,7 +218,8 @@ export default async function Page({ params }: { params: { phase_name: string } 
   //</form>
 
   return (
-    <div>My Phase: {params.phase_name}
+    <div>My Phase: { phaseName }
+      { !isEditable && <div>Derzeit nicht bearbeitbar!</div> }
       <div>
         Test
       </div>
