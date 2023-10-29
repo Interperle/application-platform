@@ -1,6 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Head from 'next/head'
+
+import { ReduxProvider } from '@/store/provider'
 import Apl_Header from '@/components/header'
 import Apl_Footer from "@/components/footer";
 
@@ -18,15 +21,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
+    
     <html lang="en">
-      <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
-          <Apl_Header />
-          <div className="flex-grow">
-            {children}
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <body className={`${inter.className} bg-[#FDCC89]`}>
+        <ReduxProvider>
+          <div className="flex flex-col min-h-screen">
+            <div className="flex-grow">
+              {children}
+            </div>
+            <Apl_Footer/>
           </div>
-          <Apl_Footer />
-        </div>
+        </ReduxProvider>
       </body>
     </html>
   )
