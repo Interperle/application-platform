@@ -1,10 +1,39 @@
 import Questionnaire from "@/components/questions";
 import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { RedirectType, redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 
+export default async function Page({ params }: { params: { phase_name: string } }) {
+  const phase_name = params.phase_name
+  const supabase = createClientComponentClient()
+  const { data, error } = await supabase
+    .from('phase_table')
+    .select('*')
+    .eq('phasename', phase_name)
+    .single();
+  // Redirection if error
+  if (error){
+    return redirect("/", RedirectType.replace)
+  }
+  // Redirection if no phase_name
+  if (!data){
+    return redirect("/", RedirectType.replace)
+  }
 
+  const currentDate = new Date();
+  currentDate.setHours(currentDate.getHours() + 2); // UTC+2
 
-export default function Page({ params }: { params: { phase_name: string } }) {
+  const startDate = new Date(data.startdate);
+  const endDate = new Date(data.enddate);
+
+  const isEditable = (currentDate >= startDate) && (currentDate <= endDate);
+
+  if (currentDate < startDate) {
+    return redirect("/", RedirectType.replace)
+  }
+
   const questionsData = [
     {
       id: '1',
@@ -106,11 +135,15 @@ export default function Page({ params }: { params: { phase_name: string } }) {
     },
   ];
 
+  // <form>
+  //<Questionnaire questions={questionsData} />
+  //</form>
+
   return (
     <div>My Phase: {params.phase_name}
-      <form>
-          <Questionnaire questions={questionsData} />
-        </form>
+      <div>
+        Test
+      </div>
     </div>
   )
 }
