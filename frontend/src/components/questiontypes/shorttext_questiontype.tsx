@@ -1,7 +1,7 @@
 import React from 'react';
-import QuestionTypes, { QuestionTypeProps } from './questiontypes';
+import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
-export interface ShortTextQuestionTypeProps extends QuestionTypeProps {}
+export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {}
 
 const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({ id, mandatory, question_text }) => {
   return (

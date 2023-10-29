@@ -1,7 +1,7 @@
 import React from 'react';
-import QuestionTypes, { QuestionTypeProps } from './questiontypes';
+import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
-export interface ImageUploadQuestionTypeProps extends QuestionTypeProps {}
+export interface ImageUploadQuestionTypeProps extends DefaultQuestionTypeProps {}
 
 const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({ id, mandatory, question_text }) => {
   return (

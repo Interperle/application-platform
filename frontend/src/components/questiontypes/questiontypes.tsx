@@ -1,12 +1,12 @@
 import React from 'react';
 
-export interface QuestionTypeProps {
+export interface DefaultQuestionTypeProps {
   id: string;
   mandatory: boolean;
   question_text: string;
 }
 
-interface QuestionTypesProps extends QuestionTypeProps {
+interface QuestionTypesProps extends DefaultQuestionTypeProps {
     children: React.ReactNode;
 }
 

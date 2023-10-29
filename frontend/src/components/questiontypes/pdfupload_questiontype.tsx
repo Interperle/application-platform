@@ -1,7 +1,7 @@
 import React from 'react';
-import QuestionTypes, { QuestionTypeProps } from './questiontypes';
+import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
-export interface PDFUploadQuestionTypeProps extends QuestionTypeProps {
+export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxSizeInMB: number;
 }
 

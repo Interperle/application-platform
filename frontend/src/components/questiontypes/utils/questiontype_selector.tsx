@@ -7,6 +7,8 @@ import DatePickerQuestionType, { DatePickerQuestionTypeProps } from "@/component
 import NumberPickerQuestionType, { NumberPickerQuestionTypeProps } from "@/components/questiontypes/numberpicker_questiontype";
 import ImageUploadQuestionType, { ImageUploadQuestionTypeProps } from "@/components/questiontypes/imageupload_questiontype";
 import PDFUploadQuestionType, { PDFUploadQuestionTypeProps } from '@/components/questiontypes/pdfupload_questiontype';
+import MultipleChoiceQuestionType, { MultipleChoiceQuestionTypeProps } from '../multiplechoice_questiontype';
+import { ChoiceProps } from './multiplechoice_choice';
 
 export enum QuestionType {
     ShortText = "shortText",
@@ -17,6 +19,7 @@ export enum QuestionType {
     ImageUpload = "imageUpload",
     VideoUpload = "videoUpload",
     PDFUpload = "pdfUpload",
+    MultipleChoice = "multipleChoice",
 }
 
 type QuestionTypeSelectorProps = {
@@ -28,6 +31,7 @@ type QuestionTypeSelectorProps = {
     numberPicker: FC<NumberPickerQuestionTypeProps>,
     imageUpload: FC<ImageUploadQuestionTypeProps>,
     pdfUpload: FC<PDFUploadQuestionTypeProps>,
+    multipleChoice: FC<MultipleChoiceQuestionTypeProps>,
 }
 
 
@@ -40,6 +44,7 @@ const QuestionTypeSelector: QuestionTypeSelectorProps = {
     numberPicker: NumberPickerQuestionType,
     imageUpload: ImageUploadQuestionType,
     pdfUpload: PDFUploadQuestionType,
+    multipleChoice: MultipleChoiceQuestionType,
   };
 
 const getQuestionComponent = (questionType: keyof QuestionTypeSelectorProps) => {

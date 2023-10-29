@@ -1,5 +1,5 @@
 import React from 'react';
-import getQuestionComponent, { QuestionType } from '@/components/questiontypes/questiontype_selector';
+import getQuestionComponent, { QuestionType } from '@/components/questiontypes/utils/questiontype_selector';
 
 
 export interface Question {

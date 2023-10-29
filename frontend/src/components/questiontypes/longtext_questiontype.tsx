@@ -1,7 +1,7 @@
 import React from 'react';
-import QuestionTypes, { QuestionTypeProps } from './questiontypes';
+import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
-export interface LongTextQuestionTypeProps extends QuestionTypeProps {}
+export interface LongTextQuestionTypeProps extends DefaultQuestionTypeProps {}
 
 const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({ id, mandatory, question_text }) => {
   return (

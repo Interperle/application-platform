@@ -1,7 +1,7 @@
 import React from 'react';
-import QuestionTypes, { QuestionTypeProps } from './questiontypes';
+import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
-export interface NumberPickerQuestionTypeProps extends QuestionTypeProps {
+export interface NumberPickerQuestionTypeProps extends DefaultQuestionTypeProps {
   min: number;
   max: number;
 }

@@ -4,7 +4,7 @@ import VideoUploadQuestionType from "@/components/questiontypes/videoupload_ques
 import DateTimePickerQuestionType from "@/components/questiontypes/datetimepicker_questiontype";
 import DatePickerQuestionType from "@/components/questiontypes/datepicker_questiontype";
 import Questionnaire from "@/components/questions";
-import { QuestionType } from "@/components/questiontypes/questiontype_selector";
+import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
 
 
 
@@ -82,6 +82,19 @@ export default function Page({ params }: { params: { phase_name: string } }) {
       mandatory: true,
       questionText: 'Please upload your profile picture.',
       params: {maxSizeInMB: 2}
+    },
+    {
+      id: '6',
+      questionType: QuestionType.MultipleChoice,
+      questionOrder: 9,
+      phaseID: "phase-1",
+      mandatory: false,
+      questionText: 'Please select your favourite color.',
+      params: {choices: [
+        { choiceId: "1", choiceText: "Red" },
+        { choiceId: "2", choiceText: "Blue" },
+        { choiceId: "3", choiceText: "Green" }
+      ]}
     },
   ];
 

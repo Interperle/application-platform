@@ -1,7 +1,7 @@
 import React from 'react';
-import QuestionTypes, { QuestionTypeProps } from './questiontypes';
+import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
-export interface DateTimePickerQuestionTypeProps extends QuestionTypeProps {}
+export interface DateTimePickerQuestionTypeProps extends DefaultQuestionTypeProps {}
 
 const DateTimePickerQuestionType: React.FC<DateTimePickerQuestionTypeProps> = ({ id, mandatory, question_text }) => {
   return (
