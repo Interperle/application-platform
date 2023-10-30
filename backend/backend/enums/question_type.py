@@ -6,7 +6,7 @@ class QuestionType(Enum):
     SHORT_TEXT = "shortText"
     LONG_TEXT = "longText"
     MULTIPLE_CHOICE = "multipleChoice"
-    VIDEO_QUESTION = "videoQuestion"
+    VIDEO_UPLOAD = "videoUpload"
 
     @classmethod
     def list_enums(cls):

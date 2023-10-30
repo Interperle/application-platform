@@ -46,7 +46,7 @@ def process_config():
                     data_choice_table = create_data_choice_table(question_id, answer)
                     response_question_type_table = supabase.table("multiple_choice_question_choices_table").insert(
                         data_choice_table).execute()
-            elif question_type == QuestionType.VIDEO_QUESTION:
+            elif question_type == QuestionType.VIDEO_UPLOAD:
                 response_question_type_table = supabase.table("video_question_table").insert(
                     data_question_type_table).execute()
             else:

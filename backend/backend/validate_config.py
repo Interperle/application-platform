@@ -53,10 +53,15 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                 raise ValueError("A question is missing the 'mandatory' field or 'mandatory' is not boolean.")
 
             if question_type == QuestionType.MULTIPLE_CHOICE:
-                if 'numberOfPossibleAnswers' not in question or not isinstance(question['numberOfPossibleAnswers'],
+                if 'minAnswers' not in question or not isinstance(question['minAnswers'],
                                                                                int):
                     raise ValueError(
-                        "A multipleChoice question is missing the 'numberOfPossibleAnswers' field or it's not an integer."
+                        "A multipleChoice question is missing the 'minAnswers' field or it's not an integer."
+                    )
+                if 'maxAnswers' not in question or not isinstance(question['maxAnswers'],
+                                                                               int):
+                    raise ValueError(
+                        "A multipleChoice question is missing the 'maxAnswers' field or it's not an integer."
                     )
 
                 if 'Answers' not in question or not isinstance(question['Answers'], list):

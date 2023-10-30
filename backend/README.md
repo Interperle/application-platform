@@ -1,6 +1,6 @@
 
 
-## Appliaction ER-Diagram
+## Application ER-Diagram
 
 ```mermaid
 erDiagram
@@ -15,95 +15,172 @@ erDiagram
     QUESTION-TABLE ||--|{ SHORT-TEXT-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ LONG-TEXT-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-TABLE : is_type
-    QUESTION-TABLE ||--|{ VIDEO-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ VIDEO-UPLOAD-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ DATE-PICKER-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ DATETIME-PICKER-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ NUMBER-PICKER-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ DROPDOWN-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ PDF-UPLOAD-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ IMAGE-UPLOAD-QUESTION-TABLE : is_type
+    DROPDOWN-QUESTION-TABLE ||--|{ DROPDOWN-QUESTION-OPTION-TABLE : has
     MULTIPLE-CHOICE-QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE : has
 
     %% default Supabase Authentication Table
     AUTHENTICATION-TABLE {
-        string userId PK
+        string userid PK
         string email
         string password
-        datetime lastLogin
-        boolean emailVerified
+        datetime lastlogin
+        boolean emailverified
     }
 
     APPLICATION-TABLE {
-        string applicationId PK
-        string userId FK
-        datetime lastLogin
-        datetime lastUpdate
+        string applicationid PK
+        string userid FK
+        datetime lastlogin
+        datetime lastupdate
         datetime created
         string name
         string phone
     }
 
     PHASE-TABLE {
-        int phaseId PK
-        string phaseName
-        int phaseOrder
-        datetime startDate
-        datetime endDate
+        int phaseid PK
+        string phasename
+        int phaseorder
+        datetime startdate
+        datetime enddate
     }
 
     QUESTION-TABLE {
-        string questionId PK
-        string questionType
-        int questionOrder
-        string phaseId FK
+        string questionid PK
+        string questiontype
+        int questionorder
+        string phaseid FK
         boolean mandatory
+        string questiontext
     }
 
     ANSWER-TABLE {
-        string answerId PK
-        string questionId FK
-        string applicationId FK
+        string answerid PK
+        string questionid FK
+        string applicationid FK
         string timestamp
     }
 
     SHORT-TEXT-QUESTION-TABLE {
-        string questionId PK
-        string questionText
+        string questionid FK
     }
 
     LONG-TEXT-QUESTION-TABLE {
-        string questionId PK
-        string questionText
+        string questionid FK
     }
 
     MULTIPLE-CHOICE-QUESTION-TABLE {
-        string questionId PK
-        string questionText
-        int numberOfPossibleAnswers
+        string questionid FK
+        int minanswers
+        int maxanswers
     }
 
     MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE {
-        string choiceId PK
-        string questionId FK
-        string choiceText
+        string choiceid PK
+        string questionid FK
+        string choicetext
     }
 
     VIDEO-QUESTION-TABLE {
-        string questionId PK
-        string questionText
+        string questionid FK
+        double maxfilesizeinmb
+    }
+
+    DATE-PICKER-QUESTION-TABLE {
+        string questionid FK
+        date mindate
+        data maxdate
+    }
+
+    DATETIME-PICKER-QUESTION-TABLE {
+        string questionid FK
+        datetime mindatetime
+        datatime maxdatetime
+    }
+
+    NUMBER-PICKER-QUESTION-TABLE {
+        string questionid FK
+        int minnumber
+        int maxnumber
+    }
+
+    DROPDOWN-QUESTION-TABLE {
+        string questionid FK
+        integer minAnswers
+        integer maxAnswers
+        boolean userinput
+    }
+
+    DROPDOWN-QUESTION-OPTION-TABLE {
+        string optionid PK
+        string questionid FK
+        string optiontext
+    }
+
+    PDF-UPLOAD-QUESTION-TABLE {
+        string questionid FK
+        double maxfilesizeinmb
+    }
+
+    IMAGE-UPLOAD-QUESTION-TABLE {
+        string questionid FK
+        double maxfilesizeinmb
     }
 
     SHORT-TEXT-ANSWER-TABLE {
-        string answerId PK
-        string answerText
+        string answerid FK
+        string answertext
     }
 
     LONG-TEXT-ANSWER-TABLE {
-        string answerId PK
-        string answerText
+        string answerid FK
+        string answertext
     }
 
     MULTIPLE-CHOICE-ANSWER-TABLE {
-        string answerId PK
-        string[] selectedChoice
+        string answerid FK
+        string[] selectedchoice
     }
 
     VIDEO-ANSWER-TABLE {
-        string answerId PK
-        string videoUrl
+        string answerid FK
+        string videourl
+    }
+
+    DATE-PICKER-ANSWER-TABLE {
+        string answerid FK
+        date pickeddate
+    }
+
+    DATETIME-PICKER-ANSWER-TABLE {
+        string answerid FK
+        datetime pickeddatetime
+    }
+
+    NUMBER-PICKER-ANSWER-TABLE {
+        string answerid FK
+        integer number
+    }
+
+    DROPDOWN-ANSWER-TABLE {
+        string answerid FK
+        string[] selectedoptions
+    }
+
+    PDF-UPLOAD-ANSWER-TABLE {
+        string answerid FK
+        string pdfurl
+    }
+
+    IMAGE-UPLOAD-ANSWER-TABLE {
+        string answerid FK
+        string imageurl
     }
 ```

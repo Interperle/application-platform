@@ -10,8 +10,8 @@
 # application_table:
 questions:
   phase_1:
-    startDate: 2024-01-02
-    endDate: 2024-02-15
+    startDate: 2024-01-02  # format: %Y-%m-%d
+    endDate: 2024-02-15  # format: %Y-%m-%d
     questions:
       - questionType: shortText
         order: 1
@@ -24,16 +24,57 @@ questions:
       - questionType: multipleChoice
         order: 4
         question: "What's your name and birthday?"
-        numberOfPossibleAnswers: 2
+        minAnswers: 0
+        maxAnswers: 2
         Answers:
           - "Possible Answer 1"
           - "Possible Answer 2"
           - "Possible Answer 3"
         mandatory: false
-      - questionType: videoQuestion
+        userInput: true
+      - questionType: videoUpload
         order: 3
         question: "Please Upload this Video"
         mandatory: false
+      - questionType: datePicker
+        order: 5
+        question: "When do you have birthday?"
+        minDate: 1993-06-21  # format: %Y-%m-%d
+        maxDate: 2023-06-21  # format: %Y-%m-%d
+      - questionType: dateTimePicker
+        order: 6
+        question: "When were you born?"
+        minDatetime: 1993-06-21T00:00:00  # format: %Y-%m-%dT%H:%M:%S
+        maxDatetime: 2023-06-21T23:59:59  # format: %Y-%m-%dT%H:%M:%S
+      - questionType: numberPicker
+        order: 7
+        question: "How old are you?"
+        minNumber: -100
+        maxNumber: 100
+      - questionType: pdfUpload
+        order: 8
+        question: "Please upload your CV"
+        maxFileSizeInMB: 2 # in Mega Byte
+      - questionType: imageUpload
+        order: 9
+        question: "Please upload your Profile picture"
+        maxFileSizeInMB: 2 # in Mega Byte
+        allowedFileTypes:
+          - png
+          - jpg
+          - jpeg
+          - gif
+      - questionType: dropdown
+        order: 10
+        question: "What's your favourite animal?"
+        minAnswers: 1
+        maxAnswers: 1
+        Answers:
+          - "Chameleon"
+          - "Salmon"
+          - "Amadillo"
+        mandatory: false
+        userInput: true
   phase_2:
     startDate: 2024-01-09
     endDate: 2024-02-15
@@ -49,13 +90,14 @@ questions:
       - questionType: multipleChoice
         order: 4
         question: "What's your name and birthday?"
-        numberOfPossibleAnswers: 2
+        minAnswers: 2
+        maxAnswers: 2
         Answers:
           - "Possible Answer 1"
           - "Possible Answer 2"
           - "Possible Answer 3"
         mandatory: false
-      - questionType: videoQuestion
+      - questionType: videoUpload
         order: 3
         question: "Please Upload this Video"
         mandatory: false
