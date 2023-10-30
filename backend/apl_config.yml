@@ -41,7 +41,7 @@ questions:
         question: "When do you have birthday?"
         minDate: 1993-06-21  # format: %Y-%m-%d
         maxDate: 2023-06-21  # format: %Y-%m-%d
-      - questionType: dateTimePicker
+      - questionType: datetimePicker
         order: 6
         question: "When were you born?"
         minDatetime: 1993-06-21T00:00:00  # format: %Y-%m-%dT%H:%M:%S
