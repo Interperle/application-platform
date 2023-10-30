@@ -3,15 +3,15 @@ import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
 export interface VideoUploadQuestionTypeProps extends DefaultQuestionTypeProps {}
 
-const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({ id, mandatory, question_text }) => {
+const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({ questionid, mandatory, question_text }) => {
     const uploading = false;
     const videoUrl = ""
     return (
-        <QuestionTypes id={id} mandatory={mandatory} question_text={question_text}>
+        <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text}>
             <input
                 type="file"
-                name={id}
-                id={id}
+                name={questionid}
+                id={questionid}
                 accept="video/mp4,video/x-m4v,video/*"
                 required={mandatory}
                 className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"

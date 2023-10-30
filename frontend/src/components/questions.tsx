@@ -3,7 +3,7 @@ import getQuestionComponent, { QuestionType } from '@/components/questiontypes/u
 
 
 export interface Question {
-  id: string;
+  questionid: string;
   questionType: QuestionType;
   questionOrder: number;
   phaseID: string;
@@ -29,8 +29,8 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
           }
           return (
             <QuestionComponent
-              key={question.id}
-              id={question.id}
+              key={question.questionid}
+              questionid={question.questionid}
               mandatory={question.mandatory}
               question_text={question.questionText}
               {...question.params}

@@ -6,7 +6,7 @@ import { RedirectType, redirect } from "next/navigation";
 
 
 type IdType = {
-  id: string;
+  questionidid: string;
   [key: string]: any;
 };
 
@@ -50,12 +50,15 @@ export default async function Page({ params }: { params: { phase_name: string } 
   }
 
   async function fetch_question_type_table(questiontype: string, table_name: string, questions: Question[]){
+    console.log(questiontype)
+    console.log(table_name)
     const { data: questionTypeData, error: questionTypeError } = await supabase
     .from(table_name)
     .select('*')
-    .in('id', questions.filter(q => q.questionType === questiontype).map(q => q.id)).single();
+    .in('questionid', questions.filter(q => q.questionType === questiontype).map(q => q.questionid)).single();
 
     if (questionTypeError) {
+      console.log("QuestionType Error")
       console.error(questionTypeError);
       return null;
     }
@@ -66,8 +69,8 @@ export default async function Page({ params }: { params: { phase_name: string } 
   }
 
   function append_params(question_type_questions: any, question: Question){
-    const question_type_params = question_type_questions!.find((params: IdType) => params.id === question.id) || {};
-    const { id, ...rest } = question_type_params;
+    const question_type_params = question_type_questions!.find((params: IdType) => params.questionid === question.questionid) || {};
+    const { questionid, ...rest } = question_type_params;
     return {
       ...question,
       params: rest,
@@ -102,7 +105,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       if (question.questionType === 'shortText') {
         return append_params(short_text_questions, question)
       }
-      
+
       return question;
     });
   
@@ -110,11 +113,11 @@ export default async function Page({ params }: { params: { phase_name: string } 
   }
 
   console.log("Test")
-  await fetch_question_table()
+  const phase_questions = await fetch_question_table()
 
   const questionsData = [
     {
-      id: '1',
+      questionid: '1',
       questionType: QuestionType.ShortText,
       questionOrder: 1,
       phaseID: "phase-1",
@@ -123,7 +126,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {}
     },
     {
-      id: '2',
+      questionid: '2',
       questionType: QuestionType.LongText,
       questionOrder: 2,
       phaseID: "phase-1",
@@ -132,7 +135,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {}
     },
     {
-      id: '2',
+      questionid: '2',
       questionType: QuestionType.NumberPicker,
       questionOrder: 3,
       phaseID: "phase-1",
@@ -141,7 +144,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: { min: 0, max: 120 }
     },
     {
-      id: '3',
+      questionid: '3',
       questionType: QuestionType.DatePicker,
       questionOrder: 4,
       phaseID: "phase-1",
@@ -150,7 +153,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {}
     },
     {
-      id: '4',
+      questionid: '4',
       questionType: QuestionType.ImageUpload,
       questionOrder: 5,
       phaseID: "phase-1",
@@ -159,7 +162,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {}
     },
     {
-      id: '5',
+      questionid: '5',
       questionType: QuestionType.DateTimePicker,
       questionOrder: 6,
       phaseID: "phase-1",
@@ -168,7 +171,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {}
     },
     {
-      id: '6',
+      questionid: '6',
       questionType: QuestionType.VideoUpload,
       questionOrder: 7,
       phaseID: "phase-1",
@@ -177,7 +180,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {}
     },
     {
-      id: '7',
+      questionid: '7',
       questionType: QuestionType.Dropdown,
       questionOrder: 10,
       phaseID: "phase-1",
@@ -190,7 +193,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       ]}
     },
     {
-      id: '8',
+      questionid: '8',
       questionType: QuestionType.PDFUpload,
       questionOrder: 8,
       phaseID: "phase-1",
@@ -199,7 +202,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
       params: {maxSizeInMB: 2}
     },
     {
-      id: '9',
+      questionid: '9',
       questionType: QuestionType.MultipleChoice,
       questionOrder: 9,
       phaseID: "phase-1",
@@ -213,15 +216,15 @@ export default async function Page({ params }: { params: { phase_name: string } 
     },
   ];
 
-  // <form>
-  //<Questionnaire questions={questionsData} />
-  //</form>
+
 
   return (
     <div>My Phase: { phaseName }
       { !isEditable && <div>Derzeit nicht bearbeitbar!</div> }
       <div>
-        Test
+        <form>
+          <Questionnaire questions={phase_questions} />
+        </form>
       </div>
     </div>
   )

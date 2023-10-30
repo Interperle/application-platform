@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import ShortTextQuestionType, { ShortTextQuestionTypeProps } from "@/components/questiontypes/shorttext_questiontype";
 import LongTextQuestionType, { LongTextQuestionTypeProps } from "@/components/questiontypes/longtext_questiontype"
 import VideoUploadQuestionType, { VideoUploadQuestionTypeProps } from "@/components/questiontypes/videoupload_questiontype";
@@ -8,7 +8,6 @@ import NumberPickerQuestionType, { NumberPickerQuestionTypeProps } from "@/compo
 import ImageUploadQuestionType, { ImageUploadQuestionTypeProps } from "@/components/questiontypes/imageupload_questiontype";
 import PDFUploadQuestionType, { PDFUploadQuestionTypeProps } from '@/components/questiontypes/pdfupload_questiontype';
 import MultipleChoiceQuestionType, { MultipleChoiceQuestionTypeProps } from '../multiplechoice_questiontype';
-import { ChoiceProps } from './multiplechoice_choice';
 import DropdownQuestionType, { DropdownQuestionTypeProps } from '../dropdown_questiontype';
 
 export enum QuestionType {
