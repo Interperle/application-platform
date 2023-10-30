@@ -43,3 +43,6 @@ jspm_packages
 # ignore env files
 *.env
 *.env.local
+
+# pycache
+*__pycache__

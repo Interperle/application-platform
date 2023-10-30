@@ -9,6 +9,8 @@
   - short_text_answer for the short text answers database table
   - application_table for the list of all applications
   - variable names contain the datatype if it is a "complex" data type (e.g., list, dict, ...)
+- datetime format in scripts is "%Y-%m-%dT%H:%M:%S"
+- date format in scripts is "%Y-%m-%d"
 
 ### "portected" keywords
 
@@ -23,6 +25,22 @@
 | db| database |
 
 --> short_text_question_table for the db table containing all short questions
+## Python Formatting:
+We use the following yapf config style:
+
+```
+[style]
+based_on_style = pep8
+split_before_named_assigns = False
+column_limit = 120
+dedent_closing_brackets = False
+join_multiple_lines = True
+indent_width = 4
+blank_line_before_nested_class_or_def = False
+```
+You can apply this style globally if you save this file in ~/.config/yapf/style
+For formatting with VS Code, follow this few quick steps: https://victorleungtw.medium.com/visual-studio-code-with-python-auto-formatting-8ba92b44360 
+
 
 ## Problem Domain
 
