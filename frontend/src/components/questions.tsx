@@ -2,13 +2,16 @@ import React from 'react';
 import getQuestionComponent, { QuestionType } from '@/components/questiontypes/utils/questiontype_selector';
 
 
-export interface Question {
+export interface DefaultQuestion {
   questionid: string;
-  questionType: QuestionType;
-  questionOrder: number;
-  phaseID: string;
+  questiontype: QuestionType;
+  questionorder: number;
+  phaseid: string;
   mandatory: boolean;
-  questionText: string;
+  questiontext: string;
+}
+
+export interface Question extends DefaultQuestion {
   params: any;
 }
 
@@ -20,11 +23,11 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
   return (
     <div>
       {questions
-        .sort((a, b) => a.questionOrder - b.questionOrder)
+        .sort((a, b) => a.questionorder - b.questionorder)
         .map((question) => {
-          const QuestionComponent = getQuestionComponent(question.questionType);
+          const QuestionComponent = getQuestionComponent(question.questiontype);
           if (!QuestionComponent) {
-            console.error(`Unknown question type: ${question.questionType}`);
+            console.error(`Unknown question type: ${question.questiontype}`);
             return null;
           }
           return (
@@ -32,7 +35,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
               key={question.questionid}
               questionid={question.questionid}
               mandatory={question.mandatory}
-              question_text={question.questionText}
+              question_text={question.questiontext}
               {...question.params}
             />
           );

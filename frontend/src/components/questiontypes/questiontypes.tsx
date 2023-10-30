@@ -14,7 +14,7 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({ questionid, mandatory, qu
   return (
     <div className="mb-4">
       <label htmlFor={questionid} className="block text-sm font-medium text-gray-700">
-        {question_text} {mandatory && <span className="text-red-500">*</span>}
+        {question_text}{mandatory && <span className="text-red-500">*</span>}
       </label>
       <div className="mt-1">
         {children}

@@ -23,6 +23,19 @@ export enum QuestionType {
     Dropdown = "dropdown",
 }
 
+export enum QuestionTypeTable {
+    ShortTextQuestionTable = "short_text_question_table",
+    LongTextQuestionTable = "long_text_question_table",
+    //NumberPickerQuestionTable = "MISSING",
+    //DateTimePickerQuestionTable = "MISSING",
+    //DatePickerQuestionTable = "MISSING",
+    //ImageUploadQuestionTable = "MISSING",
+    VideoUploadQuestionTable = "video_question_table",
+    //PDFUploadQuestionTable = "MISSING",
+    MultipleChoiceQuestionTable = "multiple_choice_question_table",
+    //DropdownQuestionTable = "MISSING",
+}
+
 type QuestionTypeSelectorProps = {
     shortText: FC<ShortTextQuestionTypeProps>,
     longText: FC<LongTextQuestionTypeProps>,
