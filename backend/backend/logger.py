@@ -43,8 +43,3 @@ class Logger:
             self.logger.error("Failed to send log to API. Error: %s", str(e))
             return False
         return True
-
-
-def run():
-    log = Logger("TEST")
-    log.info("TEST MESSAGE")
