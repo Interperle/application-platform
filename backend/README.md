@@ -92,6 +92,7 @@ erDiagram
         string questionid FK
         int minanswers
         int maxanswers
+        boolean userinput
     }
 
     MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE {

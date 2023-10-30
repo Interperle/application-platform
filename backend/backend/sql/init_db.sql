@@ -34,7 +34,7 @@ CREATE TABLE
     questiontype VARCHAR(255) NOT NULL,
     questionorder INT NOT NULL,
     phaseid UUID NOT NULL REFERENCES PHASE_TABLE (phaseid),
-    mandatory INT NOT NULL,
+    mandatory BOOLEAN NOT NULL,
     questiontext TEXT NOT NULL
   );
 
@@ -75,6 +75,7 @@ CREATE TABLE
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     minanswers INT NOT NULL,
     maxanswers INT NOT NULL,
+    userinput BOOLEAN NOT NULL,
     FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid)
   );
 
@@ -86,7 +87,6 @@ CREATE TABLE
     choiceid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     questionid UUID NOT NULL,
     choicetext VARCHAR(255) NOT NULL,
-    userinput BOOLEAN NOT NULL,
     FOREIGN KEY (questionid) REFERENCES MULTIPLE_CHOICE_QUESTION_TABLE (questionid)
   );
 
