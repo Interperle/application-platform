@@ -125,8 +125,8 @@ erDiagram
 
     DROPDOWN-QUESTION-TABLE {
         string questionid FK
-        integer minAnswers
-        integer maxAnswers
+        integer minanswers
+        integer maxanswers
         boolean userinput
     }
 
@@ -144,6 +144,7 @@ erDiagram
     IMAGE-UPLOAD-QUESTION-TABLE {
         string questionid FK
         double maxfilesizeinmb
+        string[] allowedfiletypes
     }
 ```
 
@@ -200,7 +201,7 @@ erDiagram
 
     NUMBER-PICKER-ANSWER-TABLE {
         string answerid FK
-        integer number
+        integer pickednumber
     }
 
     DROPDOWN-ANSWER-TABLE {
