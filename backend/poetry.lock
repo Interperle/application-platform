@@ -682,32 +682,32 @@ test = ["pylint", "pytest", "pytest-black", "pytest-cov", "pytest-pylint"]
 
 [[package]]
 name = "supabase"
-version = "1.2.0"
+version = "2.0.0"
 description = "Supabase client for Python."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "supabase-1.2.0-py3-none-any.whl", hash = "sha256:1549600a3965d64de97f2eb37e4e562b7d171383f439ceaab881c5cd6a79e9f7"},
-    {file = "supabase-1.2.0.tar.gz", hash = "sha256:2597ef8ec6af973b9c9e94849204f43f47bb5f46d8c65a0c7a6bdf95ad018704"},
+    {file = "supabase-2.0.0-py3-none-any.whl", hash = "sha256:911eec18f6cee0ad114df14d52ee1423098adf39553b6d58da2d66410767bda3"},
+    {file = "supabase-2.0.0.tar.gz", hash = "sha256:ee2a4ccc0ad2c2b9dc510582d1aa04d1e7c1d847b2aa235e110dc97f3d23c5a4"},
 ]
 
 [package.dependencies]
 gotrue = ">=1.0.4,<2.0.0"
 httpx = ">=0.24.0,<0.25.0"
-postgrest = ">=0.10.8,<0.12.0"
+postgrest = ">=0.10.8,<0.14.0"
 realtime = ">=1.0.0,<2.0.0"
 storage3 = ">=0.5.3,<0.7.0"
-supafunc = ">=0.2.3,<0.3.0"
+supafunc = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "supafunc"
-version = "0.2.3"
+version = "0.3.0"
 description = "Library for Supabase Functions"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "supafunc-0.2.3-py3-none-any.whl", hash = "sha256:4124773799682207d0c6ed90b72271f717373977f7de9d12a641bf32f8e13897"},
-    {file = "supafunc-0.2.3.tar.gz", hash = "sha256:b23ec2559bcd56ad74fec42cf9dd28c131ba1f00b5ba21853557ed8960891a9b"},
+    {file = "supafunc-0.3.0-py3-none-any.whl", hash = "sha256:73514bd4ba5761cf701762875dae91a6fa743f484625c3a2f804e4fe92b8c424"},
+    {file = "supafunc-0.3.0.tar.gz", hash = "sha256:9294fc0dd3b9570146b17d192017744dd26df06809b6b2816d3f929a01cb2d7c"},
 ]
 
 [package.dependencies]
@@ -864,4 +864,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "4d31bd6a3c2a7d347ff14772c3514e571b4383a9c09de24996a01b733ffe13a5"
+content-hash = "8b4ba6f637cd1e286fb5bfad3d8aeb1f88ee116e36599190c9dcfdf78c91a1db"
