@@ -1,4 +1,4 @@
-# see: https://github.com/marketplace/actions/yapf-python-code-formatting-check 
+# see: https://github.com/marketplace/actions/yapf-python-code-formatting-check
 name: YAPF Formatting Check
 on: [push]
 jobs:
