@@ -11,7 +11,13 @@ erDiagram
     ANSWER-TABLE ||--|{ SHORT-TEXT-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ LONG-TEXT-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ MULTIPLE-CHOICE-ANSWER-TABLE : is_type
-    ANSWER-TABLE ||--|{ VIDEO-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ VIDEO-UPLOAD-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ DATE-PICKER-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ DATETIME-PICKER-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ NUMBER-PICKER-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ DROPDOWN-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ PDF-UPLOAD-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ IMAGE-UPLOAD-ANSWER-TABLE : is_type
     QUESTION-TABLE ||--|{ SHORT-TEXT-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ LONG-TEXT-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-TABLE : is_type
@@ -88,7 +94,7 @@ erDiagram
         string choicetext
     }
 
-    VIDEO-QUESTION-TABLE {
+    VIDEO-UPLOAD-QUESTION-TABLE {
         string questionid FK
         double maxfilesizeinmb
     }
@@ -149,7 +155,7 @@ erDiagram
         string[] selectedchoice
     }
 
-    VIDEO-ANSWER-TABLE {
+    VIDEO-UPLOAD-ANSWER-TABLE {
         string answerid FK
         string videourl
     }
