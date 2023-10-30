@@ -1,6 +1,7 @@
 from dateutil.parser import isoparse
 from dateutil.parser._parser import ParserError
 
+
 def dt_is_iso8601(date_string):
     try:
         # Try to parse the string as an ISO 8601 date/datetime

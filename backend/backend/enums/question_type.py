@@ -1,5 +1,6 @@
 from enum import Enum, unique
 
+
 @unique
 class QuestionType(Enum):
     SHORT_TEXT = "shortText"

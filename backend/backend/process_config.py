@@ -6,8 +6,8 @@ from backend.utils.utils_supabase import init_supabase
 from backend.enums.question_type import QuestionType
 from backend.validate_config import run_structure_checks
 
-
 log = Logger(__name__)
+
 
 def process_config():
     config_data = read_yaml_file("apl_config.yml")
@@ -24,7 +24,8 @@ def process_config():
         phase_counter += 1
         for question in phase["questions"]:
             question_type = QuestionType.str_to_enum(question['questionType'])
-            data_question_table = create_data_questions_table(question_type, question["order"], phase_id, question["mandatory"])
+            data_question_table = create_data_questions_table(question_type, question["order"], phase_id,
+                                                              question["mandatory"])
             log.info(f"Create Question '{question}'")
             response_question_table = supabase.table("question_table").insert(data_question_table).execute()
             log.info(str(response_question_table))
@@ -32,17 +33,22 @@ def process_config():
             question_id = response_question_table.data[0]["questionid"]
             data_question_type_table = create_data_question_types_table(question_id, question["question"])
             if question_type == QuestionType.SHORT_TEXT:
-                response_question_type_table = supabase.table("short_text_question_table").insert(data_question_type_table).execute()
+                response_question_type_table = supabase.table("short_text_question_table").insert(
+                    data_question_type_table).execute()
             elif question_type == QuestionType.LONG_TEXT:
-                response_question_type_table = supabase.table("long_text_question_table").insert(data_question_type_table).execute()
+                response_question_type_table = supabase.table("long_text_question_table").insert(
+                    data_question_type_table).execute()
             elif question_type == QuestionType.MULTIPLE_CHOICE:
                 data_question_type_table["numberofpossibleanswers"] = question["numberOfPossibleAnswers"]
-                response_question_type_table = supabase.table("multiple_choice_question_table").insert(data_question_type_table).execute()
+                response_question_type_table = supabase.table("multiple_choice_question_table").insert(
+                    data_question_type_table).execute()
                 for answer in question["Answers"]:
                     data_choice_table = create_data_choice_table(question_id, answer)
-                    response_question_type_table = supabase.table("multiple_choice_question_choices_table").insert(data_choice_table).execute()
+                    response_question_type_table = supabase.table("multiple_choice_question_choices_table").insert(
+                        data_choice_table).execute()
             elif question_type == QuestionType.VIDEO_QUESTION:
-                response_question_type_table = supabase.table("video_question_table").insert(data_question_type_table).execute()
+                response_question_type_table = supabase.table("video_question_table").insert(
+                    data_question_type_table).execute()
             else:
                 raise ValueError("No other QuestionTypes defined!")
             log.info(str(response_question_type_table))

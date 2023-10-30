@@ -1,5 +1,6 @@
 import yaml
 
+
 def read_yaml_file(filename):
     """
     Read the content of a YAML file and return the data.
