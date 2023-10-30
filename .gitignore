@@ -40,5 +40,8 @@ jspm_packages
 .node_repl_history
 .next
 
-# Local Environment Variables
+# All local Environment Variables
 *.env.local
+
+# Pycache
+**/__pycache__

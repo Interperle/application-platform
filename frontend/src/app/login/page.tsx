@@ -12,7 +12,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   return (
     <main className="grid-cols-1 flex flex-col items-center justify-between space-y-6">
-      
+
       <Image src="/logos/gend_img.png" width={80} height={80} alt="Generation-D Image Logo" className="max-w-50 max-h-50" />
       <h1 className="text-5xl text-[#153757]">
         Generation-D Bewerbung
@@ -25,7 +25,7 @@ export default function Login() {
         <button type="button" onClick={() => dispatch(openPopup(<SignUpForm/>))} className="border rounded px-4 py-2 text-[#FDCC89] bg-[#153757]">
           Neues Konto anlegen
         </button>
-        
+
         <p>
           Oder logge dich ein, um deine Bewerbung fortzusetzen
         </p>
