@@ -7,6 +7,12 @@ class QuestionType(Enum):
     LONG_TEXT = "longText"
     MULTIPLE_CHOICE = "multipleChoice"
     VIDEO_UPLOAD = "videoUpload"
+    IMAGE_UPLOAD = "imageUpload"
+    PDF_UPLOAD = "pdfUpload"
+    DATE_PICKER = "datePicker"
+    DATETIME_PICKER = "datetimePicker"
+    NUMBER_PICKER = "numberPicker"
+    DROPDOWN = "dropdown"
 
     @classmethod
     def list_enums(cls):
