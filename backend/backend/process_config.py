@@ -1,5 +1,5 @@
-from backend.logger import Logger
 from datetime import datetime
+from backend.logger import Logger
 from backend.utils.consts import DATETIME_FORMAT
 from backend.utils.utils_file import read_yaml_file
 from backend.utils.utils_supabase import init_supabase
