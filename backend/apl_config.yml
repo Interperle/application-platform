@@ -41,20 +41,24 @@ questions:
         question: "When do you have birthday?"
         minDate: 1993-06-21  # format: %Y-%m-%d
         maxDate: 2023-06-21  # format: %Y-%m-%d
+        mandatory: false
       - questionType: datetimePicker
         order: 6
         question: "When were you born?"
         minDatetime: 1993-06-21T00:00:00  # format: %Y-%m-%dT%H:%M:%S
         maxDatetime: 2023-06-21T23:59:59  # format: %Y-%m-%dT%H:%M:%S
+        mandatory: false
       - questionType: numberPicker
         order: 7
         question: "How old are you?"
         minNumber: -100
         maxNumber: 100
+        mandatory: false
       - questionType: pdfUpload
         order: 8
         question: "Please upload your CV"
         maxFileSizeInMB: 2 # in Mega Byte
+        mandatory: false
       - questionType: imageUpload
         order: 9
         question: "Please upload your Profile picture"
@@ -64,6 +68,7 @@ questions:
           - jpg
           - jpeg
           - gif
+        mandatory: false
       - questionType: dropdown
         order: 10
         question: "What's your favourite animal?"
