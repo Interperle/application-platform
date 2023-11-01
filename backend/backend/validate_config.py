@@ -63,6 +63,7 @@ QUESTION_TYPES_DB_TABLE = {
     QuestionType.DROPDOWN: "dropdown_question_table",
 }
 
+
 def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
     # Check if 'questions' is in the YAML
     if 'questions' not in yaml_data:

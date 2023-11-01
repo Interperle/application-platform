@@ -49,8 +49,7 @@ def process_config():
                 for answer in question["Answers"]:
                     data_list_table = create_data_option_table(question_id, answer)
                     table_name = "dropdown_question_option_table"
-                    response_list_table = supabase.table(table_name).insert(
-                        data_list_table).execute()
+                    response_list_table = supabase.table(table_name).insert(data_list_table).execute()
                     log.info(str(response_list_table))
         log.info(f"Processed Phase {phase} successfully")
 
