@@ -29,7 +29,7 @@ ADDITIONAL_PARAMS = {
     },
     QuestionType.DATETIME_PICKER: {
         'minDatetime': datetime,
-        'maxDatetime': datetime, 
+        'maxDatetime': datetime,
     },
     QuestionType.NUMBER_PICKER: {
         'minNumber': int,

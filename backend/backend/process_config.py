@@ -43,8 +43,7 @@ def process_config():
                 for answer in question["Answers"]:
                     data_list_table = create_data_choice_table(question_id, answer)
                     table_name = "multiple_choice_question_choice_table"
-                    response_list_table = supabase.table(table_name).insert(
-                        data_list_table).execute()
+                    response_list_table = supabase.table(table_name).insert(data_list_table).execute()
                     log.info(str(response_list_table))
             elif question_type == QuestionType.DROPDOWN:
                 for answer in question["Answers"]:
@@ -65,7 +64,7 @@ def create_data_phase_table(phasename: str, ordernumber: int, startdate: datetim
     }
 
 
-def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool, 
+def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool,
                                 question: str):
     return {
         "questiontype": str(questiontype),
