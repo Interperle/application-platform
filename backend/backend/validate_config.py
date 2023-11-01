@@ -97,7 +97,9 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
 
             for param, paramtype in DEFAULT_PARAMS.items():
                 if param not in question or not isinstance(question[param], paramtype):
-                    raise ValueError(f"The {question_type} question {question} is missing the default '{param}' field or it's not type of {paramtype}.")
+                    raise ValueError(
+                        f"The {question_type} question {question} is missing the default '{param}' field or it's not type of {paramtype}."
+                    )
 
             order = question.get('order')
             if order in seen_orders_in_phase:
@@ -106,9 +108,13 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
 
             for param, paramtype in ADDITIONAL_PARAMS.get(question_type, {}).items():
                 if param not in question:
-                    raise ValueError(f"The {question_type} question {question} is missing the additional '{param}' field or it's not type of {paramtype}.")
+                    raise ValueError(
+                        f"The {question_type} question {question} is missing the additional '{param}' field or it's not type of {paramtype}."
+                    )
                 if not isinstance(question[param], paramtype):
-                    raise ValueError(f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}.")
+                    raise ValueError(
+                        f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
+                    )
 
 
 def validate_config_structure():

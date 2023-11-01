@@ -36,7 +36,8 @@ def process_config():
             for param in ADDITIONAL_PARAMS.get(question_type, {}):
                 if param != "Answers":
                     data_question_type_table[param.lower()] = str(question[param])
-            response_question_type_table = supabase.table(QUESTION_TYPES_DB_TABLE[question_type]).insert(data_question_type_table).execute()
+            response_question_type_table = supabase.table(
+                QUESTION_TYPES_DB_TABLE[question_type]).insert(data_question_type_table).execute()
             log.info(str(response_question_type_table))
             if question_type == QuestionType.MULTIPLE_CHOICE:
                 for answer in question["Answers"]:
@@ -64,7 +65,8 @@ def create_data_phase_table(phasename: str, ordernumber: int, startdate: datetim
     }
 
 
-def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool, question: str):
+def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool, 
+                                question: str):
     return {
         "questiontype": str(questiontype),
         "questionorder": ordernumber,
