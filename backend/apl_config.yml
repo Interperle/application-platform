@@ -36,6 +36,7 @@ questions:
         order: 3
         question: "Please Upload this Video"
         mandatory: false
+        maxFileSizeInMB: 2.0  # in Mega Byte
       - questionType: datePicker
         order: 5
         question: "When do you have birthday?"
@@ -57,12 +58,12 @@ questions:
       - questionType: pdfUpload
         order: 8
         question: "Please upload your CV"
-        maxFileSizeInMB: 2 # in Mega Byte
+        maxFileSizeInMB: 2.0  # in Mega Byte
         mandatory: false
       - questionType: imageUpload
         order: 9
         question: "Please upload your Profile picture"
-        maxFileSizeInMB: 2 # in Mega Byte
+        maxFileSizeInMB: 2.0  # in Mega Byte
         allowedFileTypes:
           - png
           - jpg
@@ -102,7 +103,9 @@ questions:
           - "Possible Answer 2"
           - "Possible Answer 3"
         mandatory: false
+        userInput: true
       - questionType: videoUpload
         order: 3
         question: "Please Upload this Video"
         mandatory: false
+        maxFileSizeInMB: 2.0  # in Mega Byte
