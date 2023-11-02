@@ -34,33 +34,95 @@ export default async function Page({ params }: { params: { phase_name: string } 
     return phaseData
   }
 
-  async function fetch_question_type_table(questiontype: string, table_name: string, questions: DefaultQuestion[]){
-    console.log("Fetch: '" + questiontype + "'; in table: " + table_name)
-    const { data: questionTypeData, error: questionTypeError } = await supabase
-      .from(table_name)
-      .select('*')
-      .in('questionid', questions.filter(q => q.questiontype === questiontype).map(q => q.questionid));
+  async function fetch_question_type_table(questions: DefaultQuestion[]){
+    const result: Record<QuestionType, any> = {
+      [QuestionType.ShortText]: {},
+      [QuestionType.LongText]: {},
+      [QuestionType.NumberPicker]: {},
+      [QuestionType.DatetimePicker]: {},
+      [QuestionType.DatePicker]: {},
+      [QuestionType.ImageUpload]: {},
+      [QuestionType.VideoUpload]: {},
+      [QuestionType.PDFUpload]: {},
+      [QuestionType.MultipleChoice]: {},
+      [QuestionType.Dropdown]: {}
+    };
+    for (const questionType of Object.values(QuestionType)) {
+      const tableName = QuestionTypeTable[`${questionType[0].toUpperCase()}${questionType.slice(1)}QuestionTable` as keyof typeof QuestionTypeTable];
+      if (!tableName) {
+        console.log(`Table for question type "${questionType}" is missing. Skipping...`);
+        continue;
+      }
 
-    console.log("QuestionType Data: " + questionTypeData?.length)
-    if (questionTypeError) {
-      console.log("QuestionType Error: Return Null")
-      console.error(questionTypeError);
-      return null;
+      console.log("Fetch: '" + questionType + "'; in table: " + tableName);
+      const { data: questionTypeData, error: questionTypeError } = await supabase
+        .from(tableName)
+        .select('*')
+        .in('questionid', questions.filter(q => q.questiontype === questionType).map(q => q.questionid));
+
+      console.log("QuestionType Data: " + questionTypeData?.length);
+      
+      if (questionTypeError) {
+        console.log("QuestionType Error: Return Null");
+        console.error(questionTypeError);
+        result[questionType] = [{}];
+      } else if (questionTypeData) {
+        console.log("QuestionType Data: " + questionTypeData)
+        result[questionType] = questionTypeData;
+      } else {
+        console.log("No data found for question type: " + questionType);
+        result[questionType] = [{}];
+      }
     }
-    if (questionTypeData) {
-      return questionTypeData;
-    }
-    return {};
+
+    return result;
   }
 
-  function append_params(question_type_questions: any, question: DefaultQuestion){
-    console.log("APPEND_PARAMS:")
-    console.log(question_type_questions)
-    console.log(question)
+  async function fetchAdditionalParams(questiontype: QuestionType): Promise<Record<string, any>> {
+    var table_name = ""
+    if (questiontype == QuestionType.MultipleChoice){
+      table_name = 'multiple_choice_question_choice_table'
+    } else if (questiontype == QuestionType.Dropdown){
+      table_name = 'dropdown_question_option_table'
+    } else {
+      console.error("Not possible for others")
+    }
+    
+    const { data: paramsData, error } = await supabase
+      .from(table_name)
+      .select('*');
+  
+    if (error) {
+      console.error("Error fetching multiple choice choices:", error);
+      return {};
+    }
+  
+    const paramsDict: Record<string, Array<{ choiceid?: string; choicetext?: string; optionid?: string; optiontext?: string }>> = {};
+  
+    paramsData?.forEach(param => {
+      if (!paramsDict[param.questionid]) {
+        paramsDict[param.questionid] = [];
+      }
+      if (questiontype == QuestionType.MultipleChoice){
+        paramsDict[param.questionid].push({"choiceid": param.choiceid, "choicetext": param.choicetext});
+      } else if (questiontype == QuestionType.Dropdown){
+        paramsDict[param.questionid].push({"optionid": param.optionid, "optiontext": param.optiontext});
+      }
+    });
+    console.log(paramsDict)
+    return paramsDict;
+  }
+
+  function append_params(question_types_questions: any, question: DefaultQuestion, choicesData: Record<string, string[]>, optionsData: Record<string, string[]>){
+    const question_type_questions = question_types_questions[question.questiontype]
     const question_type_params = question_type_questions!.find((params: IdType) => params.questionid === question.questionid) || {};
     console.log("Questiontext: " + question.questiontext)
     const { questionid, ...rest } = question_type_params;
-    console.log("Questiontext: " + question.questiontext)
+    if (question.questiontype === QuestionType.MultipleChoice){
+      rest["choices"] = choicesData[question.questionid]
+    } else if(question.questiontype === QuestionType.Dropdown){
+      rest["options"] = optionsData[question.questionid]
+    }
     return {
       ...question,
       params: rest,
@@ -84,20 +146,14 @@ export default async function Page({ params }: { params: { phase_name: string } 
     }
     console.log(questionData)
     // TODO also fetch all other question types
-    const long_text_questions = await fetch_question_type_table(QuestionType.LongText, QuestionTypeTable.LongTextQuestionTable, questionData)
-    const short_text_questions = await fetch_question_type_table(QuestionType.ShortText, QuestionTypeTable.ShortTextQuestionTable, questionData)
-
-    const combinedQuestions = questionData.map(question => {
-      if (question.questiontype === QuestionType.LongText) {
-        return append_params(long_text_questions, question)
-      }
-      if (question.questiontype === QuestionType.ShortText) {
-        return append_params(short_text_questions, question)
-      }
-      return question;
+    const questionTypesData = await fetch_question_type_table(questionData)
+    const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice)
+    const optionsData = await fetchAdditionalParams(QuestionType.Dropdown)
+    const combinedQuestions = questionData.map(async question => {
+      return await append_params(questionTypesData, question, choicesData, optionsData)
     });
   
-    return combinedQuestions;
+    return await Promise.all(combinedQuestions);
   }
 
   const phaseData = await fetch_phase_table()
@@ -105,7 +161,6 @@ export default async function Page({ params }: { params: { phase_name: string } 
   const currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 2); // UTC+2
 
-  const phaseOrder = phaseData.phaseorder
   const startDate = new Date(phaseData.startdate);
   const endDate = new Date(phaseData.enddate);
   const isEditable = (currentDate >= startDate) && (currentDate <= endDate);
@@ -118,97 +173,13 @@ export default async function Page({ params }: { params: { phase_name: string } 
   const phase_questions = await fetch_question_table()
   console.log("Render Questionnaire")
 
-  const questionsData = [
-    {
-      questionid: '2',
-      questiontype: QuestionType.NumberPicker,
-      questionorder: 3,
-      phaseid: "phase-1",
-      mandatory: false,
-      questiontext: 'How old are you?',
-      params: { min: 0, max: 120 }
-    },
-    {
-      questionid: '3',
-      questiontype: QuestionType.DatePicker,
-      questionorder: 4,
-      phaseid: "phase-1",
-      mandatory: false,
-      questiontext: 'How old are you?',
-      params: {}
-    },
-    {
-      questionid: '4',
-      questiontype: QuestionType.ImageUpload,
-      questionorder: 5,
-      phaseid: "phase-1",
-      mandatory: true,
-      questiontext: 'Please upload your profile picture.',
-      params: {}
-    },
-    {
-      questionid: '5',
-      questiontype: QuestionType.DateTimePicker,
-      questionorder: 6,
-      phaseid: "phase-1",
-      mandatory: true,
-      questiontext: 'Please upload your profile picture.',
-      params: {}
-    },
-    {
-      questionid: '6',
-      questiontype: QuestionType.VideoUpload,
-      questionorder: 7,
-      phaseid: "phase-1",
-      mandatory: true,
-      questiontext: 'Please upload your profile picture.',
-      params: {}
-    },
-    {
-      questionid: '7',
-      questiontype: QuestionType.Dropdown,
-      questionorder: 10,
-      phaseid: "phase-1",
-      mandatory: false,
-      questiontext: 'Please select your favourite animal.',
-      params: {options: [
-        { optionId: "4", optionText: "Bird" },
-        { optionId: "5", optionText: "Lion" },
-        { optionId: "6", optionText: "Frog" }
-      ]}
-    },
-    {
-      questionid: '8',
-      questiontype: QuestionType.PDFUpload,
-      questionorder: 8,
-      phaseid: "phase-1",
-      mandatory: true,
-      questiontext: 'Please upload your profile picture.',
-      params: {maxSizeInMB: 2}
-    },
-    {
-      questionid: '9',
-      questiontype: QuestionType.MultipleChoice,
-      questionorder: 9,
-      phaseid: "phase-1",
-      mandatory: false,
-      questiontext: 'Please select your favourite color.',
-      params: {choices: [
-        { choiceId: "1", choiceText: "Red" },
-        { choiceId: "2", choiceText: "Blue" },
-        { choiceId: "3", choiceText: "Green" }
-      ]}
-    },
-  ];
-
-
 
   return (
     <div>My Phase: { phaseName }
       { !isEditable && <div>Derzeit nicht bearbeitbar!</div> }
       <div>
         <form>
-          <Questionnaire questions={questionsData} />
+          <Questionnaire questions={phase_questions} />
         </form>
       </div>
     </div>
