@@ -2,7 +2,7 @@ import { FC } from 'react';
 import ShortTextQuestionType, { ShortTextQuestionTypeProps } from "@/components/questiontypes/shorttext_questiontype";
 import LongTextQuestionType, { LongTextQuestionTypeProps } from "@/components/questiontypes/longtext_questiontype"
 import VideoUploadQuestionType, { VideoUploadQuestionTypeProps } from "@/components/questiontypes/videoupload_questiontype";
-import DateTimePickerQuestionType, { DateTimePickerQuestionTypeProps } from "@/components/questiontypes/datetimepicker_questiontype";
+import DatetimePickerQuestionType, { DatetimePickerQuestionTypeProps } from "@/components/questiontypes/datetimepicker_questiontype";
 import DatePickerQuestionType, { DatePickerQuestionTypeProps } from "@/components/questiontypes/datepicker_questiontype";
 import NumberPickerQuestionType, { NumberPickerQuestionTypeProps } from "@/components/questiontypes/numberpicker_questiontype";
 import ImageUploadQuestionType, { ImageUploadQuestionTypeProps } from "@/components/questiontypes/imageupload_questiontype";
@@ -14,7 +14,7 @@ export enum QuestionType {
     ShortText = "shortText",
     LongText = "longText",
     NumberPicker = "numberPicker",
-    DateTimePicker = "dateTimePicker",
+    DatetimePicker = "datetimePicker",
     DatePicker = "datePicker",
     ImageUpload = "imageUpload",
     VideoUpload = "videoUpload",
@@ -26,21 +26,21 @@ export enum QuestionType {
 export enum QuestionTypeTable {
     ShortTextQuestionTable = "short_text_question_table",
     LongTextQuestionTable = "long_text_question_table",
-    //NumberPickerQuestionTable = "MISSING",
-    //DateTimePickerQuestionTable = "MISSING",
-    //DatePickerQuestionTable = "MISSING",
-    //ImageUploadQuestionTable = "MISSING",
-    VideoUploadQuestionTable = "video_question_table",
-    //PDFUploadQuestionTable = "MISSING",
+    NumberPickerQuestionTable = "number_picker_question_table",
+    DatetimePickerQuestionTable = "datetime_picker_question_table",
+    DatePickerQuestionTable = "date_picker_question_table",
+    ImageUploadQuestionTable = "image_upload_question_table",
+    VideoUploadQuestionTable = "image_upload_question_table",
+    PdfUploadQuestionTable = "pdf_upload_question_table",
     MultipleChoiceQuestionTable = "multiple_choice_question_table",
-    //DropdownQuestionTable = "MISSING",
+    DropdownQuestionTable = "dropdown_question_table",
 }
 
 type QuestionTypeSelectorProps = {
     shortText: FC<ShortTextQuestionTypeProps>,
     longText: FC<LongTextQuestionTypeProps>,
     videoUpload: FC<VideoUploadQuestionTypeProps>,
-    dateTimePicker: FC<DateTimePickerQuestionTypeProps>,
+    datetimePicker: FC<DatetimePickerQuestionTypeProps>,
     datePicker: FC<DatePickerQuestionTypeProps>,
     numberPicker: FC<NumberPickerQuestionTypeProps>,
     imageUpload: FC<ImageUploadQuestionTypeProps>,
@@ -54,7 +54,7 @@ const QuestionTypeSelector: QuestionTypeSelectorProps = {
     shortText: ShortTextQuestionType,
     longText: LongTextQuestionType,
     videoUpload: VideoUploadQuestionType,
-    dateTimePicker: DateTimePickerQuestionType,
+    datetimePicker: DatetimePickerQuestionType,
     datePicker: DatePickerQuestionType,
     numberPicker: NumberPickerQuestionType,
     imageUpload: ImageUploadQuestionType,

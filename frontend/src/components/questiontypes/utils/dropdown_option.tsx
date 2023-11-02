@@ -1,14 +1,14 @@
 import React from 'react';
 
 export interface DropdownOptionProps {
-    optionId: string;
-    optionText: string;
+    optionid: string;
+    optiontext: string;
 }
 
-export const DropdownOption: React.FC<DropdownOptionProps> = ({ optionId, optionText }) => {
+export const DropdownOption: React.FC<DropdownOptionProps> = ({ optionid, optiontext }) => {
     return (
-        <option key={optionId} value={optionId}>
-            {optionText}
+        <option key={optionid} value={optionid}>
+            {optiontext}
         </option>
     );
 };
