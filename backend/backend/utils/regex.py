@@ -39,3 +39,11 @@ def rational_number_check(string: str) -> bool:
     '''
     regex = r"^(-?)(0|[1-9]\d*)([.](\d*)[1-9])?$"
     return bool(re.match(regex, string))
+
+
+def url_phase_segment_check(string: str) -> bool:
+    '''
+    Simple check if string contains a valid phase segment for the URL.
+    '''
+    regex = r"^(_|-|[a-z]|[A-Z]|[0-9])+$"
+    return bool(re.match(regex, string))
