@@ -7,9 +7,8 @@ def phone_number_regex_check(string: str) -> bool:
     See: https://uibakery.io/regex-library/phone-number-python
     '''
     string = string.replace(' ', '')
-    regex_world = '^\\+?[1-9][0-9]{7,14}$'
-    regex_german = '^0[0-9]{3}[0-9]{7}$'
-    return bool(re.match(regex_world, string)) or bool(re.match(regex_german, string))
+    regex_ = r'^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$'
+    return bool(re.match(regex_, string))
 
 
 def email_regex_check(string: str) -> bool:
@@ -26,19 +25,17 @@ def email_regex_check(string: str) -> bool:
 
 def natural_number_check(string: str) -> bool:
     '''
-    Simple check if string contains a natural number (>=0). Leading '+' is allowed.
+    Simple check if string contains a natural number (>=0). Leading '+' is not allowed.
     NOTE: if superscripts like ² and fraction value like ½ are allowed, use python's isdigit() instead.
     '''
-    regex = "^\\d+$"
-    string = string[1:] if string.startswith('+') else string
+    regex = r"^[1-9]\d+$"
     return bool(re.match(regex, string))
 
 
 def rational_number_check(string: str) -> bool:
     '''
-    Simple check if string contains a rational number. Leading '+' or '-' are allowed.
+    Simple check if string contains a rational number. Leading '+' is not allowed.
     NOTE: if superscripts like ² and fraction value like ½ are allowed, use python's isnumeric() instead.
     '''
-    regex = "^(?:-(?:[1-9](?:\\d{0,2}(?:,\\d{3})+|\\d*))|(?:0|(?:[1-9](?:\\d{0,2}(?:,\\d{3})+|\\d*))))(?:.\\d+|)$"
-    string = string[1:] if string.startswith(('+', '-')) else string
+    regex = r"^(-?)(0|[1-9]\d*)([.](\d*)[1-9])?$"
     return bool(re.match(regex, string))

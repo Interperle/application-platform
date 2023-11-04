@@ -17,6 +17,8 @@ questions:
         order: 1
         question: "What's your name?"
         mandatory: true
+        maxLength: 20
+        formatting: "PHONE_NUMBER"
       - questionType: longText
         order: 2
         question: "What's your name and birthday?"

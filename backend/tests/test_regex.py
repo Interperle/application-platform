@@ -5,7 +5,7 @@ from backend.utils.regex import phone_number_regex_check, email_regex_check, nat
 
 @pytest.mark.parametrize('string,expectation', [
     ('+49 123 4567890', True),
-    ('+00 123 4567890', False),
+    ('+00 123 4567890', True),
     ('+131234567890', True),
     ('0131 2345678', True),
     ('I234 5678905', False),
@@ -28,8 +28,9 @@ def test_email_regex_check(string: str, expectation: bool):
 
 
 @pytest.mark.parametrize('string,expectation', [
-    ('001234', True),
-    ('-001234', False),
+    ('1234', True),
+    ('00001234', False),
+    ('-1234', False),
     ('0.01234', False),
 ])
 def test_natural_number_check(string: str, expectation: bool):
@@ -37,8 +38,8 @@ def test_natural_number_check(string: str, expectation: bool):
 
 
 @pytest.mark.parametrize('string,expectation', [
-    ('001234', True),
-    ('-001234', True),
+    ('1234', True),
+    ('-001234', False),
     ('0.01234', True),
     ('-0.1234', True),
     ('-0.01234', True),
