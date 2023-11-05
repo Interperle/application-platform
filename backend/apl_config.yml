@@ -17,12 +17,13 @@ questions:
         order: 1
         question: "What's your name?"
         mandatory: true
-        maxLength: 20
-        formatting: "PHONE_NUMBER"
+        maxTextLength: 20
+        formattingRegex: "PHONE_NUMBER"
       - questionType: longText
         order: 2
         question: "What's your name and birthday?"
         mandatory: true
+        maxTextLength: 200
       - questionType: multipleChoice
         order: 4
         question: "What's your name and birthday?"
@@ -90,11 +91,13 @@ questions:
       - questionType: shortText
         order: 1
         question: "What's your name?"
+        maxTextLength: 20
         mandatory: true
       - questionType: longText
         order: 2
         question: "What's your name and birthday?"
         mandatory: true
+        maxTextLength: 200
       - questionType: multipleChoice
         order: 4
         question: "What's your name and birthday?"

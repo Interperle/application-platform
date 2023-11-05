@@ -12,8 +12,12 @@ DEFAULT_PARAMS = {
 }
 
 ADDITIONAL_PARAMS = {
-    QuestionType.SHORT_TEXT: {},
-    QuestionType.LONG_TEXT: {},
+    QuestionType.SHORT_TEXT: {
+        'maxTextLength': int,
+    },
+    QuestionType.LONG_TEXT: {
+        'maxTextLength': int,
+    },
     QuestionType.MULTIPLE_CHOICE: {
         'minAnswers': int,
         'maxAnswers': int,
