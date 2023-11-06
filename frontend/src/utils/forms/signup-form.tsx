@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import router from 'next/router'
+import { getURL } from '../helpers'
 
 
 export default function SignUpForm() {
@@ -32,7 +33,7 @@ export default function SignUpForm() {
       }}
       showLinks={false}
       providers={[]}
-      redirectTo="/login"
+      redirectTo={`${getURL()}/`}
       localization={{
         variables: {
           sign_up: {
