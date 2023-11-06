@@ -1,6 +1,6 @@
 import pytest
 
-from backend.utils.regex import phone_number_regex_check, email_regex_check, natural_number_check, rational_number_check
+from backend.utils.utils_regex import phone_number_regex_check, email_regex_check, natural_number_check, rational_number_check
 
 
 @pytest.mark.parametrize('string,expectation', [

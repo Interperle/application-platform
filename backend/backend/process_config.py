@@ -5,12 +5,13 @@ from backend.utils.utils_file import read_yaml_file
 from backend.utils.utils_supabase import init_supabase
 from backend.enums.question_type import QuestionType
 from backend.validate_config import DEFAULT_PARAMS, MANDATORY_PARAMS, OPTIONAL_PARAMS, QUESTION_TYPES_DB_TABLE, run_structure_checks
-from backend.utils.regex import REGEX
+from backend.utils.consts import REGEX_JS
 
 log = Logger(__name__)
 
 
-def process_config(config_data: str):
+def process_config():
+    config_data = read_yaml_file('apl_config.yml')
     run_structure_checks(config_data)
 
     supabase = init_supabase()
@@ -92,7 +93,7 @@ def create_data_question_type_table(question_id: str, question_type: str, questi
         if opt_param not in question:
             continue
         if opt_param == 'formattingRegex':
-            data_question_type_table['formattingRegex'] = REGEX.get(question[opt_param], None)
+            data_question_type_table[opt_param.lower()] = REGEX_JS.get(question[opt_param], None)
     return data_question_type_table
 
 
@@ -111,5 +112,4 @@ def create_data_option_table(questionId: str, optionText: str) -> dict:
 
 
 if __name__ == '__main__':
-    config_data = read_yaml_file('backend/apl_config.yml')
-    process_config(config_data)
+    process_config()
