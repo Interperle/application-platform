@@ -40,8 +40,9 @@ jspm_packages
 .node_repl_history
 .next
 
-# All local Environment Variables
+# ignore env files
+*.env
 *.env.local
 
-# Pycache
-**/__pycache__
+# pycache
+*__pycache__
