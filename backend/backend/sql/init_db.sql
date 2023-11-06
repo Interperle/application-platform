@@ -67,7 +67,7 @@ CREATE TABLE
   LONG_TEXT_QUESTION_TABLE (
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid),
-    maxtextlength INT NOT NULL,
+    maxtextlength INT NOT NULL
   );
 
 ALTER TABLE
