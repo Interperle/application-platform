@@ -4,7 +4,7 @@ from backend.utils.consts import DATETIME_FORMAT
 from backend.utils.utils_file import read_yaml_file
 from backend.utils.utils_supabase import init_supabase
 from backend.enums.question_type import QuestionType
-from backend.validate_config import ADDITIONAL_PARAMS, QUESTION_TYPES_DB_TABLE, run_structure_checks
+from backend.validate_config import DEFAULT_PARAMS, MANDATORY_PARAMS, OPTIONAL_PARAMS, QUESTION_TYPES_DB_TABLE, run_structure_checks
 from backend.utils.regex import REGEX
 
 log = Logger(__name__)
@@ -35,7 +35,6 @@ def process_config(config_data: str):
             log.debug(f'Create QuestionType {question_type}')
             question_id = response_question_table.data[0]['questionid']
             data_question_type_table = create_data_question_type_table(question_id, question_type, question)
-            data_question_table
 
             response_question_type_table = supabase.table(QUESTION_TYPES_DB_TABLE[question_type]) \
                                                                         .insert(data_question_type_table).execute()
@@ -48,11 +47,9 @@ def process_config(config_data: str):
                     response_list_table = None
                     try:
                         response_list_table = supabase.table(table_name).insert(data_list_table).execute()
-                    except Exception as e:
-                        pass
+                        log.info(str(response_list_table))
+                    except Exception:
                         log.info('Failed to insert data into multiple_choice_question_choice_table')
-                    log.info(str(response_list_table)) if response_list_table else None
-
             elif question_type == QuestionType.DROPDOWN:
                 for answer in question['Answers']:
                     data_list_table = create_data_option_table(question_id, answer)
@@ -60,11 +57,9 @@ def process_config(config_data: str):
                     response_list_table = None
                     try:
                         response_list_table = supabase.table(table_name).insert(data_list_table).execute()
-                    except Exception as e:
-                        pass
+                        log.info(str(response_list_table))
+                    except Exception:
                         log.info('Failed to insert data into dropdown_question_option_table')
-                    log.info(str(response_list_table))
-
         log.info(f'Processed Phase {phase} successfully')
 
 
@@ -90,11 +85,14 @@ def create_data_questions_table(questiontype: QuestionType, ordernumber: int, ph
 
 def create_data_question_type_table(question_id: str, question_type: str, question: dict) -> dict:
     data_question_type_table = {'questionid': question_id}
-    for param in ADDITIONAL_PARAMS.get(question_type, {}):
-        if param == 'formattingRegex':
-            data_question_type_table['formattingRegex'] = REGEX.get(question[param], None)
-        elif param != 'Answers':
+    for param in MANDATORY_PARAMS.get(question_type, {}):
+        if param != 'Answers' and param.lower() not in DEFAULT_PARAMS:
             data_question_type_table[param.lower()] = str(question[param])
+    for opt_param in OPTIONAL_PARAMS.get(question_type, {}):
+        if opt_param not in question:
+            continue
+        if opt_param == 'formattingRegex':
+            data_question_type_table['formattingRegex'] = REGEX.get(question[opt_param], None)
     return data_question_type_table
 
 

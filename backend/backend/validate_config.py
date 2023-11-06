@@ -11,46 +11,50 @@ DEFAULT_PARAMS = {
     'question': str,
 }
 
-ADDITIONAL_PARAMS = {
+# Define the specific parameters for each question type
+SPECIFIC_PARAMS = {
+    'maxTextLength': int,
+    'minAnswers': int,
+    'maxAnswers': int,
+    'userInput': bool,
+    'Answers': list,
+    'maxFileSizeInMB': float,
+    'minDate': date,
+    'maxDate': date,
+    'minDatetime': datetime,
+    'maxDatetime': datetime,
+    'minNumber': int,
+    'maxNumber': int,
+    'allowedFileTypes': list,
+}
+
+# Define which specific parameters are used by each question type
+QUESTION_TYPE_PARAMS = {
+    QuestionType.SHORT_TEXT: ['maxTextLength'],
+    QuestionType.LONG_TEXT: ['maxTextLength'],
+    QuestionType.MULTIPLE_CHOICE: ['minAnswers', 'maxAnswers', 'userInput', 'Answers'],
+    QuestionType.VIDEO_UPLOAD: ['maxFileSizeInMB'],
+    QuestionType.DATE_PICKER: ['minDate', 'maxDate'],
+    QuestionType.DATETIME_PICKER: ['minDatetime', 'maxDatetime'],
+    QuestionType.NUMBER_PICKER: ['minNumber', 'maxNumber'],
+    QuestionType.PDF_UPLOAD: ['maxFileSizeInMB'],
+    QuestionType.IMAGE_UPLOAD: ['maxFileSizeInMB', 'allowedFileTypes'],
+    QuestionType.DROPDOWN: ['minAnswers', 'maxAnswers', 'Answers', 'userInput'],
+}
+
+# Construct the mandatory parameters dictionary
+MANDATORY_PARAMS = {
+    question_type: {param: SPECIFIC_PARAMS[param] for param in params}
+    for question_type, params in QUESTION_TYPE_PARAMS.items()
+}
+
+# Merge the default parameters with the specific ones for each question type
+for question_type in MANDATORY_PARAMS:
+    MANDATORY_PARAMS[question_type].update(DEFAULT_PARAMS)
+
+OPTIONAL_PARAMS = {
     QuestionType.SHORT_TEXT: {
-        'maxTextLength': int,
-    },
-    QuestionType.LONG_TEXT: {
-        'maxTextLength': int,
-    },
-    QuestionType.MULTIPLE_CHOICE: {
-        'minAnswers': int,
-        'maxAnswers': int,
-        'userInput': bool,
-        'Answers': list,
-    },
-    QuestionType.VIDEO_UPLOAD: {
-        'maxFileSizeInMB': float,
-    },
-    QuestionType.DATE_PICKER: {
-        'minDate': date,
-        'maxDate': date,
-    },
-    QuestionType.DATETIME_PICKER: {
-        'minDatetime': datetime,
-        'maxDatetime': datetime,
-    },
-    QuestionType.NUMBER_PICKER: {
-        'minNumber': int,
-        'maxNumber': int,
-    },
-    QuestionType.PDF_UPLOAD: {
-        'maxFileSizeInMB': float,
-    },
-    QuestionType.IMAGE_UPLOAD: {
-        'maxFileSizeInMB': float,
-        'allowedFileTypes': list,
-    },
-    QuestionType.DROPDOWN: {
-        'minAnswers': int,
-        'maxAnswers': int,
-        'Answers': list,
-        'userInput': bool,
+        'formattingRegex': str,
     },
 }
 
@@ -100,25 +104,25 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                     f"Invalid 'questionType': {question['questionType']}. Has to be one of the followings: {QuestionType.list_enums()}"
                 )
 
-            for param, paramtype in DEFAULT_PARAMS.items():
-                if param not in question or not isinstance(question[param], paramtype):
-                    raise ValueError(
-                        f"The {question_type} question {question} is missing the default '{param}' field or it's not type of {paramtype}."
-                    )
-
             order = question.get('order')
             if order in seen_orders_in_phase:
-                raise ValueError(f"The order number {order} in phase {phase} is NOT Unique!")
+                raise ValueError(f"The order number {order} in phase '{phase}' is NOT Unique!")
             seen_orders_in_phase.add(order)
 
-            for param, paramtype in ADDITIONAL_PARAMS.get(question_type, {}).items():
+            for param, paramtype in MANDATORY_PARAMS.get(question_type, {}).items():
                 if param not in question:
                     raise ValueError(
-                        f"The {question_type} question {question} is missing the additional '{param}' field or it's not type of {paramtype}."
+                        f"The {question_type} question {question} is missing the parameter '{param}' field!"
                     )
                 if not isinstance(question[param], paramtype):
                     raise ValueError(
                         f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
+                    )
+            
+            for param, paramtype in OPTIONAL_PARAMS.get(question_type, {}).items():
+                if param in question and not isinstance(question[param], paramtype):
+                    raise ValueError(
+                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
                     )
 
 
