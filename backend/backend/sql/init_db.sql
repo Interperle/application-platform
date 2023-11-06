@@ -10,7 +10,7 @@ CREATE TABLE
     lastupdate TIMESTAMPTZ,
     created TIMESTAMPTZ NOT NULL,
     name VARCHAR(255) NOT NULL,
-    phone VARCHAR(255) NOT NULL
+    phone VARCHAR(20) NOT NULL
   );
 
 ALTER TABLE
@@ -55,7 +55,9 @@ ALTER TABLE
 CREATE TABLE
   SHORT_TEXT_QUESTION_TABLE (
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid)
+    FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid),
+    maxtextlength INT NOT NULL,
+    formattingregex VARCHAR(255)
   );
 
 ALTER TABLE
@@ -64,7 +66,8 @@ ALTER TABLE
 CREATE TABLE
   LONG_TEXT_QUESTION_TABLE (
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid)
+    FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid),
+    maxtextlength INT NOT NULL
   );
 
 ALTER TABLE
