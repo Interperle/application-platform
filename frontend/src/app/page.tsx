@@ -40,8 +40,8 @@ export default function Home() {
             </li>
           </ul>
           <p>
-            Weitere Details zum Ablauf und der Bewertung könnt Ihr auch nochmal in unserem <
-            href="https://generation-d.org/wp-content/uploads/2022/12/Ablauf_des_Bewerbungsprozesses_2023.pdf" target='_blank' className="font-bold font-underline">Leitfaden</Link> nachlesen.
+            Weitere Details zum Ablauf und der Bewertung könnt Ihr auch nochmal in unserem 
+            <Link href="https://generation-d.org/wp-content/uploads/2022/12/Ablauf_des_Bewerbungsprozesses_2023.pdf" target='_blank' className="font-bold font-underline">Leitfaden</Link> nachlesen.
           </p>
 
           <h2 className="font-bold">Kurz noch einige allgemeine Hinweise:</h2>
