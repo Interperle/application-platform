@@ -8,7 +8,6 @@ import Link from 'next/link'
 
 export default function Home() {
   const log = new Logger("Overview Page")
-  log.debug("TEST", "1234567");
   return (
     <main className="grid-cols-1 flex flex-col items-start justify-between p-24 max-w-5xl bg-[#FFFFFF] text-[#153757] space-y-4">
       <div className='flex flex-col items-start justify-between space-y-4'>
