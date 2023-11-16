@@ -1,7 +1,7 @@
 import Questionnaire, { DefaultQuestion } from "@/components/questions";
 import { Question } from "@/components/questions";
 import { QuestionType, QuestionTypeTable } from "@/components/questiontypes/utils/questiontype_selector";
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { supabase } from '@/utils/supabase_server';
 import { RedirectType, redirect } from "next/navigation";
 
 
@@ -12,7 +12,6 @@ type IdType = {
 
 export default async function Page({ params }: { params: { phase_name: string } }) {
   const phaseName = params.phase_name
-  const supabase = createClientComponentClient({supabaseUrl: "https://uppfhawtpuoynrrijion.supabase.co", supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwcGZoYXd0cHVveW5ycmlqaW9uIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5NDk4OTM5MywiZXhwIjoyMDEwNTY1MzkzfQ.tuX_RUFy1C9_SP1x8XTCiRTkahmNSsUtdWP6CBnqzDs"})
   console.log("")
   console.log("Phasename: " + phaseName)
   async function fetch_phase_table(){

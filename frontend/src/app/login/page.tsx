@@ -3,10 +3,10 @@
 import Image from 'next/image'
 import { openPopup } from "@/store/slices/popupSlice";
 import { useAppDispatch } from "@/store/store";
-import SignInForm from "@/utils/forms/signin-form";
-import SignUpForm from "@/utils/forms/signup-form";
-import ForgottenPasswordForm from "@/utils/forms/forgottenpassword-form";
-import Popup from '@/utils/popup';
+import SignInForm from "@/components/forms/signin-form";
+import SignUpForm from "@/components/forms/signup-form";
+import ForgottenPasswordForm from "@/components/forms/forgottenpassword-form";
+import Popup from '@/components/popup';
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -32,9 +32,6 @@ export default function Login() {
         <div className='text-left'>
           <SignInForm/>
         </div>
-        <button type="button" onClick={() => dispatch(openPopup(<ForgottenPasswordForm/>))} className="border rounded px-4 py-2 text-[#FDCC89] bg-[#153757]">
-            Passwort vergessen
-        </button>
       </div>
     </main>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import UpdatePasswordForm from '@/utils/forms/updatepassword-form';
+import UpdatePasswordForm from '@/components/forms/updatepassword-form';
 
 export default function Login() {
   return (
