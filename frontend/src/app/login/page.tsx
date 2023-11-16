@@ -32,9 +32,6 @@ export default function Login() {
         <div className='text-left'>
           <SignInForm/>
         </div>
-        <button type="button" onClick={() => dispatch(openPopup(<ForgottenPasswordForm/>))} className="border rounded px-4 py-2 text-[#FDCC89] bg-[#153757]">
-            Passwort vergessen
-        </button>
       </div>
     </main>
   )

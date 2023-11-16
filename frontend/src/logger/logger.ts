@@ -13,17 +13,22 @@ class Logger {
   logger: pino.Logger;
 
   constructor(module: string) {
+    const apiKey = process.env.NEXT_PUBLIC_LOGFLARE_API_TOKEN;
+    const sourceToken = process.env.NEXT_PUBLIC_LOGFLARE_CLIENT_TOKEN;
+    if (!apiKey || !sourceToken) {
+      throw new Error("Logflare API key and source token must be configured!");
+    }
     const stream = createWriteStream({
-      apiKey: process.env.NEXT_PUBLIC_LOGFLARE_API_TOKEN!,
-      sourceToken: process.env.NEXT_PUBLIC_LOGFLARE_CLIENT_TOKEN!,
+      apiKey: apiKey,
+      sourceToken: sourceToken,
       transforms: {
         numbersToFloats: true,
       },
     });
 
     const send = createPinoBrowserSend({
-      apiKey: process.env.LOGFLARE_API_TOKEN!,
-      sourceToken: process.env.LOGFLARE_SERVER_TOKEN!,
+      apiKey: apiKey,
+      sourceToken: sourceToken,
       transforms: {
         numbersToFloats: true,
       },

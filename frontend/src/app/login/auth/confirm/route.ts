@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
-  const next = searchParams.get('next') ?? '/'
+  const next = searchParams.get('next') ?? `${getURL()}/`
 
   if (token_hash && type) {
     const cookieStore = cookies()
@@ -41,5 +41,5 @@ export async function GET(request: Request) {
   }
 
   // return the user to an error page with some instructions
-  return NextResponse.redirect(`${getURL()}/login/auth/auth-code-error`)
+  return NextResponse.redirect(`${getURL()}auth/auth-code-error`)
 }
