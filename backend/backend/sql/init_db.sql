@@ -351,3 +351,6 @@ CREATE POLICY select_policy ON IMAGE_UPLOAD_QUESTION_TABLE
 
 CREATE POLICY select_policy ON USER_ROLES_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_profile ON user_profiles_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
