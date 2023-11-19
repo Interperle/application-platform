@@ -43,7 +43,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
         },
       }
     )
-    const { data, error } = await supabase.auth.signUp({
+    const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.password,
       options: {
@@ -52,11 +52,23 @@ export async function signUpUser(prevState: any, formData: FormData) {
       },
     }) 
     revalidatePath("/login");
-    if (error){
-      console.log(error)
-      return {message: error.message}
+    if (userError){
+      console.log(userError)
+      return {message: userError.message}
+    }
+    console.log(userData)
+    console.log("Success")
+
+    const { data: userProfileData, error: userProfileError } = await supabaseServiceRole.from(
+      'user_profiles_table'
+    ).insert({'userid': userData.user!.id, 'userrole': 1})
+
+    if (userProfileError){
+      console.log(userProfileError)
+      return {message: userProfileError.message}
     }
     console.log("Success")
+
     return {message: `Wir haben dir eine Email geschickt!`}
   } catch (e){
     console.log("Fehler")

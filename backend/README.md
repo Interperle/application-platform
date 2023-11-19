@@ -6,6 +6,8 @@
 ```mermaid
 erDiagram
     AUTHENTICATION-TABLE ||--|{ APPLICATION-TABLE : has
+    AUTHENTICATION-TABLE ||--|{ USER-PROFILES-TABLE : has
+    USER-PROFILES-TABLE ||--|{ USER-ROLES-TABLE : has
     APPLICATION-TABLE ||--|| QUESTION-TABLE : contains
     QUESTION-TABLE ||--|| PHASE-TABLE : is_divided_in
     QUESTION-TABLE ||--|| ANSWER-TABLE : has
@@ -17,6 +19,16 @@ erDiagram
         string password
         datetime lastlogin
         boolean emailverified
+    }
+    
+    USER-PROFILES-TABLE {
+        string userid PK
+        int userrole FK
+    }
+
+    USER-ROLES-TABLE {
+        string userroleid PK
+        string userrolename
     }
 
     APPLICATION-TABLE {
@@ -44,6 +56,7 @@ erDiagram
         string phaseid FK
         boolean mandatory
         string questiontext
+        string questionnote
     }
 
     ANSWER-TABLE {
