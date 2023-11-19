@@ -284,6 +284,28 @@ CREATE TABLE
 ALTER TABLE
   DROPDOWN_ANSWER_TABLE ENABLE ROW LEVEL SECURITY;
 
+
+
+-- Roles Management
+CREATE TABLE USER_ROLES_TABLE (
+    userroleid SERIAL PRIMARY KEY,
+    userrolename VARCHAR(50) UNIQUE NOT NULL
+);
+
+INSERT INTO USER_ROLES_TABLE (userrolename) VALUES ('applicant'), ('evaluator'), ('admin');
+
+ALTER TABLE
+  USER_ROLES_TABLE ENABLE ROW LEVEL SECURITY;
+
+create table PUBLIC.USER_PROFILES_TABLE (
+  userid uuid not null references auth.users on delete cascade,
+  userrole INT REFERENCES user_roles_table(userroleid),
+
+  PRIMARY KEY (userid)
+);
+
+alter table PUBLIC.USER_PROFILES_TABLE enable row level security;
+
 -- RLS SELECT POLICIES
 CREATE POLICY select_policy ON PHASE_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
@@ -325,4 +347,7 @@ CREATE POLICY select_policy ON PDF_UPLOAD_QUESTION_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY select_policy ON IMAGE_UPLOAD_QUESTION_TABLE
+  FOR SELECT USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_policy ON USER_ROLES_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
