@@ -11,7 +11,7 @@ export default async function getOverviewPageText() {
     const currentPhase = await extractCurrentPhase(currentTime)
 
     var markdownFilePath: string
-    if (currentPhase.phaseorder == 0){
+    if (currentPhase.phaseorder == -1){
         markdownFilePath = path.join('public', 'texts', 'welcome.md');
     } else if(new Date(currentPhase.enddate) < currentTime) {
         markdownFilePath = path.join('public', 'texts', currentPhase.phasename, 'evaluating.md');

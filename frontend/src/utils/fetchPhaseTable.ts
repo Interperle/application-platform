@@ -50,7 +50,7 @@ export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
     const sortedPhases = phasesData!.sort((a, b) => a.phaseorder - b.phaseorder);
 
     var previous_phase: Phase
-    previous_phase = {phaseid: "", phasename: "", phaseorder: 0, startdate: "", enddate: ""}
+    previous_phase = {phaseid: "", phasename: "", phaseorder: -1, startdate: "", enddate: ""}
     for (const phase of sortedPhases) {
       const startDate = new Date(phase.startdate);
       const endDate = new Date(phase.enddate);
