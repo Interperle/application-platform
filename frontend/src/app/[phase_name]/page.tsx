@@ -2,7 +2,8 @@ import Questionnaire, { DefaultQuestion } from "@/components/questions";
 import { Question } from "@/components/questions";
 import { QuestionType, QuestionTypeTable } from "@/components/questiontypes/utils/questiontype_selector";
 import { fetch_phase_by_name } from "@/utils/fetchPhaseTable";
-import { supabase } from '@/utils/supabase_server';
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
 
 
@@ -15,7 +16,19 @@ export default async function Page({ params }: { params: { phase_name: string } 
   const phaseName = params.phase_name
   console.log("")
   console.log("Phasename: " + phaseName)
+  const cookieStore = cookies()
 
+  const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+          cookies: {
+          get(name: string) {
+              return cookieStore.get(name)?.value
+          },
+          },
+      }
+  )
   async function fetch_question_type_table(questions: DefaultQuestion[]){
     const result: Record<QuestionType, any> = {
       [QuestionType.ShortText]: {},

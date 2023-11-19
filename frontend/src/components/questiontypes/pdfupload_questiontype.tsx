@@ -5,7 +5,7 @@ export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxSizeInMB: number;
 }
 
-const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ questionid, mandatory, question_text, maxSizeInMB }) => {
+const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ questionid, mandatory, question_text, questionnote, maxSizeInMB }) => {
   const fileInputRef = null;
   const [fileSizeError, setFileSizeError] = [null, console.log];
 
@@ -27,7 +27,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ questioni
   };
 
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text}>
+    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
         <input
           ref={fileInputRef}
           type="file"

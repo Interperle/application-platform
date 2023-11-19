@@ -37,7 +37,7 @@ class Logger:
         try:
             response = requests.post(self.api_url, headers=self.HEADER, json=payload, timeout=5.0)
             if response.status_code != 200:
-                self.logger.error("Failed to send log to API. Status code: %s", response.status_code)
+                self.logger.error("Failed to send log to API. Status code: %s and Reason: %s", response.status_code, response.reason)
                 assert False
         except requests.RequestException as e:
             self.logger.error("Failed to send log to API. Error: %s", str(e))

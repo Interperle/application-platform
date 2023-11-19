@@ -3,9 +3,9 @@ import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {}
 
-const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({ questionid, mandatory, question_text }) => {
+const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({ questionid, mandatory, question_text, questionnote }) => {
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text}>
+    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
       <div className="mt-1">
         <input
           type="date"
