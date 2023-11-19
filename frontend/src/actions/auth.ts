@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from "next/navigation";
+import { supabaseServiceRole } from "@/utils/supabase_servicerole";
 
 
 export async function signUpUser(prevState: any, formData: FormData) {
@@ -174,6 +175,96 @@ export async function sendResetPasswordLink(prevState: any, formData: FormData) 
 
     revalidatePath("/login");
     return {message: `Send "Reset Password Email" successfully`}
+  } catch (e){
+    return {message: "Error"}
+  }
+}
+
+
+export async function deleteUser() {
+  console.log("Action")
+  try {
+    const cookieStore = cookies()
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            cookieStore.set({ name, value, ...options })
+          },
+          remove(name: string, options: CookieOptions) {
+            cookieStore.set({ name, value: '', ...options })
+          },
+        },
+      }
+    )
+    const { data: userData, error: userError } = await supabase.auth.getUser()
+    if (userError) {
+      console.log(userError)
+    }
+    console.log()
+    const { data, error } = await supabaseServiceRole.auth.admin.deleteUser(userData.user!.id)
+    if (error) {
+      console.log(error)
+    }
+    revalidatePath("/");
+  } catch (e){
+    return {message: "Error"}
+  }
+  redirect("/login")
+}
+
+
+
+export async function updatePassword(prevState: any, formData: FormData) {
+  console.log("Action")
+  const schema = z.object({
+    // For Implementation with Old Password Check: https://github.com/orgs/supabase/discussions/4042#discussioncomment-1707356
+    //old_password: z.string().min(1),
+    new_password: z.string().min(1),
+    reenter_password: z.string().min(1)
+  })
+  const updatePasswordFormData = schema.parse({
+    //old_password: formData.get("old_password"),
+    new_password: formData.get("new_password"),
+    reenter_password: formData.get("reenter_password")
+  })
+  if (updatePasswordFormData.new_password != updatePasswordFormData.reenter_password){
+    return {message: "Passwords don't match"}
+  }
+  try {
+    const cookieStore = cookies()
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            cookieStore.set({ name, value, ...options })
+          },
+          remove(name: string, options: CookieOptions) {
+            cookieStore.set({ name, value: '', ...options })
+          },
+        },
+      }
+    )
+    const { data: userData, error: userError } = await supabase.auth.updateUser({
+      password: updatePasswordFormData.new_password
+    })
+    if (userError) {
+      console.log(userError)
+    }
+    console.log(userData)
+    revalidatePath("/");
   } catch (e){
     return {message: "Error"}
   }

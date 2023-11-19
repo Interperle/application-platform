@@ -19,9 +19,16 @@ const Apl_Header: React.FC = () => {
                 </Link>
             </div>
             <div className="flex space-x-4">
-                <button className="text-[#153757] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-#537575">
-                FAQs
-                </button>
+                <Link href="/faqs">
+                    <span className="text-[#153757] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-#537575">
+                        FAQs
+                    </span>
+                </Link>
+                <Link href="/settings">
+                    <span className="text-[#153757] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-#537575">
+                        Settings
+                    </span>
+                </Link>
                 <form action={signOutAction}>
                     <button type="submit" className="border rounded px-4 py-2 text-[#FDCC89] bg-[#153757]">
                         Ausloggen
