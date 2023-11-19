@@ -9,6 +9,7 @@ export interface DefaultQuestion {
   phaseid: string;
   mandatory: boolean;
   questiontext: string;
+  questionnote: string;
 }
 
 export interface Question extends DefaultQuestion {
@@ -36,6 +37,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
               questionid={question.questionid}
               mandatory={question.mandatory}
               question_text={question.questiontext}
+              questionnote={question.questionnote}
               {...question.params}
             />
           );

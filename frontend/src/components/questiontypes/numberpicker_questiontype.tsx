@@ -6,9 +6,9 @@ export interface NumberPickerQuestionTypeProps extends DefaultQuestionTypeProps 
   max: number;
 }
 
-const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({ questionid, mandatory, question_text, min, max }) => {
+const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({ questionid, mandatory, question_text, questionnote, min, max }) => {
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text}>
+    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
       <input
         type="number"
         id={questionid}
