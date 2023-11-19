@@ -47,7 +47,7 @@ def process_config():
                     table_name = QUESTION_TYPES_DB_TABLE[question_type]
                     response_list_table = None
                     try:
-                        response_list_table = supabase.table(table_name).insert(data_list_table).execute()
+                        response_list_table = supabase.table('multiple_choice_question_choice_table').insert(data_list_table).execute()
                         log.info(str(response_list_table))
                     except Exception:
                         log.info('Failed to insert data into multiple_choice_question_choice_table')
@@ -57,7 +57,7 @@ def process_config():
                     table_name = QUESTION_TYPES_DB_TABLE[question_type]
                     response_list_table = None
                     try:
-                        response_list_table = supabase.table(table_name).insert(data_list_table).execute()
+                        response_list_table = supabase.table('dropdown_question_option_table').insert(data_list_table).execute()
                         log.info(str(response_list_table))
                     except Exception:
                         log.info('Failed to insert data into dropdown_question_option_table')
