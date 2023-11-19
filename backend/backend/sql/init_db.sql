@@ -35,7 +35,8 @@ CREATE TABLE
     questionorder INT NOT NULL,
     phaseid UUID NOT NULL REFERENCES PHASE_TABLE (phaseid),
     mandatory BOOLEAN NOT NULL,
-    questiontext TEXT NOT NULL
+    questiontext TEXT NOT NULL,
+    questionnote VARCHAR(255)
   );
 
 ALTER TABLE

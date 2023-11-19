@@ -19,11 +19,13 @@ questions:
         mandatory: true
         maxTextLength: 20
         formattingRegex: PHONE_NUMBER  # optional; Other predefined values: "EMAIL", "NUMBERS", "LETTERS", any JS Regex
+        note: e.g. Max Mustermann
       - questionType: longText
         order: 2
         question: What's your name and birthday?
         mandatory: true
         maxTextLength: 200
+        note: "hint: please use dd/mm/yyyy for your birthday"
       - questionType: multipleChoice
         order: 4
         question: What's your name and birthday?
