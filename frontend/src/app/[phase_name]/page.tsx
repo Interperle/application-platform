@@ -1,6 +1,7 @@
 import Questionnaire, { DefaultQuestion } from "@/components/questions";
 import { Question } from "@/components/questions";
 import { QuestionType, QuestionTypeTable } from "@/components/questiontypes/utils/questiontype_selector";
+import { fetch_phase_by_name } from "@/utils/fetchPhaseTable";
 import { supabase } from '@/utils/supabase_server';
 import { RedirectType, redirect } from "next/navigation";
 
@@ -14,24 +15,6 @@ export default async function Page({ params }: { params: { phase_name: string } 
   const phaseName = params.phase_name
   console.log("")
   console.log("Phasename: " + phaseName)
-  async function fetch_phase_table(){
-    const {data: phaseData, error: phaseError} = await supabase
-      .from('phase_table')
-      .select('*')
-      .eq('phasename', phaseName)
-      .single();
-    // Redirection if error
-    if (phaseError){
-      console.log("Error: " + phaseError + " -> Redirect")
-      redirect("/", RedirectType.replace)
-    }
-    // Redirection if no phaseName
-    if (!phaseData){
-      console.log("No data " + phaseData + " -> Redirect")
-      redirect("/", RedirectType.replace)
-    }
-    return phaseData
-  }
 
   async function fetch_question_type_table(questions: DefaultQuestion[]){
     const result: Record<QuestionType, any> = {
@@ -155,7 +138,7 @@ export default async function Page({ params }: { params: { phase_name: string } 
     return await Promise.all(combinedQuestions);
   }
 
-  const phaseData = await fetch_phase_table()
+  const phaseData = await fetch_phase_by_name(phaseName)
   const phaseId = phaseData.phaseid
   const currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 2); // UTC+2
