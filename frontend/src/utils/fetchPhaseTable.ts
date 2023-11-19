@@ -1,9 +1,24 @@
 import { RedirectType, redirect } from "next/navigation";
-import { supabase } from '@/utils/supabase_server';
+import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
 
 
 
 export async function fetch_phase_by_name(phaseName: string){
+
+    const cookieStore = cookies()
+
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+            get(name: string) {
+                return cookieStore.get(name)?.value
+            },
+            },
+        }
+    )
     const {data: phaseData, error: phaseError} = await supabase
       .from('phase_table')
       .select('*')
@@ -24,6 +39,20 @@ export async function fetch_phase_by_name(phaseName: string){
 
 
 export async function fetch_all_phases(){
+    const cookieStore = cookies()
+
+    const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+            get(name: string) {
+                return cookieStore.get(name)?.value
+            },
+            },
+        }
+    )
+    
     const {data: phasesData, error: phasesError} = await supabase
       .from('phase_table')
       .select('*');
