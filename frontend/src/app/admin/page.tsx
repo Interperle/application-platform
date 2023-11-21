@@ -1,5 +1,6 @@
 "use client"
-import { fetchAllUsers } from "@/actions/admin"
+
+import { fetchAllUsers } from  "@/actions/admin"
 import UserList from "@/components/userslist"
 import { setUsers } from "@/store/slices/usersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
