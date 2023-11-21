@@ -292,7 +292,7 @@ CREATE TABLE USER_ROLES_TABLE (
     userrolename VARCHAR(50) UNIQUE NOT NULL
 );
 
-INSERT INTO USER_ROLES_TABLE (userrolename) VALUES ('applicant'), ('evaluator'), ('admin');
+INSERT INTO USER_ROLES_TABLE (userrolename) VALUES ('applicant'), ('reviewer'), ('admin');
 
 ALTER TABLE
   USER_ROLES_TABLE ENABLE ROW LEVEL SECURITY;
@@ -300,6 +300,7 @@ ALTER TABLE
 create table PUBLIC.USER_PROFILES_TABLE (
   userid uuid not null references auth.users on delete cascade,
   userrole INT REFERENCES user_roles_table(userroleid),
+  isactive BOOLEAN DEFAULT TRUE
 
   PRIMARY KEY (userid)
 );
@@ -354,3 +355,6 @@ CREATE POLICY select_policy ON USER_ROLES_TABLE
 
 CREATE POLICY insert_profile ON user_profiles_table FOR INSERT
   WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_own_profile ON public.user_profiles_table FOR SELECT
+  USING (userid = auth.uid());

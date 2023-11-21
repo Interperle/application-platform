@@ -7,6 +7,9 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from "next/navigation";
 import { supabaseServiceRole } from "@/utils/supabase_servicerole";
+import { UserRole } from "@/utils/userRole";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
 
 export async function signUpUser(prevState: any, formData: FormData) {
@@ -61,7 +64,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
 
     const { data: userProfileData, error: userProfileError } = await supabaseServiceRole.from(
       'user_profiles_table'
-    ).insert({'userid': userData.user!.id, 'userrole': 1})
+    ).insert({'userid': userData.user!.id, 'userrole': 1, 'isactive': true})
 
     if (userProfileError){
       console.log(userProfileError)
@@ -280,4 +283,58 @@ export async function updatePassword(prevState: any, formData: FormData) {
   } catch (e){
     return {message: "Error"}
   }
+}
+
+export async function signInWithSlack() {
+  const cookieStore = cookies()
+
+  const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            cookieStore.set({ name, value, ...options })
+          },
+          remove(name: string, options: CookieOptions) {
+            cookieStore.set({ name, value: '', ...options })
+          },
+        },
+      }
+  )
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'slack',
+    options: {
+      redirectTo: `${getURL()}auth/callback/`
+    }
+  })
+  console.log(error)
+  console.log(data)
+  if (data && data.url) {
+    console.log("Redirect to " + data.url)
+    redirect(data.url)
+  } else {
+    console.log('Error during sign in:', error);
+  }
+}
+
+export async function isAuthorized(supabase: SupabaseClient, requiredRole: UserRole) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  
+  const { data: userProfileData, error: userProfileError } = await supabase.from('user_profiles_table').select('userrole').eq("userid", user!.id).single()
+  if (userProfileError){
+    throw userProfileError;
+  }
+  if (userProfileData.userrole >= requiredRole.valueOf()) {
+    return null; // User has the required role
+  }
+
+  // Redirect based on the user's role
+  return userProfileData.userrole === UserRole.Reviewer ? '/review' :
+         userProfileData.userrole === UserRole.Admin ? '/admin' : '/';
 }
