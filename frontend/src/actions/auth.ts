@@ -7,6 +7,8 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from "next/navigation";
 import { supabaseServiceRole } from "@/utils/supabase_servicerole";
+import { UserRole } from "@/utils/userRole";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
 
@@ -317,4 +319,22 @@ export async function signInWithSlack() {
   } else {
     console.log('Error during sign in:', error);
   }
+}
+
+export async function isAuthorized(supabase: SupabaseClient, requiredRole: UserRole) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  
+  const { data: userProfileData, error: userProfileError } = await supabase.from('user_profiles_table').select('userrole').eq("userid", user!.id).single()
+  if (userProfileError){
+    throw userProfileError;
+  }
+  if (userProfileData.userrole >= requiredRole.valueOf()) {
+    return null; // User has the required role
+  }
+
+  // Redirect based on the user's role
+  return userProfileData.userrole === UserRole.Reviewer ? '/review' :
+         userProfileData.userrole === UserRole.Admin ? '/admin' : '/';
 }
