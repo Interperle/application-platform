@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    name: Run Lint
+    name: ESLint for NextJS
     runs-on: ubuntu-latest
 
     steps:
