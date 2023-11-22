@@ -231,8 +231,8 @@ export default async function Page({
           {!isEditable && (
             <div>
               <strong>
-                Die Phase ist bereits um, du kannst deine Eingaben
-                nur noch einlesen!
+                Die Phase ist bereits um, du kannst deine Eingaben nur noch
+                einlesen!
               </strong>
             </div>
           )}
