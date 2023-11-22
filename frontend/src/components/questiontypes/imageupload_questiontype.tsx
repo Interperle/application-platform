@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 
 export interface ImageUploadQuestionTypeProps
@@ -28,7 +30,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
         />
       </div>
       <div className="mt-4">
-        <img src="" alt="Preview" className="max-w-xs" id="imagePreview" />
+        <Image alt="Preview" src="" className="max-w-xs" id="imagePreview" />
       </div>
     </QuestionTypes>
   );
