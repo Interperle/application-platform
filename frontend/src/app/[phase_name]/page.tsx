@@ -1,3 +1,4 @@
+import Apl_Header from "@/components/header";
 import Questionnaire, { DefaultQuestion } from "@/components/questions";
 import { Question } from "@/components/questions";
 import {
@@ -220,14 +221,26 @@ export default async function Page({
   console.log("Render Questionnaire");
 
   return (
-    <div>
-      My Phase: {phaseName}
-      {!isEditable && <div>Derzeit nicht bearbeitbar!</div>}
-      <div>
-        <form>
-          <Questionnaire questions={phase_questions} />
-        </form>
+    <span className="w-full">
+      <div className="flex flex-col items-start justify-between space-y-4">
+        <Apl_Header />
+        <div className="">
+          <h2 className="p-4 rounded text-secondary">
+            <b>Bewerbungs-Phase: {phaseName}</b>
+          </h2>
+          {!isEditable && (
+            <div>
+              <strong>
+                Die Phase ist bereits um, du kannst deine Eingaben
+                nur noch einlesen!
+              </strong>
+            </div>
+          )}
+          <div className="space-y-4 max-w-screen-xl">
+            <Questionnaire questions={phase_questions} />
+          </div>
+        </div>
       </div>
-    </div>
+    </span>
   );
 }

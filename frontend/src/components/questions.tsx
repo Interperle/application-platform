@@ -23,7 +23,7 @@ interface QuestionnaireProps {
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
   return (
-    <div>
+    <>
       {questions
         .sort((a, b) => a.questionorder - b.questionorder)
         .map((question) => {
@@ -43,7 +43,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
             />
           );
         })}
-    </div>
+    </>
   );
 };
 

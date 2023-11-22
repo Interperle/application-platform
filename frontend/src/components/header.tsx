@@ -30,22 +30,27 @@ const Apl_Header: React.FC = () => {
         </Link>
       </div>
       <div className="md:hidden">
-        <button onClick={() => dispatch(toggle())} className="p-2 focus:outline-none focus:shadow-outline">
+        <button
+          onClick={() => dispatch(toggle())}
+          className="p-2 focus:outline-none focus:shadow-outline"
+        >
           <div className="block w-6 h-1 bg-secondary rounded-md"></div>
           <div className="block w-6 h-1 bg-secondary my-1.5 rounded-md"></div>
           <div className="block w-6 h-1 bg-secondary rounded-md"></div>
         </button>
       </div>
-      <div className={`${isMenuOpen ? 'border space-y-2 absolute bg-white right-10 top-24 z-10 p-4 flex flex-col justify-center' : 'hidden md:flex items-center'} space-x-4`}>
+      <div
+        className={`${
+          isMenuOpen
+            ? "border space-y-2 absolute bg-white right-10 top-24 z-10 p-4 flex flex-col justify-center"
+            : "hidden md:flex items-center"
+        } space-x-4`}
+      >
         <Link href="/faqs">
-          <span className="text-secondary block text-center">
-            FAQs
-          </span>
+          <span className="text-secondary block text-center">FAQs</span>
         </Link>
         <Link href="/settings">
-          <span className="text-secondary block text-center">
-            Settings
-          </span>
+          <span className="text-secondary block text-center">Settings</span>
         </Link>
         <form action={signOutAction}>
           <button type="submit" className="apl-button-fixed block mx-auto">

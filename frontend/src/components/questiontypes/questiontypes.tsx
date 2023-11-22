@@ -22,11 +22,15 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
     <div className="mb-4">
       <label
         htmlFor={questionid}
-        className="block text-sm font-medium text-gray-700"
+        className="block font-semibold text-secondary py-3"
       >
-        {question_text}
-        {mandatory && <span className="text-red-500">*</span>}
-        {questionnote && <p className="italic text-gray-600">{questionnote}</p>}
+        <h4 className="py-1 text-base">
+          {question_text}
+          {mandatory && <span className="text-red-500">*</span>}
+        </h4>
+        {questionnote && (
+          <p className="italic text-gray-500 text-sm">{questionnote}</p>
+        )}
       </label>
       <div className="mt-1">{children}</div>
     </div>
