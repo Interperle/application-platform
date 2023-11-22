@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 import authReducer from "./slices/authSlice";
 import popupReducer from "./slices/popupSlice";
 import userReducer from "./slices/usersSlice";
+import menuReducer from "./slices/menuSlice";
 
 export const store = configureStore({
   reducer: {
     authReducer,
     popupReducer,
     userReducer,
+    menuReducer,
   },
 });
 

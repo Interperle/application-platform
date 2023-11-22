@@ -10,13 +10,13 @@ import Popup from "@/components/popup";
 export default function Login() {
   const dispatch = useAppDispatch();
   return (
-    <main className="grid-cols-1 flex flex-col items-center justify-between space-y-6">
+    <>
       <Image
         src="/logos/gend_img.png"
         width={80}
         height={80}
         alt="Generation-D Image Logo"
-        className="max-w-50 max-h-50"
+        className="max-w-50 max-h-50 items-center"
       />
       <h1 className="text-5xl text-secondary">Generation-D Bewerbung</h1>
       <Popup />
@@ -39,6 +39,6 @@ export default function Login() {
           <SignInForm />
         </div>
       </div>
-    </main>
+    </>
   );
 }

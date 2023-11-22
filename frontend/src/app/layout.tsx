@@ -23,7 +23,11 @@ export default function RootLayout({
       <body className={`${inter.className} bg-primary`}>
         <ReduxProvider>
           <div className="flex flex-col min-h-screen">
-            <div className="flex-grow">{children}</div>
+            <div className="flex-grow">
+              <main className="flex flex-col rounded items-center p-8 justify-center space-y-6 mx-auto max-w-4xl bg-white">
+                {children}
+              </main>
+            </div>
             <Apl_Footer />
           </div>
         </ReduxProvider>

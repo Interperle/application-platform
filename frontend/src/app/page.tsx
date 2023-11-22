@@ -6,7 +6,7 @@ export default async function Home() {
   const log = new Logger("Overview Page");
   const contentHtml = await getOverviewPageText();
   return (
-    <main className="grid-cols-1 flex flex-col items-start justify-between p-24 max-w-5xl bg-[#FFFFFF] text-secondary space-y-4">
+    <>
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
         <div
@@ -21,6 +21,6 @@ export default async function Home() {
           <button className="apl-button-fixed">Phase fortsetzen</button>
         </div>
       </div>
-    </main>
+    </>
   );
 }
