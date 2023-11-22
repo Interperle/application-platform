@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ReactNode } from 'react';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ReactNode } from "react";
 
 interface PopupState {
   isOpen: boolean;
@@ -12,7 +12,7 @@ const initialState: PopupState = {
 };
 
 export const popupSlice = createSlice({
-  name: 'popup',
+  name: "popup",
   initialState,
   reducers: {
     openPopup: (state, action: PayloadAction<ReactNode>) => {

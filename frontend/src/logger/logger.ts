@@ -1,12 +1,11 @@
-import pino from "pino"
-import { createPinoBrowserSend, createWriteStream } from "pino-logflare"
+import pino from "pino";
+import { createPinoBrowserSend, createWriteStream } from "pino-logflare";
 
 interface LogDetails {
   module: string;
   msg: string;
   userId?: string;
 }
-
 
 class Logger {
   module: string;
@@ -38,21 +37,21 @@ class Logger {
     this.logger = pino(
       {
         browser: {
-            transmit: {
-                level: "info",
-                send: send,
-            }
+          transmit: {
+            level: "info",
+            send: send,
+          },
         },
         level: "info",
-      }, 
-      stream
+      },
+      stream,
     );
   }
 
   private getDetails(msg: string, userId?: string) {
     const details: LogDetails = {
       module: this.module,
-      msg: msg
+      msg: msg,
     };
     if (userId) details.userId = userId;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface DefaultQuestionTypeProps {
   questionid: string;
@@ -8,19 +8,27 @@ export interface DefaultQuestionTypeProps {
 }
 
 interface QuestionTypesProps extends DefaultQuestionTypeProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const QuestionTypes: React.FC<QuestionTypesProps> = ({ questionid, mandatory, question_text, questionnote, children }) => {
+const QuestionTypes: React.FC<QuestionTypesProps> = ({
+  questionid,
+  mandatory,
+  question_text,
+  questionnote,
+  children,
+}) => {
   return (
     <div className="mb-4">
-      <label htmlFor={questionid} className="block text-sm font-medium text-gray-700">
-        {question_text}{mandatory && <span className="text-red-500">*</span>}
+      <label
+        htmlFor={questionid}
+        className="block text-sm font-medium text-gray-700"
+      >
+        {question_text}
+        {mandatory && <span className="text-red-500">*</span>}
         {questionnote && <p className="italic text-gray-600">{questionnote}</p>}
       </label>
-      <div className="mt-1">
-        {children}
-      </div>
+      <div className="mt-1">{children}</div>
     </div>
   );
 };

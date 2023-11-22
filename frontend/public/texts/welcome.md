@@ -5,7 +5,8 @@ Wir freuen uns sehr, dass Ihr Euch bei Generation-D bewerben möchtet.
 Aktuell läuft die erste Bewerbungsphase, in welcher es darum geht einige Fragen zu Euerem Start-up/Projekt zu beantworten und zu jedem Teammitglied einen Lebenslauf hochzuladen.
 
 **Seid Euch bewusst, dass Generation-D keine Bewerbungen akzeptieren kann…**
-- …in welchen ein Teammitglied aktueller oder ehemaliger Stipendiat*in der Bayerischen EliteAkademie ist,
+
+- …in welchen ein Teammitglied aktueller oder ehemaliger Stipendiat\*in der Bayerischen EliteAkademie ist,
 - …das Projekt bereits in einem Generation-D Finale gewesen ist,
 - …es sich um ein langfristig rein spenden basiertes Projekt handelt,
 - …oder das Unternehmen bereits länger als 5 Jahre im Handelsregister eingetragen ist.
@@ -18,7 +19,7 @@ Alle eure Angaben werden automatisch gespeichert. Ihr könnt eure Antworten aber
 
 Eine Bewerbung wird erst berücksichtigt, wenn sie vollständig ist. Vollständig ist eine Bewerbung, wenn alle Fragen beantwortet wurden. Den Status eurer Bewerbung könnt Ihr auch immer auf dieser Übersichtsseite einsehen.
 
-*Ihr werdet auch über alle weiteren Phasen und Vorgehen per E-Mail informiert.* Kontrolliert dafür bitte, dass die angegebene E-Mail korrekt ist und checkt auch den Spam Ordner.
+_Ihr werdet auch über alle weiteren Phasen und Vorgehen per E-Mail informiert._ Kontrolliert dafür bitte, dass die angegebene E-Mail korrekt ist und checkt auch den Spam Ordner.
 
 ### Dann kann es jetzt losgehen! Klickt unten auf “Bewerbung bearbeiten” und startet durch!
 

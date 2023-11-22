@@ -1,13 +1,13 @@
-import { userData } from '@/actions/admin';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { userData } from "@/actions/admin";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface UsersState {
-    users: userData[];
-  }
+  users: userData[];
+}
 
 interface ChangeUserRolePayload {
-    userId: string;
-    newRole: number;
+  userId: string;
+  newRole: number;
 }
 
 const initialState: UsersState = {
@@ -16,21 +16,21 @@ const initialState: UsersState = {
 };
 
 export const usersSlice = createSlice({
-  name: 'users',
+  name: "users",
   initialState,
   reducers: {
     setUsers: (state, action: PayloadAction<userData[]>) => {
       state.users = action.payload;
     },
     toggleUserActive: (state, action: PayloadAction<string>) => {
-      const index = state.users.findIndex(user => user.id === action.payload);
+      const index = state.users.findIndex((user) => user.id === action.payload);
       if (index !== -1) {
         state.users[index].isactive = !state.users[index].isactive;
       }
     },
     changeUserRole: (state, action: PayloadAction<ChangeUserRolePayload>) => {
       const { userId, newRole } = action.payload;
-      const index = state.users.findIndex(user => user.id === userId);
+      const index = state.users.findIndex((user) => user.id === userId);
       if (index !== -1) {
         state.users[index].userrole = newRole;
       }
@@ -38,6 +38,7 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { setUsers, toggleUserActive, changeUserRole } = usersSlice.actions;
+export const { setUsers, toggleUserActive, changeUserRole } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;

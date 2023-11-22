@@ -20,7 +20,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Troubleshooting
 
-- Make sure to update your node version: https://askubuntu.com/q/426750/941305  (check your version with ```node -v```)
+- Make sure to update your node version: https://askubuntu.com/q/426750/941305 (check your version with `node -v`)
 
 ## Learn More
 

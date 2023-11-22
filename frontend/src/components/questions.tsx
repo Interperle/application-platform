@@ -1,6 +1,7 @@
-import React from 'react';
-import getQuestionComponent, { QuestionType } from '@/components/questiontypes/utils/questiontype_selector';
-
+import React from "react";
+import getQuestionComponent, {
+  QuestionType,
+} from "@/components/questiontypes/utils/questiontype_selector";
 
 export interface DefaultQuestion {
   questionid: string;
