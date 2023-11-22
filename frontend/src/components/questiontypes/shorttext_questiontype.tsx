@@ -20,7 +20,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
         type="text"
         name={questionid}
         id={questionid}
-        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+        className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
         required={mandatory}
         maxLength={50}
       />
