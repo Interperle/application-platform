@@ -1,4 +1,5 @@
 import { Question } from "@/components/questions";
+import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface PhaseData {
@@ -13,7 +14,7 @@ interface PhasesState {
   phases: {
     [phasename: string]: {
       data: PhaseData;
-      questions: Question[];
+      questions: Question[] | null;
     };
   };
 }
@@ -22,32 +23,27 @@ const initialState: PhasesState = {
   phases: {},
 };
 
+
 export const phaseSlice = createSlice({
   name: "phase",
   initialState,
   reducers: {
-    setPhaseData: (
+    setPhase: (
       state,
-      action: PayloadAction<{ phasename: string; phasedata: PhaseData }>,
+      action: PayloadAction<{ phasename: string; phasedata: PhaseData;  phasequestions: Question[] }>,
     ) => {
-      const { phasename, phasedata } = action.payload;
-      if (!state.phases[phasename]) {
-        state.phases[phasename] = { data: {phaseid: "", phasename:"", phaseorder: -1, startdate: "", enddate: ""}, questions: []};
-      }
-      state.phases[phasename].data = phasedata;
-    },
-    setPhaseQuestions: (
-      state,
-      action: PayloadAction<{ phasename: string; phasequestions: Question[] }>,
-    ) => {
-      const { phasename, phasequestions } = action.payload;
-      if (!state.phases[phasename]) {
-        state.phases[phasename] = { data: {phaseid: "", phasename:"", phaseorder: -1, startdate: "", enddate: ""}, questions: [] };
-      }
-      state.phases[phasename].questions = phasequestions;
+      const { phasename, phasedata, phasequestions } = action.payload;
+      state.phases[phasename] = {data: phasedata, questions: [{
+        questionid: "string",
+        questiontype: QuestionType.ShortText,
+        questionorder: 0,
+        phaseid: "1",
+        mandatory: true,
+        questiontext: "Hallo",
+        questionnote: "Wekt", params: {minanswers: 0, maxanswers: 2, userinput: true}}]};
     },
   },
 });
 
-export const { setPhaseQuestions, setPhaseData } = phaseSlice.actions;
+export const { setPhase } = phaseSlice.actions;
 export default phaseSlice.reducer;

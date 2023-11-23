@@ -5,6 +5,7 @@ import {
   QuestionType,
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import { createCurrentTimestamp } from "@/utils/helpers";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
@@ -224,7 +225,6 @@ export async function fetch_phase_by_name(phaseName: string) {
     console.log("No data " + phaseData + " -> Redirect");
     redirect("/", RedirectType.replace);
   }
-  console.log(phaseData)
   return phaseData;
 }
 
@@ -287,4 +287,22 @@ export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
     previous_phase = phase;
   }
   return previous_phase;
+}
+
+
+export async function fetch_phase_data(phaseName: string){
+  const phaseData = await fetch_phase_by_name(phaseName)
+  let isEditable = false;
+  let startDate, endDate;
+  const currentDate = new Date(createCurrentTimestamp());
+  startDate = new Date(phaseData.startdate);
+  endDate = new Date(phaseData.enddate);
+  isEditable = currentDate >= startDate && currentDate <= endDate;
+  if (currentDate < startDate) {
+    console.log("Phase didn't start yet");
+    return redirect("/", RedirectType.replace);
+  }
+  const phaseQuestions = await fetch_question_table(phaseData.phaseid)
+  phaseQuestions.forEach((e) => console.log(JSON.stringify(e, null, 2)))
+  return {phasedata: phaseData, phasequestions: phaseQuestions, iseditable: isEditable}
 }

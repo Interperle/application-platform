@@ -13,5 +13,5 @@ export const getURL = () => {
 };
 
 export function createCurrentTimestamp() {
-  return moment().tz("Europe/Berlin").format("%Y-%m-%dT%H:%M:%S");
+  return moment().tz("Europe/Berlin").format("Y-M-DTHH:M:SS.000");
 }
