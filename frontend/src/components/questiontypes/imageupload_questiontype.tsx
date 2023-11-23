@@ -1,11 +1,24 @@
-import React from 'react';
-import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
+import React from "react";
+import Image from "next/image";
 
-export interface ImageUploadQuestionTypeProps extends DefaultQuestionTypeProps {}
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 
-const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({ questionid, mandatory, question_text,  questionnote }) => {
+export interface ImageUploadQuestionTypeProps
+  extends DefaultQuestionTypeProps {}
+
+const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
+  questionid,
+  mandatory,
+  question_text,
+  questionnote,
+}) => {
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
+    <QuestionTypes
+      questionid={questionid}
+      mandatory={mandatory}
+      question_text={question_text}
+      questionnote={questionnote}
+    >
       <div className="mt-1">
         <input
           type="file"
@@ -17,7 +30,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({ quest
         />
       </div>
       <div className="mt-4">
-        <img src="" alt="Preview" className="max-w-xs" id="imagePreview" />
+        <Image alt="Preview" src="" className="max-w-xs" id="imagePreview" />
       </div>
     </QuestionTypes>
   );

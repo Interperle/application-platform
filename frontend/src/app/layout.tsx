@@ -1,37 +1,37 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-import { ReduxProvider } from '@/store/provider'
+import { ReduxProvider } from "@/store/provider";
 import Apl_Footer from "@/components/footer";
 
-
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Generation-D Bewerbung',
-  description: 'Bewirb dich beim Social Startup Wettbewerb Generation-D.',
+  title: "Generation-D Bewerbung",
+  description: "Bewirb dich beim Social Startup Wettbewerb Generation-D.",
   icons: "/favicon.ico",
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    
     <html lang="en">
-      <body className={`${inter.className} bg-[#FDCC89]`}>
+      <body className={`${inter.className} bg-primary`}>
         <ReduxProvider>
           <div className="flex flex-col min-h-screen">
             <div className="flex-grow">
-              {children}
+              <main className="flex flex-col rounded items-center p-8 justify-center space-y-6 mx-auto max-w-4xl bg-white">
+                {children}
+              </main>
             </div>
-            <Apl_Footer/>
+            <Apl_Footer />
           </div>
         </ReduxProvider>
       </body>
     </html>
-  )
+  );
 }
