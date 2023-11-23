@@ -1,3 +1,5 @@
+import moment from "moment-timezone"
+
 export const getURL = () => {
   let url =
     process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
@@ -9,3 +11,8 @@ export const getURL = () => {
   url = url.charAt(url.length - 1) === "/" ? url : `${url}/`;
   return url;
 };
+
+function createCurrentTimestamp() {
+  return moment().tz('Europe/Berlin').format("%Y-%m-%dT%H:%M:%S");
+}
+
