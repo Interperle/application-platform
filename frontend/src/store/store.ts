@@ -4,6 +4,7 @@ import authReducer from "./slices/authSlice";
 import popupReducer from "./slices/popupSlice";
 import userReducer from "./slices/usersSlice";
 import menuReducer from "./slices/menuSlice";
+import phaseQuestionsReducer from "./slices/phaseQuestionsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     popupReducer,
     userReducer,
     menuReducer,
+    phaseQuestionsReducer,
   },
 });
 
