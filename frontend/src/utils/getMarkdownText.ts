@@ -3,7 +3,7 @@
 import path from "path";
 import fs from "fs";
 import markdownToHtml from "./markdownToHtml";
-import { extractCurrentPhase } from "./fetchPhaseTable";
+import { extractCurrentPhase } from "@/actions/phase"
 
 export default async function getOverviewPageText() {
   const currentTime = new Date(
