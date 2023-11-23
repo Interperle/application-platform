@@ -6,6 +6,7 @@ import {
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { fetch_phase_by_name } from "@/utils/fetchPhaseTable";
+import { createCurrentTimestamp } from "@/utils/helpers";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
@@ -63,7 +64,6 @@ export default async function Page({
         continue;
       }
 
-      console.log("Fetch: '" + questionType + "'; in table: " + tableName);
       const { data: questionTypeData, error: questionTypeError } =
         await supabase
           .from(tableName)
@@ -75,14 +75,11 @@ export default async function Page({
               .map((q) => q.questionid),
           );
 
-      console.log("QuestionType Data: " + questionTypeData?.length);
-
       if (questionTypeError) {
         console.log("QuestionType Error: Return Null");
         console.error(questionTypeError);
         result[questionType] = [{}];
       } else if (questionTypeData) {
-        console.log("QuestionType Data: " + questionTypeData);
         result[questionType] = questionTypeData;
       } else {
         console.log("No data found for question type: " + questionType);
@@ -140,7 +137,6 @@ export default async function Page({
         });
       }
     });
-    console.log(paramsDict);
     return paramsDict;
   }
 
@@ -169,7 +165,7 @@ export default async function Page({
     };
   }
 
-  async function fetch_question_table(): Promise<Question[]> {
+  async function fetch_question_table(phaseId: string): Promise<Question[]> {
     const { data: questionData, error: errorData } = await supabase
       .from("question_table")
       .select("*")
@@ -184,7 +180,6 @@ export default async function Page({
       console.log("No Data");
       redirect("/404", RedirectType.replace);
     }
-    console.log(questionData);
     // TODO also fetch all other question types
     const questionTypesData = await fetch_question_type_table(questionData);
     const choicesData = await fetchAdditionalParams(
@@ -204,22 +199,20 @@ export default async function Page({
   }
 
   const phaseData = await fetch_phase_by_name(phaseName);
-  const phaseId = phaseData.phaseid;
-  const currentDate = new Date();
-  currentDate.setHours(currentDate.getHours() + 2); // UTC+2
 
+  const currentDate = new Date(createCurrentTimestamp());
   const startDate = new Date(phaseData.startdate);
   const endDate = new Date(phaseData.enddate);
-  const isEditable = currentDate >= startDate && currentDate <= endDate;
 
   if (currentDate < startDate) {
     console.log("Phase didn't start yet");
     return redirect("/", RedirectType.replace);
   }
 
-  const phase_questions = await fetch_question_table();
-  console.log("Render Questionnaire");
+  const isEditable = ((currentDate >= startDate) && (currentDate <= endDate));
+  const phase_questions = await fetch_question_table(phaseData.phaseid);
 
+  console.log("Render Questionnaire");
   return (
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
