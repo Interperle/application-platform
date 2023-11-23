@@ -47,7 +47,8 @@ CREATE TABLE
     answerid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     questionid UUID NOT NULL REFERENCES QUESTION_TABLE (questionid),
     applicationid UUID NOT NULL REFERENCES APPLICATION_TABLE (applicationid),
-    timestamp TIMESTAMPTZ NOT NULL
+    created TIMESTAMPTZ NOT NULL,
+    lastupdated TIMESTAMPTZ NOT NULL
   );
 
 ALTER TABLE

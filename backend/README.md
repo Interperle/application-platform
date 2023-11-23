@@ -63,7 +63,8 @@ erDiagram
         string answerid PK
         string questionid FK
         string applicationid FK
-        string timestamp
+        timestamp created
+        timestamp lastupdated
     }
 ```
 
