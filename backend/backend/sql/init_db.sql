@@ -359,3 +359,6 @@ CREATE POLICY insert_profile ON user_profiles_table FOR INSERT
 
 CREATE POLICY select_own_profile ON public.user_profiles_table FOR SELECT
   USING (userid = auth.uid());
+
+CREATE POLICY select_own_application ON application_table FOR SELECT
+  USING (userid = auth.uid());
