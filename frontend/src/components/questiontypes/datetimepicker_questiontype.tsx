@@ -1,11 +1,22 @@
-import React from 'react';
-import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
+import React from "react";
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 
-export interface DatetimePickerQuestionTypeProps extends DefaultQuestionTypeProps {}
+export interface DatetimePickerQuestionTypeProps
+  extends DefaultQuestionTypeProps {}
 
-const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({ questionid, mandatory, question_text,  questionnote}) => {
+const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
+  questionid,
+  mandatory,
+  question_text,
+  questionnote,
+}) => {
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
+    <QuestionTypes
+      questionid={questionid}
+      mandatory={mandatory}
+      question_text={question_text}
+      questionnote={questionnote}
+    >
       <input
         type="datetime-local"
         id={questionid}

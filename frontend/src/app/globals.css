@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary-color: #fdcc89;
+  --secondary-color: #153757;
+}
+
+.apl-button-fixed {
+  @apply rounded px-4 py-2 text-primary bg-secondary;
+}
+
+.apl-button-fixed-big {
+  @apply rounded px-6 py-3 text-primary bg-secondary;
+}
+
+.apl-button-expanded {
+  @apply w-full flex justify-center rounded px-4 py-2 text-primary bg-secondary;
+}

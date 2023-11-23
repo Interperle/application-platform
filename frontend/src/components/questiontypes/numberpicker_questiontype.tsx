@@ -1,14 +1,27 @@
-import React from 'react';
-import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
+import React from "react";
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 
-export interface NumberPickerQuestionTypeProps extends DefaultQuestionTypeProps {
+export interface NumberPickerQuestionTypeProps
+  extends DefaultQuestionTypeProps {
   min: number;
   max: number;
 }
 
-const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({ questionid, mandatory, question_text, questionnote, min, max }) => {
+const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
+  questionid,
+  mandatory,
+  question_text,
+  questionnote,
+  min,
+  max,
+}) => {
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
+    <QuestionTypes
+      questionid={questionid}
+      mandatory={mandatory}
+      question_text={question_text}
+      questionnote={questionnote}
+    >
       <input
         type="number"
         id={questionid}

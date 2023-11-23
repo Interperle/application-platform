@@ -1,7 +1,6 @@
-import { FC } from 'react';
-import { closePopup } from '../store/slices/popupSlice';
-import { useAppDispatch, useAppSelector } from '../store/store';
-
+import { FC } from "react";
+import { closePopup } from "../store/slices/popupSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
 
 const Popup: FC = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +25,9 @@ const Popup: FC = () => {
         ></span>
         {/* The main popup container adjusts its size based on content */}
         <div className="inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-          <div className="bg-white p-4 relative overflow-y-auto"> {/* Added overflow-y-auto for scrollable content */}
+          <div className="bg-white p-4 relative overflow-y-auto">
+            {" "}
+            {/* Added overflow-y-auto for scrollable content */}
             {/* Close button */}
             <button
               type="button"
@@ -34,8 +35,20 @@ const Popup: FC = () => {
               onClick={() => dispatch(closePopup())}
             >
               <span className="sr-only">Close</span>
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
             {/* Content container */}
@@ -48,7 +61,7 @@ const Popup: FC = () => {
         </div>
       </div>
     </div>
-  );  
+  );
 };
 
 export default Popup;

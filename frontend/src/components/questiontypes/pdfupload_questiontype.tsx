@@ -1,11 +1,17 @@
-import React from 'react';
-import QuestionTypes, { DefaultQuestionTypeProps } from './questiontypes';
+import React from "react";
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 
 export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxSizeInMB: number;
 }
 
-const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ questionid, mandatory, question_text, questionnote, maxSizeInMB }) => {
+const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
+  questionid,
+  mandatory,
+  question_text,
+  questionnote,
+  maxSizeInMB,
+}) => {
   const fileInputRef = null;
   const [fileSizeError, setFileSizeError] = [null, console.log];
 
@@ -16,8 +22,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ questioni
       if (fileSizeInMB > maxSizeInMB) {
         setFileSizeError(`File size exceeds ${maxSizeInMB}MB`);
         // Clear the file input for new selection
-        if (fileInputRef){
-            
+        if (fileInputRef) {
         }
       } else {
         setFileSizeError(null);
@@ -27,18 +32,25 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({ questioni
   };
 
   return (
-    <QuestionTypes questionid={questionid} mandatory={mandatory} question_text={question_text} questionnote={questionnote}>
-        <input
-          ref={fileInputRef}
-          type="file"
-          id={questionid}
-          name={questionid}
-          accept="application/pdf"
-          required={mandatory}
-          //onChange={handleFileChange}
-          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-        />
-      {fileSizeError && <p className="text-red-500 text-xs mt-1">{fileSizeError}</p>}
+    <QuestionTypes
+      questionid={questionid}
+      mandatory={mandatory}
+      question_text={question_text}
+      questionnote={questionnote}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        id={questionid}
+        name={questionid}
+        accept="application/pdf"
+        required={mandatory}
+        //onChange={handleFileChange}
+        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+      />
+      {fileSizeError && (
+        <p className="text-red-500 text-xs mt-1">{fileSizeError}</p>
+      )}
     </QuestionTypes>
   );
 };

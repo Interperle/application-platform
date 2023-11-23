@@ -1,0 +1,27 @@
+name: Lint Codebase
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: ESLint for NextJS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.6.1' # specify your Node.js version here
+
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Run Lint
+        run: |
+          cd frontend
+          make lint
