@@ -44,7 +44,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
             />
           );
         })}
-        <button type="submit">Speichern</button>
+      <button type="submit">Speichern</button>
     </form>
   );
 };

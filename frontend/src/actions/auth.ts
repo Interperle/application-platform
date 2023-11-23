@@ -71,8 +71,9 @@ export async function signUpUser(prevState: any, formData: FormData) {
       return { message: userProfileError.message };
     }
     console.log("Success");
-    const sendData = {"userid": userData!.user!.id}
-    const { data: applicationData, error: applicationError } = await supabaseServiceRole.from("application_table").insert(sendData);
+    const sendData = { userid: userData!.user!.id };
+    const { data: applicationData, error: applicationError } =
+      await supabaseServiceRole.from("application_table").insert(sendData);
     if (applicationError) {
       console.log(applicationError);
       return { message: applicationError.message };
