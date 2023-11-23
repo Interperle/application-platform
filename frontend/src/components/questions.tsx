@@ -2,6 +2,7 @@ import React from "react";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import { saveShortTextAnswer } from "@/actions/answers";
 
 export interface DefaultQuestion {
   questionid: string;
@@ -23,7 +24,7 @@ interface QuestionnaireProps {
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
   return (
-    <>
+    <form action={saveShortTextAnswer}>
       {questions
         .sort((a, b) => a.questionorder - b.questionorder)
         .map((question) => {
@@ -43,7 +44,8 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
             />
           );
         })}
-    </>
+        <button type="submit">Speichern</button>
+    </form>
   );
 };
 
