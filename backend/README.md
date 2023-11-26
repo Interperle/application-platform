@@ -10,7 +10,7 @@ erDiagram
     USER-PROFILES-TABLE ||--|{ USER-ROLES-TABLE : has
     APPLICATION-TABLE ||--|{ ANSWER-TABLE : has
     QUESTION-TABLE ||--|| PHASE-TABLE : is_divided_in
-    QUESTION-TABLE ||--|| ANSWER-TABLE : has
+    QUESTION-TABLE }|--|| ANSWER-TABLE : answers
 
     %% default Supabase Authentication Table
     AUTHENTICATION-TABLE {
