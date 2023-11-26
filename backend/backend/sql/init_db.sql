@@ -5,12 +5,7 @@ CREATE EXTENSION
 CREATE TABLE
   APPLICATION_TABLE (
     applicationid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    userid UUID NOT NULL REFERENCES auth.users (id),
-    lastlogin TIMESTAMPTZ,
-    lastupdate TIMESTAMPTZ,
-    created TIMESTAMPTZ NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    phone VARCHAR(20) NOT NULL
+    userid UUID NOT NULL REFERENCES auth.users (id)
   );
 
 ALTER TABLE
@@ -47,7 +42,8 @@ CREATE TABLE
     answerid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     questionid UUID NOT NULL REFERENCES QUESTION_TABLE (questionid),
     applicationid UUID NOT NULL REFERENCES APPLICATION_TABLE (applicationid),
-    timestamp TIMESTAMPTZ NOT NULL
+    created TIMESTAMPTZ NOT NULL,
+    lastUpdated TIMESTAMPTZ NOT NULL
   );
 
 ALTER TABLE

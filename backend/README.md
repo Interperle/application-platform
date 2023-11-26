@@ -8,9 +8,9 @@ erDiagram
     AUTHENTICATION-TABLE ||--|{ APPLICATION-TABLE : has
     AUTHENTICATION-TABLE ||--|{ USER-PROFILES-TABLE : has
     USER-PROFILES-TABLE ||--|{ USER-ROLES-TABLE : has
-    APPLICATION-TABLE ||--|| QUESTION-TABLE : contains
+    APPLICATION-TABLE ||--|{ ANSWER-TABLE : has
     QUESTION-TABLE ||--|| PHASE-TABLE : is_divided_in
-    QUESTION-TABLE ||--|| ANSWER-TABLE : has
+    QUESTION-TABLE }|--|| ANSWER-TABLE : answers
 
     %% default Supabase Authentication Table
     AUTHENTICATION-TABLE {
@@ -18,12 +18,15 @@ erDiagram
         string email
         string password
         datetime lastlogin
+        datetime lastupdated
+        datetime created
         boolean emailverified
     }
     
     USER-PROFILES-TABLE {
         string userid PK
         int userrole FK
+        boolean isactive
     }
 
     USER-ROLES-TABLE {
@@ -34,11 +37,6 @@ erDiagram
     APPLICATION-TABLE {
         string applicationid PK
         string userid FK
-        datetime lastlogin
-        datetime lastupdate
-        datetime created
-        string name
-        string phone
     }
 
     PHASE-TABLE {
@@ -63,7 +61,8 @@ erDiagram
         string answerid PK
         string questionid FK
         string applicationid FK
-        string timestamp
+        datetime created
+        datetime lastupdated
     }
 ```
 

@@ -44,7 +44,10 @@ QUESTION_TYPE_PARAMS = {
 
 # Construct the mandatory parameters dictionary
 MANDATORY_PARAMS = {
-    question_type: {param: SPECIFIC_PARAMS[param] for param in params}
+    question_type: {
+        param: SPECIFIC_PARAMS[param]
+        for param in params
+    }
     for question_type, params in QUESTION_TYPE_PARAMS.items()
 }
 
@@ -112,13 +115,12 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
             for param, paramtype in MANDATORY_PARAMS.get(question_type, {}).items():
                 if param not in question:
                     raise ValueError(
-                        f"The {question_type} question {question} is missing the parameter '{param}' field!"
-                    )
+                        f"The {question_type} question {question} is missing the parameter '{param}' field!")
                 if not isinstance(question[param], paramtype):
                     raise ValueError(
                         f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
                     )
-            
+
             for param, paramtype in OPTIONAL_PARAMS.get(question_type, {}).items():
                 if param in question and not isinstance(question[param], paramtype):
                     raise ValueError(
