@@ -27,7 +27,8 @@ def process_config():
         for question in phase['questions']:
             question_type = QuestionType.str_to_enum(question['questionType'])
             data_question_table = create_data_questions_table(question_type, question['order'], phase_id,
-                                                              question['mandatory'], question['question'], question.get('note', ''))
+                                                              question['mandatory'], question['question'],
+                                                              question.get('note', ''))
 
             log.debug(f'Create Question "{question}"')
             response_question_table = supabase.table('question_table').insert(data_question_table).execute()
@@ -47,7 +48,8 @@ def process_config():
                     table_name = QUESTION_TYPES_DB_TABLE[question_type]
                     response_list_table = None
                     try:
-                        response_list_table = supabase.table('multiple_choice_question_choice_table').insert(data_list_table).execute()
+                        response_list_table = supabase.table('multiple_choice_question_choice_table').insert(
+                            data_list_table).execute()
                         log.info(str(response_list_table))
                     except Exception:
                         log.info('Failed to insert data into multiple_choice_question_choice_table')
@@ -57,7 +59,8 @@ def process_config():
                     table_name = QUESTION_TYPES_DB_TABLE[question_type]
                     response_list_table = None
                     try:
-                        response_list_table = supabase.table('dropdown_question_option_table').insert(data_list_table).execute()
+                        response_list_table = supabase.table('dropdown_question_option_table').insert(
+                            data_list_table).execute()
                         log.info(str(response_list_table))
                     except Exception:
                         log.info('Failed to insert data into dropdown_question_option_table')
