@@ -4,7 +4,7 @@ import React from "react";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
-import { saveShortTextAnswer } from "@/actions/answers";
+import { saveShortTextAnswer } from "@/actions/answers/answers";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
 

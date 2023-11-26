@@ -1,8 +1,11 @@
-"use client"
+"use client";
 
-import React, { EventHandler, useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { saveLongTextAnswer } from "@/actions/answers";
+import {
+  fetchLongTextAnswer,
+  saveLongTextAnswer,
+} from "@/actions/answers/longText";
 
 export interface LongTextQuestionTypeProps extends DefaultQuestionTypeProps {}
 
@@ -13,6 +16,23 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   questiontext,
   questionnote,
 }) => {
+  const [answer, setAnswer] = useState("");
+
+  useEffect(() => {
+    async function loadAnswer() {
+      try {
+        const savedAnswer = await fetchLongTextAnswer(questionid);
+        setAnswer(savedAnswer || "");
+      } catch (error) {
+        console.error("Failed to fetch answer", error);
+      }
+    }
+    loadAnswer();
+  }, [questionid]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setAnswer(event.target.value);
+  };
 
   return (
     <QuestionTypes
@@ -29,6 +49,8 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
         rows={4}
         style={{ minHeight: "100px" }}
         onBlur={(event) => saveLongTextAnswer(event.target.value, questionid)}
+        onChange={handleChange}
+        value={answer}
       />
     </QuestionTypes>
   );
