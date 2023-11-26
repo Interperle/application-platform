@@ -1,7 +1,10 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { fetchDatePickerAnswer, saveDatePickerAnswer } from "@/actions/answers/datePicker";
+import {
+  fetchDatePickerAnswer,
+  saveDatePickerAnswer,
+} from "@/actions/answers/datePicker";
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {}
 

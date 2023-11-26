@@ -12,13 +12,12 @@ export async function saveDateTimePickerAnswer(
   pickeddatetime: string,
   questionid: string,
 ) {
-  console.log("%"+pickeddatetime+"%");
   if (pickeddatetime == "" || pickeddatetime == "Invalid date") {
     await deleteAnswer(questionid, "datetime_picker_answer_table");
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-    console.log(answerid)
+    console.log(answerid);
     if (reqtype == "created") {
       const insertDateTimePickerAnswerResponse = await supabase
         .from("datetime_picker_answer_table")
@@ -48,13 +47,13 @@ export async function fetchDateTimePickerAnswer(questionid: string) {
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  console.log(answerid)
   if (answerid) {
-    const { data: datetimePickerData, error: datetimePickerError } = await supabase
-      .from("datetime_picker_answer_table")
-      .select("pickeddatetime")
-      .eq("answerid", answerid)
-      .single();
+    const { data: datetimePickerData, error: datetimePickerError } =
+      await supabase
+        .from("datetime_picker_answer_table")
+        .select("pickeddatetime")
+        .eq("answerid", answerid)
+        .single();
     return datetimePickerData!.pickeddatetime;
   }
   return "";

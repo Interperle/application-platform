@@ -12,12 +12,11 @@ export async function saveDatePickerAnswer(
   pickeddate: string,
   questionid: string,
 ) {
-  console.log("%"+pickeddate+"%");
+  console.log("%" + pickeddate + "%");
   if (pickeddate == "") {
     await deleteAnswer(questionid, "date_picker_answer_table");
     return;
   } else {
-    
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
       const insertDatePickerAnswerResponse = await supabase
