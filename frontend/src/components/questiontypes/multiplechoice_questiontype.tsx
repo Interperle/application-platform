@@ -8,17 +8,19 @@ export interface MultipleChoiceQuestionTypeProps
 }
 
 const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
   choices,
 }) => {
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <div role="group" aria-labelledby={questionid} className="mt-2">

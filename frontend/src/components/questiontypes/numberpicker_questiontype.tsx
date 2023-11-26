@@ -1,5 +1,6 @@
 import React from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+import { saveNumberPickerAnswer } from "@/actions/answers";
 
 export interface NumberPickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
@@ -8,18 +9,20 @@ export interface NumberPickerQuestionTypeProps
 }
 
 const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
   min,
   max,
 }) => {
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <input
@@ -30,6 +33,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
         min={min}
         max={max}
         className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+        onBlur={(event) => saveNumberPickerAnswer(Number(event.target.value), questionid)}
       />
     </QuestionTypes>
   );

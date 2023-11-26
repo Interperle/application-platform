@@ -5,18 +5,20 @@ export interface VideoUploadQuestionTypeProps
   extends DefaultQuestionTypeProps {}
 
 const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
 }) => {
   const uploading = false;
   const videoUrl = "";
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <input

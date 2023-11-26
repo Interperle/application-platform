@@ -6,9 +6,10 @@ export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
 }
 
 const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
   maxSizeInMB,
 }) => {
@@ -33,9 +34,10 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
 
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <input

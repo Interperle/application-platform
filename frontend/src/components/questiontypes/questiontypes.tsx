@@ -1,9 +1,10 @@
 import React from "react";
 
 export interface DefaultQuestionTypeProps {
+  phasename: string;
   questionid: string;
   mandatory: boolean;
-  question_text: string;
+  questiontext: string;
   questionnote: string;
 }
 
@@ -14,7 +15,7 @@ interface QuestionTypesProps extends DefaultQuestionTypeProps {
 const QuestionTypes: React.FC<QuestionTypesProps> = ({
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
   children,
 }) => {
@@ -25,7 +26,7 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
         className="block font-semibold text-secondary py-3"
       >
         <h4 className="py-1 text-base">
-          {question_text}
+          {questiontext}
           {mandatory && <span className="text-red-500">*</span>}
         </h4>
         {questionnote && (

@@ -1,8 +1,12 @@
+"use client";
+
 import React from "react";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { saveShortTextAnswer } from "@/actions/answers";
+import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
+import { useAppDispatch } from "@/store/store";
 
 export interface DefaultQuestion {
   questionid: string;
@@ -19,28 +23,49 @@ export interface Question extends DefaultQuestion {
 }
 
 interface QuestionnaireProps {
-  questions: Question[];
+  phaseData: PhaseData;
+  phaseQuestions: Question[];
 }
 
-const Questionnaire: React.FC<QuestionnaireProps> = ({ questions }) => {
+const Questionnaire: React.FC<QuestionnaireProps> = ({
+  phaseData,
+  phaseQuestions,
+}) => {
+  const dispatch = useAppDispatch();
+  // need a copy, so I can modify it beneath
+  const copyPhaseQuestions = phaseQuestions.map((phaseQuestions) => {
+    return phaseQuestions;
+  });
+  dispatch(
+    setPhase({
+      phasename: phaseData.phasename,
+      phasedata: phaseData,
+      phasequestions: phaseQuestions,
+    }),
+  );
   return (
-    <form action={saveShortTextAnswer}>
-      {questions
+    <form>
+      {copyPhaseQuestions
         .sort((a, b) => a.questionorder - b.questionorder)
-        .map((question) => {
-          const QuestionComponent = getQuestionComponent(question.questiontype);
+        .map((phaseQuestion) => {
+          const QuestionComponent = getQuestionComponent(
+            phaseQuestion.questiontype,
+          );
           if (!QuestionComponent) {
-            console.error(`Unknown question type: ${question.questiontype}`);
+            console.error(
+              `Unknown question type: ${phaseQuestion.questiontype}`,
+            );
             return null;
           }
           return (
             <QuestionComponent
-              key={question.questionid}
-              questionid={question.questionid}
-              mandatory={question.mandatory}
-              question_text={question.questiontext}
-              questionnote={question.questionnote}
-              {...question.params}
+              key={phaseQuestion.questionid}
+              phasename={phaseData.phasename}
+              questionid={phaseQuestion.questionid}
+              mandatory={phaseQuestion.mandatory}
+              questiontext={phaseQuestion.questiontext}
+              questionnote={phaseQuestion.questionnote}
+              {...phaseQuestion.params}
             />
           );
         })}

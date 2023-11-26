@@ -7,16 +7,18 @@ export interface ImageUploadQuestionTypeProps
   extends DefaultQuestionTypeProps {}
 
 const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
 }) => {
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <div className="mt-1">

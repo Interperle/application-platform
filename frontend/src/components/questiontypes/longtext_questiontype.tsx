@@ -1,19 +1,25 @@
-import React from "react";
+"use client"
+
+import React, { EventHandler, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+import { saveLongTextAnswer } from "@/actions/answers";
 
 export interface LongTextQuestionTypeProps extends DefaultQuestionTypeProps {}
 
 const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
 }) => {
+
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <textarea
@@ -22,6 +28,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
         maxLength={200}
         rows={4}
         style={{ minHeight: "100px" }}
+        onBlur={(event) => saveLongTextAnswer(event.target.value, questionid)}
       />
     </QuestionTypes>
   );

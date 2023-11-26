@@ -7,17 +7,19 @@ export interface DropdownQuestionTypeProps extends DefaultQuestionTypeProps {
 }
 
 const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
+  phasename,
   questionid,
   mandatory,
-  question_text,
+  questiontext,
   questionnote,
   options,
 }) => {
   return (
     <QuestionTypes
+      phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}
-      question_text={question_text}
+      questiontext={questiontext}
       questionnote={questionnote}
     >
       <select
