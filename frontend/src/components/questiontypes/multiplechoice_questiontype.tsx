@@ -1,6 +1,9 @@
-import React from "react";
+"use client"
+
+import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { Choice, ChoiceProps } from "./utils/multiplechoice_choice";
+import { fetchMultipleChoiceAnswer, saveMultipleChoiceAnswer } from "@/actions/answers/multipleChoice";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {
@@ -15,6 +18,31 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   questionnote,
   choices,
 }) => {
+  const [selectedChoice, setSelectedChoice] = useState("");
+
+  useEffect(() => {
+    async function loadAnswer() {
+      try {
+        const savedAnswer = await fetchMultipleChoiceAnswer(questionid);
+        setSelectedChoice(savedAnswer || "");
+      } catch (error) {
+        console.error("Failed to fetch answer", error);
+      }
+    }
+    loadAnswer();
+  }, [questionid]);
+
+  const handleChange = (choice: ChoiceProps) => {
+    if (selectedChoice === choice.choiceid) {
+      saveMultipleChoiceAnswer("", questionid);
+      setSelectedChoice("");
+    } else {
+      saveMultipleChoiceAnswer(choice.choiceid, questionid);
+      setSelectedChoice(choice.choiceid);
+    }
+    
+  };
+
   return (
     <QuestionTypes
       phasename={phasename}
@@ -29,6 +57,9 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
             key={choice.choiceid}
             choiceid={choice.choiceid}
             choicetext={choice.choicetext}
+            isSelected={selectedChoice === choice.choiceid}
+            mandatory={mandatory}
+            onChange={() => handleChange(choice)}
           />
         ))}
       </div>
