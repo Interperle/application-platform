@@ -13,5 +13,9 @@ export const getURL = () => {
 };
 
 export function createCurrentTimestamp() {
-  return moment().tz("Europe/Berlin").format("Y-M-DTHH:M:SS.000");
+  return moment().tz("Europe/Berlin").format("YYYY-MM-DDTHH:mm:ss.SSS");
+}
+
+export function setToPrefferedTimeZone(dateString: string) {
+  return moment(dateString).tz('Europe/Berlin').format("YYYY-MM-DDTHH:mm:ss.SSS");
 }
