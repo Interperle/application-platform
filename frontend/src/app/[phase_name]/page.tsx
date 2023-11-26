@@ -1,9 +1,11 @@
-import { fetch_phase_by_name, fetch_question_table } from "@/actions/phase";
+import {
+  cached_fetch_phase_by_name,
+  cached_fetch_phase_questions,
+} from "@/utils/cached";
 import Apl_Header from "@/components/header";
 import Questionnaire from "@/components/questions";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { RedirectType, redirect } from "next/navigation";
-
 
 export default async function Page({
   params,
@@ -14,8 +16,7 @@ export default async function Page({
   console.log("");
   console.log("Phasename: " + phaseName);
 
-  const phaseData = await fetch_phase_by_name(phaseName);
-
+  const phaseData = await cached_fetch_phase_by_name(phaseName);
   const currentDate = new Date(createCurrentTimestamp());
   const startDate = new Date(phaseData.startdate);
   const endDate = new Date(phaseData.enddate);
@@ -25,8 +26,8 @@ export default async function Page({
     return redirect("/", RedirectType.replace);
   }
 
-  const isEditable = ((currentDate >= startDate) && (currentDate <= endDate));
-  const phase_questions = await fetch_question_table(phaseData.phaseid);
+  const isEditable = currentDate >= startDate && currentDate <= endDate;
+  const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
 
   console.log("Render Questionnaire");
   return (
@@ -46,7 +47,10 @@ export default async function Page({
             </div>
           )}
           <div className="space-y-4 max-w-screen-xl">
-            <Questionnaire questions={phase_questions} />
+            <Questionnaire
+              phaseData={phaseData}
+              phaseQuestions={phase_questions}
+            />
           </div>
         </div>
       </div>
