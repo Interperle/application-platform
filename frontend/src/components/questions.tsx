@@ -4,7 +4,6 @@ import React from "react";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
-import { saveShortTextAnswer } from "@/actions/answers/answers";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
 
@@ -44,7 +43,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
     }),
   );
   return (
-    <form>
+    <div>
       {copyPhaseQuestions
         .sort((a, b) => a.questionorder - b.questionorder)
         .map((phaseQuestion) => {
@@ -70,7 +69,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
           );
         })}
       <button type="submit">Speichern</button>
-    </form>
+    </div>
   );
 };
 

@@ -1,7 +1,9 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+import { deletePdfUploadAnswer, savePdfUploadAnswer } from "@/actions/answers/pdfUpload";
+import { fetchPdfUploadAnswer } from "@/utils/helpers";
 
 export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxSizeInMB: number;
@@ -15,23 +17,31 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   questionnote,
   maxSizeInMB,
 }) => {
-  const fileInputRef = null;
-  const [fileSizeError, setFileSizeError] = [null, console.log];
+  const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid)
+  const [uploadUrl, setUploadPdf] = useState("");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const fileSizeInMB = file.size / (1024 * 1024);
-      if (fileSizeInMB > maxSizeInMB) {
-        setFileSizeError(`File size exceeds ${maxSizeInMB}MB`);
-        // Clear the file input for new selection
-        if (fileInputRef) {
-        }
-      } else {
-        setFileSizeError(null);
-        // Handle file upload here if needed
+  useEffect(() => {
+    async function loadAnswer() {
+      try {
+        const pdfUploadBucketData = await fetchPdfUploadAnswer(questionid)
+        const url = URL.createObjectURL(pdfUploadBucketData!)
+        setUploadPdf(url)
+      } catch (error) {
+        console.error("Failed to fetch answer", error);
       }
     }
+    loadAnswer();
+  }, [questionid]);
+
+  const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files){
+      setUploadPdf(URL.createObjectURL(event.target.files[0]));
+    }
+  };
+
+  const handleDeleteOnClick = () => {
+    deletePdfUploadAnswer(questionid)
+    setUploadPdf("");
   };
 
   return (
@@ -42,19 +52,29 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
     >
-      <input
-        ref={fileInputRef}
-        type="file"
-        id={questionid}
-        name={questionid}
-        accept="application/pdf"
-        required={mandatory}
-        //onChange={handleFileChange}
-        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-      />
-      {fileSizeError && (
-        <p className="text-red-500 text-xs mt-1">{fileSizeError}</p>
-      )}
+      <form action={savePdfUploadAnswerWithId}>
+        <input
+          type="file"
+          id={questionid}
+          name={questionid}
+          accept="application/pdf"
+          required={mandatory}
+          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          onChange={(event) => handleUploadChange(event)}
+        />
+        {uploadUrl && (
+          <div className="mt-4">
+            <iframe
+              src={uploadUrl}
+              width="100%"
+              height="600px"
+              style={{ border: 'none' }}
+            />
+            <button onClick={handleDeleteOnClick}>Delete</button>
+          </div>
+        )}
+        <button type="submit">Upload Bild</button>
+      </form>
     </QuestionTypes>
   );
 };

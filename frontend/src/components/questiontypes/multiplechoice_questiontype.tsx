@@ -40,7 +40,6 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       saveMultipleChoiceAnswer(choice.choiceid, questionid);
       setSelectedChoice(choice.choiceid);
     }
-    
   };
 
   return (

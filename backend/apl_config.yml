@@ -108,4 +108,4 @@ questions:
         order: 3
         question: Please Upload this Video
         mandatory: false
-        maxFileSizeInMB: 2.0  # in Mega Byte
+        maxFileSizeInMB: 10.0  # in Mega Byte
