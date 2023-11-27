@@ -38,7 +38,7 @@ QUESTION_TYPE_PARAMS = {
     QuestionType.DATETIME_PICKER: ['minDatetime', 'maxDatetime'],
     QuestionType.NUMBER_PICKER: ['minNumber', 'maxNumber'],
     QuestionType.PDF_UPLOAD: ['maxFileSizeInMB'],
-    QuestionType.IMAGE_UPLOAD: ['maxFileSizeInMB', 'allowedFileTypes'],
+    QuestionType.IMAGE_UPLOAD: ['maxFileSizeInMB'],
     QuestionType.DROPDOWN: ['minAnswers', 'maxAnswers', 'Answers', 'userInput'],
 }
 
