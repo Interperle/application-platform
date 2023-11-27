@@ -41,12 +41,21 @@ def process_config():
             response_question_type_table = supabase.table(QUESTION_TYPES_DB_TABLE[question_type]) \
                                                                         .insert(data_question_type_table).execute()
             log.info(str(response_question_type_table))
-
-            if question_type == QuestionType.MULTIPLE_CHOICE:
+            if question_type in [QuestionType.PDF_UPLOAD, QuestionType.IMAGE_UPLOAD, QuestionType.VIDEO_UPLOAD]:
+                file_type = ""
+                if question_type == QuestionType.PDF_UPLOAD:
+                    file_type = "pdf"
+                    allowed_mime_types = ["application/pdf"]
+                elif question_type == QuestionType.VIDEO_UPLOAD:
+                    file_type = "video"
+                    allowed_mime_types = ["video/mp4"]
+                elif question_type == QuestionType.IMAGE_UPLOAD:
+                    file_type = "image"
+                    allowed_mime_types = ["image/png", "image/jpeg"]
+                create_file_storage(file_type, question_id, question["maxFileSizeInMB"], allowed_mime_types)
+            elif question_type == QuestionType.MULTIPLE_CHOICE:
                 for answer in question['Answers']:
                     data_list_table = create_data_choice_table(question_id, answer)
-                    table_name = QUESTION_TYPES_DB_TABLE[question_type]
-                    response_list_table = None
                     try:
                         response_list_table = supabase.table('multiple_choice_question_choice_table').insert(
                             data_list_table).execute()
@@ -56,8 +65,6 @@ def process_config():
             elif question_type == QuestionType.DROPDOWN:
                 for answer in question['Answers']:
                     data_list_table = create_data_option_table(question_id, answer)
-                    table_name = QUESTION_TYPES_DB_TABLE[question_type]
-                    response_list_table = None
                     try:
                         response_list_table = supabase.table('dropdown_question_option_table').insert(
                             data_list_table).execute()
@@ -115,5 +122,12 @@ def create_data_option_table(questionId: str, optionText: str) -> dict:
     }
 
 
-if __name__ == '__main__':
-    process_config()
+def create_file_storage(filetype: str, questionid: str, fileSizeLimitInMB: int, allowedMimeTypes: list):
+    supabase = init_supabase()
+    bucket_name = f"{filetype}-{questionid}"
+    response = supabase.storage.create_bucket(bucket_name, bucket_name, {
+        "public": False,
+        "file_size_limit": fileSizeLimitInMB * (2**20),
+        "allowed_mime_types": allowedMimeTypes
+    })
+    log.info(str(response))
