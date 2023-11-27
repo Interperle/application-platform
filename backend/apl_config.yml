@@ -1,11 +1,9 @@
 
-### Uncomment to configure additional attributes of Application. -> Adds to APPLICATION_TABLE
+### Uncomment to configure additional attributes of Application
 # application:
-#   timezone: UTC+2  #default
-#   firstName: string
-#   surName: string
-#   profilePicture: picture
-#   logo: picture
+#   timezone: Europe/Berlin  #default
+#   admin_email: string
+#   admin_password: string
 
 # application_table:
 questions:
@@ -69,11 +67,6 @@ questions:
         order: 9
         question: Please upload your Profile picture
         maxFileSizeInMB: 2.0  # in Mega Byte
-        allowedFileTypes:
-          - png
-          - jpg
-          - jpeg
-          - gif
         mandatory: false
       - questionType: dropdown
         order: 10
