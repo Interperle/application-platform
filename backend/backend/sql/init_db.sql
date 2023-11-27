@@ -213,7 +213,7 @@ ALTER TABLE
 CREATE TABLE
   VIDEO_UPLOAD_ANSWER_TABLE (
     answerid UUID PRIMARY KEY,
-    videourl VARCHAR(255) NOT NULL, -- change to Videoupload later on
+    videoname TEXT NOT NULL,
     FOREIGN KEY (answerid) REFERENCES ANSWER_TABLE (answerid) ON DELETE CASCADE
   );
 
@@ -223,7 +223,7 @@ ALTER TABLE
 CREATE TABLE
   IMAGE_UPLOAD_ANSWER_TABLE (
     answerid UUID PRIMARY KEY,
-    imageurl VARCHAR(255) NOT NULL, -- change to Image Upload later on
+    imagename TEXT NOT NULL,
     FOREIGN KEY (answerid) REFERENCES ANSWER_TABLE (answerid) ON DELETE CASCADE
   );
 
@@ -233,7 +233,7 @@ ALTER TABLE
 CREATE TABLE
   PDF_UPLOAD_ANSWER_TABLE (
     answerid UUID PRIMARY KEY,
-    pdfurl VARCHAR(255) NOT NULL, -- change to PDF Upload later on
+    pdfname TEXT NOT NULL,
     FOREIGN KEY (answerid) REFERENCES ANSWER_TABLE (answerid) ON DELETE CASCADE
   );
 
@@ -353,4 +353,7 @@ CREATE POLICY insert_profile ON user_profiles_table FOR INSERT
   WITH CHECK (auth.uid() IS NOT NULL);
 
 CREATE POLICY select_own_profile ON public.user_profiles_table FOR SELECT
+  USING (userid = auth.uid());
+
+CREATE POLICY select_own_application ON application_table FOR SELECT
   USING (userid = auth.uid());

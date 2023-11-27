@@ -7,10 +7,6 @@ import { deleteUser, updatePassword } from "@/actions/auth";
 import { useFormStatus, useFormState } from "react-dom";
 
 const SettingsPage: React.FC = () => {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
