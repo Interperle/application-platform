@@ -30,9 +30,7 @@ export function setToPrefferedTimeZone(dateString: string) {
 }
 
 export function transformReadableDate(dateString: string) {
-  return moment(dateString)
-    .tz("Europe/Berlin")
-    .format("DD.MM.YYYY");
+  return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY");
 }
 
 export async function fetchImageUploadAnswer(questionid: string) {

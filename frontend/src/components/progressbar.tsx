@@ -42,7 +42,7 @@ export const ProgressBar = ({
     return () => {
       supabase.removeChannel(progressbarChannel);
     };
-  }, [supabase]);
+  });
   return (
     <div className="w-full bg-gray-300 rounded-2xl border">
       <div

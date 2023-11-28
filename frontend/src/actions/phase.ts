@@ -308,11 +308,10 @@ export async function fetch_answer_table(
   return answerData ? answerData.length : 0;
 }
 
-
 export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
   const { data: questionData, error: errorData } = await get_supabase()
     .from("question_table")
-    .select("*")
+    .select("*");
 
   if (errorData) {
     console.log("Error:" && errorData);
