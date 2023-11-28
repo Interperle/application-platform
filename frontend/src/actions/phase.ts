@@ -232,7 +232,7 @@ export async function fetch_phase_by_name(
   return phaseData;
 }
 
-export async function fetch_all_phases() {
+export async function fetch_all_phases(): Promise<PhaseData[]> {
   const cookieStore = cookies();
 
   const supabase = createServerClient(
@@ -256,7 +256,7 @@ export async function fetch_all_phases() {
   if (!phasesData) {
     console.log("No data " + phasesData);
   }
-  return phasesData;
+  return phasesData || [];
 }
 
 type Phase = {
@@ -306,4 +306,21 @@ export async function fetch_answer_table(
   }
 
   return answerData ? answerData.length : 0;
+}
+
+export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
+  const { data: questionData, error: errorData } = await get_supabase()
+    .from("question_table")
+    .select("*");
+
+  if (errorData) {
+    console.log("Error:" && errorData);
+  }
+
+  if (!questionData) {
+    console.log("No Data");
+    return [];
+  }
+
+  return questionData as DefaultQuestion[];
 }

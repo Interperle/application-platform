@@ -29,6 +29,10 @@ export function setToPrefferedTimeZone(dateString: string) {
     .format("YYYY-MM-DDTHH:mm:ss.SSS");
 }
 
+export function transformReadableDate(dateString: string) {
+  return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY");
+}
+
 export async function fetchImageUploadAnswer(questionid: string) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

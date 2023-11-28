@@ -32,7 +32,7 @@ export default async function Page({
   const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
 
   const mandatoryQuestionIds = phase_questions
-    .filter((q) => q.mandatory) // Filter questions where mandatory is true
+    .filter((q) => q.mandatory)
     .map((q) => q.questionid);
   const already_answered = await fetch_answer_table(mandatoryQuestionIds);
   console.log("Render Questionnaire");
