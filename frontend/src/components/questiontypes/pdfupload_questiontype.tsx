@@ -1,8 +1,11 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { deletePdfUploadAnswer, savePdfUploadAnswer } from "@/actions/answers/pdfUpload";
+import {
+  deletePdfUploadAnswer,
+  savePdfUploadAnswer,
+} from "@/actions/answers/pdfUpload";
 import { fetchPdfUploadAnswer } from "@/utils/helpers";
 
 export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
@@ -17,15 +20,15 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   questionnote,
   maxSizeInMB,
 }) => {
-  const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid)
+  const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid);
   const [uploadUrl, setUploadPdf] = useState("");
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const pdfUploadBucketData = await fetchPdfUploadAnswer(questionid)
-        const url = URL.createObjectURL(pdfUploadBucketData!)
-        setUploadPdf(url)
+        const pdfUploadBucketData = await fetchPdfUploadAnswer(questionid);
+        const url = URL.createObjectURL(pdfUploadBucketData!);
+        setUploadPdf(url);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -34,13 +37,13 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   }, [questionid]);
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files){
+    if (event.target.files) {
       setUploadPdf(URL.createObjectURL(event.target.files[0]));
     }
   };
 
   const handleDeleteOnClick = () => {
-    deletePdfUploadAnswer(questionid)
+    deletePdfUploadAnswer(questionid);
     setUploadPdf("");
   };
 
@@ -68,7 +71,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
               src={uploadUrl}
               width="100%"
               height="600px"
-              style={{ border: 'none' }}
+              style={{ border: "none" }}
             />
             <button onClick={handleDeleteOnClick}>Delete</button>
           </div>

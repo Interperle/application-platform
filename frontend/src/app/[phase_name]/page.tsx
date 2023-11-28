@@ -6,6 +6,8 @@ import Apl_Header from "@/components/header";
 import Questionnaire from "@/components/questions";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { RedirectType, redirect } from "next/navigation";
+import { ProgressBar } from "@/components/progressbar";
+import { fetch_answer_table } from "@/actions/phase";
 
 export default async function Page({
   params,
@@ -29,6 +31,10 @@ export default async function Page({
   const isEditable = currentDate >= startDate && currentDate <= endDate;
   const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
 
+  const mandatoryQuestionIds = phase_questions
+    .filter((q) => q.mandatory) // Filter questions where mandatory is true
+    .map((q) => q.questionid);
+  const already_answered = await fetch_answer_table(mandatoryQuestionIds);
   console.log("Render Questionnaire");
   return (
     <span className="w-full">
@@ -46,6 +52,10 @@ export default async function Page({
               </strong>
             </div>
           )}
+          <ProgressBar
+            mandatoryQuestionIds={mandatoryQuestionIds}
+            numAnswers={already_answered}
+          />
           <div className="space-y-4 max-w-screen-xl">
             <Questionnaire
               phaseData={phaseData}

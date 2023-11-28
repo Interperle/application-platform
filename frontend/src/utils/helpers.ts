@@ -1,4 +1,9 @@
-import { fetchAnswerId, getApplicationIdOfCurrentUser, getCurrentUser, setupSupabaseClient } from "@/actions/answers/answers";
+import {
+  fetchAnswerId,
+  getApplicationIdOfCurrentUser,
+  getCurrentUser,
+  setupSupabaseClient,
+} from "@/actions/answers/answers";
 import { createBrowserClient } from "@supabase/ssr";
 import moment from "moment-timezone";
 
@@ -30,7 +35,7 @@ export async function fetchImageUploadAnswer(questionid: string) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
   const { data: userData, error: userError } = await supabase.auth.getUser();
-  const user_id = userData.user!.id
+  const user_id = userData.user!.id;
   const { data: applicationData, error: applicationError } = await supabase
     .from("application_table")
     .select("applicationid")
@@ -52,8 +57,8 @@ export async function fetchImageUploadAnswer(questionid: string) {
     return null;
   }
   let answerid = answerData![0].answerid;
-  const bucket_name = "image-" + questionid
-  
+  const bucket_name = "image-" + questionid;
+
   if (answerid) {
     const { data: imageUploadData, error: imageUploadError } = await supabase
       .from("image_upload_answer_table")
@@ -63,13 +68,15 @@ export async function fetchImageUploadAnswer(questionid: string) {
     if (imageUploadError) {
       alert(imageUploadError.message);
     }
-    const { data: imageUploadBucketData, error: imageUploadBucketError } = await supabase.storage.from(bucket_name).download(`${user_id}_${imageUploadData!.imagename}`);
-    
+    const { data: imageUploadBucketData, error: imageUploadBucketError } =
+      await supabase.storage
+        .from(bucket_name)
+        .download(`${user_id}_${imageUploadData!.imagename}`);
+
     return imageUploadBucketData;
   }
   return null;
 }
-
 
 export async function fetchPdfUploadAnswer(questionid: string) {
   const supabase = createBrowserClient(
@@ -77,7 +84,7 @@ export async function fetchPdfUploadAnswer(questionid: string) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
   const { data: userData, error: userError } = await supabase.auth.getUser();
-  const user_id = userData.user!.id
+  const user_id = userData.user!.id;
   const { data: applicationData, error: applicationError } = await supabase
     .from("application_table")
     .select("applicationid")
@@ -99,8 +106,8 @@ export async function fetchPdfUploadAnswer(questionid: string) {
     return null;
   }
   let answerid = answerData![0].answerid;
-  const bucket_name = "pdf-" + questionid
-  
+  const bucket_name = "pdf-" + questionid;
+
   if (answerid) {
     const { data: pdfUploadData, error: pdfUploadError } = await supabase
       .from("pdf_upload_answer_table")
@@ -110,13 +117,15 @@ export async function fetchPdfUploadAnswer(questionid: string) {
     if (pdfUploadError) {
       alert(pdfUploadError.message);
     }
-    const { data: pdfUploadBucketData, error: pdfUploadBucketError } = await supabase.storage.from(bucket_name).download(`${user_id}_${pdfUploadData!.pdfname}`);
-    
+    const { data: pdfUploadBucketData, error: pdfUploadBucketError } =
+      await supabase.storage
+        .from(bucket_name)
+        .download(`${user_id}_${pdfUploadData!.pdfname}`);
+
     return pdfUploadBucketData;
   }
   return null;
 }
-
 
 export async function fetchVideoUploadAnswer(questionid: string) {
   const supabase = createBrowserClient(
@@ -124,7 +133,7 @@ export async function fetchVideoUploadAnswer(questionid: string) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
   const { data: userData, error: userError } = await supabase.auth.getUser();
-  const user_id = userData.user!.id
+  const user_id = userData.user!.id;
   const { data: applicationData, error: applicationError } = await supabase
     .from("application_table")
     .select("applicationid")
@@ -146,8 +155,8 @@ export async function fetchVideoUploadAnswer(questionid: string) {
     return null;
   }
   let answerid = answerData![0].answerid;
-  const bucket_name = "video-" + questionid
-  
+  const bucket_name = "video-" + questionid;
+
   if (answerid) {
     const { data: videoUploadData, error: videoUploadError } = await supabase
       .from("video_upload_answer_table")
@@ -157,8 +166,11 @@ export async function fetchVideoUploadAnswer(questionid: string) {
     if (videoUploadError) {
       alert(videoUploadError.message);
     }
-    const { data: videoUploadBucketData, error: videoUploadBucketError } = await supabase.storage.from(bucket_name).download(`${user_id}_${videoUploadData!.videoname}`);
-    
+    const { data: videoUploadBucketData, error: videoUploadBucketError } =
+      await supabase.storage
+        .from(bucket_name)
+        .download(`${user_id}_${videoUploadData!.videoname}`);
+
     return videoUploadBucketData;
   }
   return null;

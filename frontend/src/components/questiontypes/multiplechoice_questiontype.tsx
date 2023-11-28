@@ -1,9 +1,12 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { Choice, ChoiceProps } from "./utils/multiplechoice_choice";
-import { fetchMultipleChoiceAnswer, saveMultipleChoiceAnswer } from "@/actions/answers/multipleChoice";
+import {
+  fetchMultipleChoiceAnswer,
+  saveMultipleChoiceAnswer,
+} from "@/actions/answers/multipleChoice";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {

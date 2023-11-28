@@ -169,21 +169,21 @@ export async function fetch_question_table(
     .from("question_table")
     .select("*")
     .eq("phaseid", phaseId);
-  //TODO
+
   if (errorData) {
     console.log("Error:" && errorData);
     redirect("/404", RedirectType.replace);
   }
-  //TODO
+
   if (!questionData) {
     console.log("No Data");
     redirect("/404", RedirectType.replace);
   }
-  // TODO also fetch all other question types
+
   const questionTypesData = await fetch_question_type_table(questionData);
   const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice);
   const optionsData = await fetchAdditionalParams(QuestionType.Dropdown);
-  const combinedQuestions = questionData.map(
+  const combinedQuestions = await questionData.map(
     async (question: DefaultQuestion) => {
       return await append_params(
         questionTypesData,
@@ -291,4 +291,19 @@ export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
     previous_phase = phase;
   }
   return previous_phase;
+}
+
+export async function fetch_answer_table(
+  questionIds: string[],
+): Promise<number> {
+  const { data: answerData, error: answerError } = await get_supabase()
+    .from("answer_table")
+    .select("answerid")
+    .in("questionid", questionIds);
+
+  if (answerError) {
+    console.log("Error:" && answerError);
+  }
+
+  return answerData ? answerData.length : 0;
 }

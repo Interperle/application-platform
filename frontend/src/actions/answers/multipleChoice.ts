@@ -49,11 +49,12 @@ export async function fetchMultipleChoiceAnswer(questionid: string) {
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
 
   if (answerid) {
-    const { data: multipleChoiceData, error: multipleChoiceError } = await supabase
-      .from("multiple_choice_answer_table")
-      .select("selectedchoice")
-      .eq("answerid", answerid)
-      .single();
+    const { data: multipleChoiceData, error: multipleChoiceError } =
+      await supabase
+        .from("multiple_choice_answer_table")
+        .select("selectedchoice")
+        .eq("answerid", answerid)
+        .single();
     return multipleChoiceData!.selectedchoice;
   }
   return "";

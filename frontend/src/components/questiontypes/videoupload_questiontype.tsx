@@ -1,8 +1,11 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { deleteVideoUploadAnswer, saveVideoUploadAnswer } from "@/actions/answers/videoUpload";
+import {
+  deleteVideoUploadAnswer,
+  saveVideoUploadAnswer,
+} from "@/actions/answers/videoUpload";
 import { fetchVideoUploadAnswer } from "@/utils/helpers";
 
 export interface VideoUploadQuestionTypeProps
@@ -15,15 +18,18 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   questiontext,
   questionnote,
 }) => {
-  const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(null, questionid)
+  const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(
+    null,
+    questionid,
+  );
   const [uploadUrl, setUploadVideo] = useState("");
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const VideoUploadBucketData = await fetchVideoUploadAnswer(questionid)
-        const url = URL.createObjectURL(VideoUploadBucketData!)
-        setUploadVideo(url)
+        const VideoUploadBucketData = await fetchVideoUploadAnswer(questionid);
+        const url = URL.createObjectURL(VideoUploadBucketData!);
+        setUploadVideo(url);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -32,13 +38,13 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   }, [questionid]);
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files){
+    if (event.target.files) {
       setUploadVideo(URL.createObjectURL(event.target.files[0]));
     }
   };
 
   const handleDeleteOnClick = () => {
-    deleteVideoUploadAnswer(questionid)
+    deleteVideoUploadAnswer(questionid);
     setUploadVideo("");
   };
 
