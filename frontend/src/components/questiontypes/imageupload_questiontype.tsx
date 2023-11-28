@@ -1,10 +1,13 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { deleteImageUploadAnswer, saveImageUploadAnswer } from "@/actions/answers/imageUpload";
+import {
+  deleteImageUploadAnswer,
+  saveImageUploadAnswer,
+} from "@/actions/answers/imageUpload";
 import { fetchImageUploadAnswer } from "@/utils/helpers";
 
 export interface ImageUploadQuestionTypeProps
@@ -17,15 +20,18 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   questiontext,
   questionnote,
 }) => {
-  const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(null, questionid)
+  const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
+    null,
+    questionid,
+  );
   const [uploadUrl, setUploadImage] = useState("");
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const imageUploadBucketData = await fetchImageUploadAnswer(questionid)
-        const url = URL.createObjectURL(imageUploadBucketData!)
-        setUploadImage(url)
+        const imageUploadBucketData = await fetchImageUploadAnswer(questionid);
+        const url = URL.createObjectURL(imageUploadBucketData!);
+        setUploadImage(url);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -34,13 +40,13 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   }, [questionid]);
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files){
+    if (event.target.files) {
       setUploadImage(URL.createObjectURL(event.target.files[0]));
     }
   };
 
   const handleDeleteOnClick = () => {
-    deleteImageUploadAnswer(questionid)
+    deleteImageUploadAnswer(questionid);
     setUploadImage("");
   };
 
@@ -64,12 +70,19 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
             onChange={(event) => handleUploadChange(event)}
           />
         </div>
-        {uploadUrl &&
+        {uploadUrl && (
           <div className="mt-4">
-            <Image alt="Preview" src={uploadUrl} className="max-w-xs" id="imagePreview" width={100} height={100}/>
+            <Image
+              alt="Preview"
+              src={uploadUrl}
+              className="max-w-xs"
+              id="imagePreview"
+              width={100}
+              height={100}
+            />
             <button onClick={handleDeleteOnClick}>Delete</button>
           </div>
-        }
+        )}
         <button type="submit">Upload Bild</button>
       </form>
     </QuestionTypes>

@@ -1,8 +1,11 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { DropdownOption, DropdownOptionProps } from "./utils/dropdown_option";
-import { fetchDropdownAnswer, saveDropdownAnswer } from "@/actions/answers/dropdown";
+import {
+  fetchDropdownAnswer,
+  saveDropdownAnswer,
+} from "@/actions/answers/dropdown";
 
 export interface DropdownQuestionTypeProps extends DefaultQuestionTypeProps {
   options: DropdownOptionProps[];
@@ -22,7 +25,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         const savedAnswer = await fetchDropdownAnswer(questionid);
-        console.log("Saved Answer: " + savedAnswer)
+        console.log("Saved Answer: " + savedAnswer);
         setAnswer(savedAnswer || "");
       } catch (error) {
         console.error("Failed to fetch answer", error);
@@ -32,7 +35,8 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   }, [questionid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = event.target.options[event.target.selectedIndex].text;
+    const selectedOption =
+      event.target.options[event.target.selectedIndex].text;
     saveDropdownAnswer(selectedOption, questionid);
     setAnswer(event.target.value);
   };
@@ -57,10 +61,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
             Bitte wähle eine Option
           </option>
         )}
-        {!mandatory && (
-          <option key="empty" value="empty">
-          </option>
-        )}
+        {!mandatory && <option key="empty" value="empty"></option>}
         {options.map((option) => (
           <DropdownOption
             key={option.optionid}
