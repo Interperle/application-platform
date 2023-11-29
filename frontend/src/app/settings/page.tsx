@@ -3,12 +3,17 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase_client";
 import { User } from "@supabase/supabase-js";
-import { deleteUser, updatePassword } from "@/actions/auth";
+import { updatePassword } from "@/actions/auth";
 import { useFormStatus, useFormState } from "react-dom";
 import Apl_Header from "@/components/header";
 import OverviewButton from "@/components/overviewButton";
+import { useAppDispatch } from "@/store/store";
+import { openPopup } from "@/store/slices/popupSlice";
+import SubmitDeletionForm from "@/components/submitDeletionForm";
+import Popup from "@/components/popup";
 
 const SettingsPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -49,6 +54,7 @@ const SettingsPage: React.FC = () => {
         <Apl_Header />
         <OverviewButton />
       <h1 className="text-2xl font-bold mb-4">Einstellungen</h1>
+      <Popup />
       <div>
         <label>Email: {user?.email}</label>
       </div>
@@ -76,15 +82,14 @@ const SettingsPage: React.FC = () => {
         </div>
         <SubmitButton />
       </form>
-      <form action={deleteUser}>
-        <h4 className="py-2 text-xl mb-3">Lösche deinen Account</h4>
-        <button
-          type="submit"
-          className="apl-alert-button-fixed-expanded"
-        >
-          Account löschen
-        </button>
-      </form>
+      <h4 className="py-2 text-xl mb-3">Lösche deinen Account</h4>
+      <button
+        type="submit"
+        className="apl-alert-button-fixed-big"
+        onClick={() => dispatch(openPopup(<SubmitDeletionForm />))}
+      >
+        Account löschen
+      </button>
     </div>
     </span>
   );

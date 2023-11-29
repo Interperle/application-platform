@@ -5,7 +5,7 @@ CREATE EXTENSION
 CREATE TABLE
   APPLICATION_TABLE (
     applicationid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    userid UUID NOT NULL REFERENCES auth.users (id)
+    userid UUID NOT NULL REFERENCES auth.users (id) on delete cascade
   );
 
 ALTER TABLE
