@@ -6,7 +6,11 @@ import ForgottenPasswordForm from "./forgottenpassword-form";
 import { useAppDispatch } from "@/store/store";
 import { openPopup } from "@/store/slices/popupSlice";
 
-const initialState = {
+interface messageType {
+  message: string | null,
+}
+
+const initialState: messageType = {
   message: null,
 };
 
@@ -25,13 +29,13 @@ function SubmitButton() {
 }
 
 export default function SignInForm() {
-  const [state, sigInAction] = useFormState(signInUser, initialState);
+  const [state, formAction] = useFormState(signInUser, initialState);
 
   const dispatch = useAppDispatch();
 
   return (
     <div>
-      <form action={sigInAction} className="space-y-4">
+      <form action={formAction} className="space-y-4">
         <div>
           <label
             htmlFor="email"
@@ -72,9 +76,9 @@ export default function SignInForm() {
             Passwort vergessen?
           </button>
         </div>
-        <p aria-live="polite" className="sr-only" role="status">
+        <div className="text-red-600 italic">
           {state?.message}
-        </p>
+        </div>
         <div>
           <SubmitButton />
         </div>
