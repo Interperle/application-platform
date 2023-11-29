@@ -18,7 +18,7 @@ export default function Login() {
         alt="Generation-D Image Logo"
         className="max-w-50 max-h-50 items-center"
       />
-      <h1 className="text-5xl text-secondary">Generation-D Bewerbung</h1>
+      <h1 className="md:text-5xl text-4xl text-secondary justify-center text-center">Generation-D Bewerbung</h1>
       <Popup />
       <div className="py-12 px-8 max-w-xl bg-[#FFFFFF] text-secondary space-y-4 rounded text-center">
         <p>

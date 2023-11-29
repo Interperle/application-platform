@@ -50,7 +50,7 @@ const Apl_Header: React.FC = () => {
           <span className="text-secondary block text-center">FAQs</span>
         </Link>
         <Link href="/settings">
-          <span className="text-secondary block text-center">Settings</span>
+          <span className="text-secondary block text-center">Einstellungen</span>
         </Link>
         <form action={signOutAction}>
           <button type="submit" className="apl-button-fixed block mx-auto">

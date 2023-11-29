@@ -30,12 +30,11 @@ const PhaseOverview: React.FC<{
       key={key}
       className="w-full max-w-screen-xl mx-auto bg-white p-8 rounded-lg shadow-md"
     >
-      <div className="grid grid-cols-3 gap-4">
-        <div className="grid grid-rows-2">
+      <div className="grid grid-rows-3 md:grid-rows-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 md:grid-cols-1 md:grid-rows-2">
           <h2 className="rounded font-bold">{phaseName}</h2>
           <h4 className="rounded">
-            {transformReadableDate(phaseStart)} -{" "}
-            {transformReadableDate(phaseEnd)}
+            {transformReadableDate(phaseStart)}{" - "}{transformReadableDate(phaseEnd)}
           </h4>
         </div>
         <div className="p-4 rounded">

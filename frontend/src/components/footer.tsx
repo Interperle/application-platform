@@ -5,7 +5,7 @@ import React from "react";
 
 const Apl_Footer: React.FC = () => {
   return (
-    <footer className="bg-primary h-[256px] items-center justify-center space-y-8">
+    <footer className="bg-primary h-[256px] items-center justify-center space-y-8 mt-4">
       <div className="items-center justify-center flex flex-row md:flex-col md:space-x-8 space-y-8">
         <div className="flex flex-col md:flex-row space-x-0 md:space-x-8 space-y-4 md:space-y-0 text-secondary font-nunito">
           <Link href="https://generation-d.org/legal/" target="_blank">Impressum</Link>
