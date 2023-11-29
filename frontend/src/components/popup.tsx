@@ -34,7 +34,7 @@ const Popup: FC = () => {
               className="absolute top-0 right-0 p-4 bg-transparent rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               onClick={() => dispatch(closePopup())}
             >
-              <span className="sr-only">Close</span>
+              <span >Close</span>
               <svg
                 className="h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"

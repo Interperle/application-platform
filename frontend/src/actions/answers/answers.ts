@@ -1,32 +1,14 @@
 "use server";
 
 import { createCurrentTimestamp } from "@/utils/helpers";
-import { createServerClient } from "@supabase/ssr";
+import { initSupabaseActions } from "@/utils/supabaseServerClients";
 import { SupabaseClient, User, UserResponse } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export interface saveAnswerType {
   supabase: SupabaseClient;
   answerid: string;
   reqtype: string;
-}
-
-export async function setupSupabaseClient(): Promise<SupabaseClient> {
-  const cookieStore = cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    },
-  );
-  return supabase;
 }
 
 export async function getCurrentUser(supabase: SupabaseClient) {
@@ -75,7 +57,7 @@ export async function fetchAnswerId(
 }
 
 export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
-  const supabase = await setupSupabaseClient();
+  const supabase = await initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
@@ -114,7 +96,7 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
 }
 
 export async function deleteAnswer(questionid: string, answertype: string) {
-  const supabase = await setupSupabaseClient();
+  const supabase = await initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);

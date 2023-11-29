@@ -6,33 +6,13 @@ import {
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData } from "@/store/slices/phaseSlice";
-import { createCurrentTimestamp } from "@/utils/helpers";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { initSupabaseActions } from "@/utils/supabaseServerClients";
 import { RedirectType, redirect } from "next/navigation";
-import { cache } from "react";
 
 type IdType = {
   questionid: string;
   [key: string]: any;
 };
-
-function get_supabase() {
-  const cookieStore = cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    },
-  );
-  return supabase;
-}
 
 export async function fetch_question_type_table(questions: DefaultQuestion[]) {
   const result: Record<QuestionType, any> = {
@@ -62,7 +42,7 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
     }
 
     const { data: questionTypeData, error: questionTypeError } =
-      await get_supabase()
+      await initSupabaseActions()
         .from(tableName)
         .select("*")
         .in(
@@ -99,7 +79,7 @@ export async function fetchAdditionalParams(
     console.error("Not possible for others");
   }
 
-  const { data: paramsData, error } = await get_supabase()
+  const { data: paramsData, error } = await initSupabaseActions()
     .from(table_name)
     .select("*");
 
@@ -165,7 +145,7 @@ async function append_params(
 export async function fetch_question_table(
   phaseId: string,
 ): Promise<Question[]> {
-  const { data: questionData, error: errorData } = await get_supabase()
+  const { data: questionData, error: errorData } = await initSupabaseActions()
     .from("question_table")
     .select("*")
     .eq("phaseid", phaseId);
@@ -200,19 +180,8 @@ export async function fetch_question_table(
 export async function fetch_phase_by_name(
   phaseName: string,
 ): Promise<PhaseData> {
-  const cookieStore = cookies();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    },
-  );
+  const supabase = await initSupabaseActions()
   const { data: phaseData, error: phaseError } = await supabase
     .from("phase_table")
     .select("*")
@@ -233,19 +202,8 @@ export async function fetch_phase_by_name(
 }
 
 export async function fetch_all_phases(): Promise<PhaseData[]> {
-  const cookieStore = cookies();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    },
-  );
+  const supabase = await initSupabaseActions()
 
   const { data: phasesData, error: phasesError } = await supabase
     .from("phase_table")
@@ -296,7 +254,7 @@ export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
 export async function fetch_answer_table(
   questionIds: string[],
 ): Promise<number> {
-  const { data: answerData, error: answerError } = await get_supabase()
+  const { data: answerData, error: answerError } = await initSupabaseActions()
     .from("answer_table")
     .select("answerid")
     .in("questionid", questionIds);
@@ -309,7 +267,7 @@ export async function fetch_answer_table(
 }
 
 export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
-  const { data: questionData, error: errorData } = await get_supabase()
+  const { data: questionData, error: errorData } = await initSupabaseActions()
     .from("question_table")
     .select("*");
 

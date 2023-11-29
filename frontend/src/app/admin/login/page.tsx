@@ -11,7 +11,7 @@ export default async function Home() {
         alt="Generation-D Image Logo"
         className="max-w-50 max-h-50"
       />
-      <h1 className="text-5xl text-secondary">Generation-D Internal Login</h1>
+      <h1 className="text-4xl text-secondary md:text-5xl text-center">Generation-D Internal Login</h1>
       <form action={signInWithSlack}>
         <button
           type="submit"
@@ -24,7 +24,7 @@ export default async function Home() {
             alt="Slack Image Logo"
             className="max-w-50 max-h-50"
           />
-          <strong className="ml-2">Login with Slack</strong>
+          <strong className="ml-2">Login mit Slack</strong>
         </button>
       </form>
     </main>

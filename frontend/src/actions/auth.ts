@@ -3,13 +3,10 @@
 import { getURL } from "@/utils/helpers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { supabaseServiceRole } from "@/utils/supabase_servicerole";
+import { initSupabaseActions, supabaseServiceRole } from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
 
 export async function signUpUser(prevState: any, formData: FormData) {
   const schema = z.object({
@@ -17,37 +14,24 @@ export async function signUpUser(prevState: any, formData: FormData) {
     password: z.string().min(1),
     passwordConfirmation: z.string().min(1),
   });
-  const signUpFormData = schema.parse({
+  const signUpFormData = schema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     passwordConfirmation: formData.get("confirm-password"),
   });
-  if (signUpFormData.password != signUpFormData.passwordConfirmation) {
-    return { message: `Passwörter stimmen nicht überein!` };
+
+  if (!signUpFormData.success) {
+    return { message: 'User Registrierung fehlgeschlagen', status: 'ERROR' }
+  }
+
+  if (signUpFormData.data.password != signUpFormData.data.passwordConfirmation) {
+    return { message: `Passwörter stimmen nicht überein!`, status: 'ERROR' };
   }
   try {
-    const cookieStore = cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: "", ...options });
-          },
-        },
-      },
-    );
+    const supabase = await initSupabaseActions()
     const { data: userData, error: userError } = await supabase.auth.signUp({
-      email: signUpFormData.email.replace("@googlemail.com", "@gmail.com"),
-      password: signUpFormData.password,
+      email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
+      password: signUpFormData.data.password,
       options: {
         data: {},
         emailRedirectTo: `${getURL()}`,
@@ -56,7 +40,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
     revalidatePath("/login");
     if (userError) {
       console.log(userError);
-      return { message: userError.message };
+      return { message: userError.message, status: 'ERROR' };
     }
     console.log(userData);
     console.log("Success");
@@ -76,90 +60,60 @@ export async function signUpUser(prevState: any, formData: FormData) {
       await supabaseServiceRole.from("application_table").insert(sendData);
     if (applicationError) {
       console.log(applicationError);
-      return { message: applicationError.message };
+      return { message: applicationError.message, status: 'ERROR' };
     }
 
-    return { message: `Wir haben dir eine Email geschickt!` };
+    return { message: `Wir haben dir eine Email geschickt!`, status: 'SUCCESS' };
   } catch (e) {
-    console.log("Fehler");
     return {
       message: "Etwas ist schief gelaufen, bitte probiere es nocheinmal.",
+      status: 'ERROR'
     };
   }
 }
 
 export async function signInUser(prevState: any, formData: FormData) {
-  console.log("Action");
+  console.log("SignIn User");
   const schema = z.object({
     email: z.string().min(1),
     password: z.string().min(1),
   });
-  const signInFormData = schema.parse({
+  const signInFormData = schema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
-  try {
-    const cookieStore = cookies();
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: "", ...options });
-          },
-        },
-      },
-    );
+  if (!signInFormData.success) {
+    return { message: 'User Login fehlgeschlagen' }
+  }
+
+  try {
+    const supabase = await initSupabaseActions();
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: signInFormData.email.replace("@googlemail.com", "@gmail.com"),
-      password: signInFormData.password,
+      email: signInFormData.data.email.replace("@googlemail.com", "@gmail.com"),
+      password: signInFormData.data.password,
     });
     if (error) {
       console.log(error);
+      return { message: "Fehler: " + error.message }
     }
     revalidatePath("/");
   } catch (e) {
-    return { message: "Error" };
+    return { message: "Etwas ist schief gelaufen. Bitte probiere es nocheinmal" };
   }
   redirect("/");
 }
 
 export async function signOutUser(prevState: any, formData: FormData) {
-  try {
-    const cookieStore = cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: "", ...options });
-          },
-        },
-      },
-    );
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.log(error);
-    }
-  } catch (e) {
-    return { message: "Error" };
+  //try {
+  const supabase = await initSupabaseActions();
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    return{"message": error.message};
   }
+  /*} catch (e) {
+    return{"message": };
+  }*/
   redirect("/");
 }
 
@@ -170,75 +124,47 @@ export async function sendResetPasswordLink(
   const schema = z.object({
     email: z.string().min(1),
   });
-  const signUpFormData = schema.parse({
+  const resetPasswordFormData = schema.safeParse({
     email: formData.get("email"),
   });
-  try {
-    const cookieStore = cookies();
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: "", ...options });
-          },
-        },
-      },
-    );
+  if (!resetPasswordFormData.success) {
+    return { message: 'Passwort zurücksetzen fehlgeschlagen', status: 'ERROR' }
+  }
+  try {
+    const supabase = await initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
-      signUpFormData.email.replace("@googlemail.com", "@gmail.com"),
+      resetPasswordFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       {
         redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
       },
     );
+    console.log(error)
+    if(error){
+      return { message: error.message, status: 'ERROR' };
+    }
 
     revalidatePath("/login");
-    return { message: `Send "Reset Password Email" successfully` };
+    return { message: `Wenn du einen Account bei uns besitzt wurde dir ein Passwort Zurücksetzen Link gesendet!`, status: 'SUCCESS' };
   } catch (e) {
-    return { message: "Error" };
+    return { message: "Error", status: 'ERROR' };
   }
 }
 
 export async function deleteUser() {
   console.log("Action");
   try {
-    const cookieStore = cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: "", ...options });
-          },
-        },
-      },
-    );
+    const supabase = await initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError) {
-      console.log(userError);
+      return { message: userError.message };
     }
     console.log();
     const { data, error } = await supabaseServiceRole.auth.admin.deleteUser(
       userData.user!.id,
     );
     if (error) {
-      console.log(error);
+      return { message: error.message };
     }
     revalidatePath("/");
   } catch (e) {
@@ -267,25 +193,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
     return { message: "Passwords don't match" };
   }
   try {
-    const cookieStore = cookies();
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.set({ name, value: "", ...options });
-          },
-        },
-      },
-    );
+    const supabase = await initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.updateUser(
       {
         password: updatePasswordFormData.new_password,
@@ -302,25 +210,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
 }
 
 export async function signInWithSlack() {
-  const cookieStore = cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          cookieStore.set({ name, value: "", ...options });
-        },
-      },
-    },
-  );
+  const supabase = await initSupabaseActions();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "slack",
     options: {

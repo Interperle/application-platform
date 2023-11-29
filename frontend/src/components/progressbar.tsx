@@ -1,5 +1,5 @@
 "use client";
-import { supabase } from "@/utils/supabase_client";
+import { supabase } from "@/utils/supabaseBrowserClient";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 

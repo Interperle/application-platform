@@ -8,6 +8,7 @@ import { createCurrentTimestamp } from "@/utils/helpers";
 import { RedirectType, redirect } from "next/navigation";
 import { ProgressBar } from "@/components/progressbar";
 import { fetch_answer_table } from "@/actions/phase";
+import OverviewButton from "@/components/overviewButton";
 
 export default async function Page({
   params,
@@ -40,7 +41,8 @@ export default async function Page({
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
-        <div className="">
+        <OverviewButton />
+        <div>
           <h2 className="p-4 rounded text-secondary">
             <b>Bewerbungs-Phase: {phaseName}</b>
           </h2>
