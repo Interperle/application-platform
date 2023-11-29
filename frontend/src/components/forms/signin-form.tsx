@@ -7,11 +7,11 @@ import { useAppDispatch } from "@/store/store";
 import { openPopup } from "@/store/slices/popupSlice";
 
 interface messageType {
-  message: string | null,
+  message: string,
 }
 
 const initialState: messageType = {
-  message: null,
+  message: "",
 };
 
 function SubmitButton() {

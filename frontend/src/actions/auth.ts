@@ -14,19 +14,24 @@ export async function signUpUser(prevState: any, formData: FormData) {
     password: z.string().min(1),
     passwordConfirmation: z.string().min(1),
   });
-  const signUpFormData = schema.parse({
+  const signUpFormData = schema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     passwordConfirmation: formData.get("confirm-password"),
   });
-  if (signUpFormData.password != signUpFormData.passwordConfirmation) {
-    return { message: `Passwörter stimmen nicht überein!` };
+
+  if (!signUpFormData.success) {
+    return { message: 'User Registrierung fehlgeschlagen', status: 'ERROR' }
+  }
+
+  if (signUpFormData.data.password != signUpFormData.data.passwordConfirmation) {
+    return { message: `Passwörter stimmen nicht überein!`, status: 'ERROR' };
   }
   try {
     const supabase = await initSupabaseActions()
     const { data: userData, error: userError } = await supabase.auth.signUp({
-      email: signUpFormData.email.replace("@googlemail.com", "@gmail.com"),
-      password: signUpFormData.password,
+      email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
+      password: signUpFormData.data.password,
       options: {
         data: {},
         emailRedirectTo: `${getURL()}`,
@@ -35,7 +40,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
     revalidatePath("/login");
     if (userError) {
       console.log(userError);
-      return { message: userError.message };
+      return { message: userError.message, status: 'ERROR' };
     }
     console.log(userData);
     console.log("Success");
@@ -55,14 +60,14 @@ export async function signUpUser(prevState: any, formData: FormData) {
       await supabaseServiceRole.from("application_table").insert(sendData);
     if (applicationError) {
       console.log(applicationError);
-      return { message: applicationError.message };
+      return { message: applicationError.message, status: 'ERROR' };
     }
 
-    return { message: `Wir haben dir eine Email geschickt!` };
+    return { message: `Wir haben dir eine Email geschickt!`, status: 'SUCCESS' };
   } catch (e) {
-    console.log("Fehler");
     return {
       message: "Etwas ist schief gelaufen, bitte probiere es nocheinmal.",
+      status: 'ERROR'
     };
   }
 }
@@ -79,7 +84,7 @@ export async function signInUser(prevState: any, formData: FormData) {
   });
 
   if (!signInFormData.success) {
-    return { message: 'User Registrierung fehlgeschlagen' }
+    return { message: 'User Login fehlgeschlagen' }
   }
 
   try {
@@ -100,15 +105,15 @@ export async function signInUser(prevState: any, formData: FormData) {
 }
 
 export async function signOutUser(prevState: any, formData: FormData) {
-  try {
-    const supabase = await initSupabaseActions();
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.log(error);
-    }
-  } catch (e) {
-    return { message: "Error" };
+  //try {
+  const supabase = await initSupabaseActions();
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    return{"message": error.message};
   }
+  /*} catch (e) {
+    return{"message": };
+  }*/
   redirect("/");
 }
 
@@ -119,22 +124,30 @@ export async function sendResetPasswordLink(
   const schema = z.object({
     email: z.string().min(1),
   });
-  const signUpFormData = schema.parse({
+  const resetPasswordFormData = schema.safeParse({
     email: formData.get("email"),
   });
+
+  if (!resetPasswordFormData.success) {
+    return { message: 'Passwort zurücksetzen fehlgeschlagen', status: 'ERROR' }
+  }
   try {
     const supabase = await initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
-      signUpFormData.email.replace("@googlemail.com", "@gmail.com"),
+      resetPasswordFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       {
         redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
       },
     );
+    console.log(error)
+    if(error){
+      return { message: error.message, status: 'ERROR' };
+    }
 
     revalidatePath("/login");
-    return { message: `Send "Reset Password Email" successfully` };
+    return { message: `Wenn du einen Account bei uns besitzt wurde dir ein Passwort Zurücksetzen Link gesendet!`, status: 'SUCCESS' };
   } catch (e) {
-    return { message: "Error" };
+    return { message: "Error", status: 'ERROR' };
   }
 }
 
@@ -144,14 +157,14 @@ export async function deleteUser() {
     const supabase = await initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError) {
-      console.log(userError);
+      return { message: userError.message };
     }
     console.log();
     const { data, error } = await supabaseServiceRole.auth.admin.deleteUser(
       userData.user!.id,
     );
     if (error) {
-      console.log(error);
+      return { message: error.message };
     }
     revalidatePath("/");
   } catch (e) {

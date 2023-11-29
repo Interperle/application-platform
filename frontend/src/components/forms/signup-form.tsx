@@ -2,8 +2,14 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { signUpUser } from "@/actions/auth";
 
-const initialState = {
+interface messageType {
+  message: string,
+  status: string,
+}
+
+const initialState: messageType = {
   message: "",
+  status: ""
 };
 
 function SubmitButton() {
@@ -21,12 +27,12 @@ function SubmitButton() {
 }
 
 export default function SignUpForm() {
-  const [state, signUpAction] = useFormState(signUpUser, initialState);
+  const [state, formAction] = useFormState(signUpUser, initialState);
 
   return (
     <div>
       <h2>Registriere dich!</h2>
-      <form action={signUpAction} className="space-y-6">
+      <form action={formAction} className="space-y-6">
         <div>
           <label
             htmlFor="email"
@@ -73,9 +79,9 @@ export default function SignUpForm() {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <p aria-live="polite"  >
+        <div className={`italic ${state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"}`}>
           {state?.message}
-        </p>
+        </div>
         <div>
           <SubmitButton />
         </div>
