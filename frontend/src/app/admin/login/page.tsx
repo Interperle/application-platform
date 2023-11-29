@@ -24,7 +24,7 @@ export default async function Home() {
             alt="Slack Image Logo"
             className="max-w-50 max-h-50"
           />
-          <strong className="ml-2">Login with Slack</strong>
+          <strong className="ml-2">Login mit Slack</strong>
         </button>
       </form>
     </main>
