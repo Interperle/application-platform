@@ -42,7 +42,7 @@ export default async function Page({
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
         <OverviewButton />
-        <div className="">
+        <div>
           <h2 className="p-4 rounded text-secondary">
             <b>Bewerbungs-Phase: {phaseName}</b>
           </h2>
