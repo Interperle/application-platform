@@ -1,12 +1,12 @@
 "use server";
 
+import { initSupabaseActions } from "@/utils/supabaseServerClients";
 import {
   deleteAnswer,
   fetchAnswerId,
   getApplicationIdOfCurrentUser,
   getCurrentUser,
   saveAnswer,
-  setupSupabaseClient,
 } from "./answers";
 
 export async function saveShortTextAnswer(
@@ -43,7 +43,7 @@ export async function saveShortTextAnswer(
 }
 
 export async function fetchShortTextAnswer(questionid: string) {
-  const supabase = await setupSupabaseClient();
+  const supabase = await initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);

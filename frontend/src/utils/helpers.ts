@@ -2,7 +2,6 @@ import {
   fetchAnswerId,
   getApplicationIdOfCurrentUser,
   getCurrentUser,
-  setupSupabaseClient,
 } from "@/actions/answers/answers";
 import { createBrowserClient } from "@supabase/ssr";
 import moment from "moment-timezone";
