@@ -1,5 +1,4 @@
-FROM node:20 AS builder
-
+FROM node:20
 
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -30,20 +29,6 @@ RUN npm install
 COPY frontend/ .
 
 RUN npm run build
-
-FROM node:20
-
-WORKDIR /app
-
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/tailwind.config.ts ./
-COPY --from=builder /app/tsconfig.json ./
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/postcss.config.js ./
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
 
