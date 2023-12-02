@@ -36,7 +36,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/${{ env.REPOSITORY_NAME }}/application-plattform-${{ env.BRANCH_NAME }}:latest
+        tags: ghcr.io/${{ env.REPOSITORY_NAME }}-${{ env.BRANCH_NAME }}:latest
         build-args: |
           NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
