@@ -9,9 +9,13 @@ import {
   saveImageUploadAnswer,
 } from "@/actions/answers/imageUpload";
 import { fetchImageUploadAnswer } from "@/utils/helpers";
+import { SubmitButton } from "../submitButton";
+import { AwaitingChild } from "../awaiting";
 
 export interface ImageUploadQuestionTypeProps
-  extends DefaultQuestionTypeProps {}
+  extends DefaultQuestionTypeProps {
+  answerid: string | null;
+}
 
 const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   phasename,
@@ -19,19 +23,24 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  answerid
 }) => {
   const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
     null,
     questionid,
   );
   const [uploadUrl, setUploadImage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const imageUploadBucketData = await fetchImageUploadAnswer(questionid);
-        const url = URL.createObjectURL(imageUploadBucketData!);
-        setUploadImage(url);
+        if (answerid) {
+          const imageUploadBucketData = await fetchImageUploadAnswer(questionid, answerid);
+          const url = URL.createObjectURL(imageUploadBucketData!);
+          setUploadImage(url);
+        }
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -46,8 +55,10 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    deleteImageUploadAnswer(questionid);
-    setUploadImage("");
+    if (answerid) {
+      deleteImageUploadAnswer(questionid, answerid);
+      setUploadImage("");
+    }
   };
 
   return (
@@ -60,15 +71,17 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     >
       <form action={saveImageUploadAnswerWithId}>
         <div className="mt-1">
-          <input
-            type="file"
-            id={questionid}
-            name={questionid}
-            accept="image/png, image/jpeg"
-            required={mandatory}
-            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            onChange={(event) => handleUploadChange(event)}
-          />
+          <AwaitingChild isLoading={isLoading}>
+            <input
+              type="file"
+              id={questionid}
+              name={questionid}
+              accept="image/png, image/jpeg"
+              required={mandatory}
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              onChange={(event) => handleUploadChange(event)}
+            />
+          </AwaitingChild>
         </div>
         {uploadUrl && (
           <div className="mt-4">
@@ -83,7 +96,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
             <button onClick={handleDeleteOnClick}>Delete</button>
           </div>
         )}
-        <button type="submit">Upload Bild</button>
+        <SubmitButton text={"Bild hochladen"} expanded={false} />
       </form>
     </QuestionTypes>
   );

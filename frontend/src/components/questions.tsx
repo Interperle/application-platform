@@ -6,6 +6,7 @@ import getQuestionComponent, {
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
+import { Answer } from "@/actions/answers/answers";
 
 export interface DefaultQuestion {
   questionid: string;
@@ -24,11 +25,13 @@ export interface Question extends DefaultQuestion {
 interface QuestionnaireProps {
   phaseData: PhaseData;
   phaseQuestions: Question[];
+  phaseAnswers: Answer[];
 }
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({
   phaseData,
   phaseQuestions,
+  phaseAnswers,
 }) => {
   const dispatch = useAppDispatch();
   // need a copy, so I can modify it beneath
@@ -64,6 +67,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
               mandatory={phaseQuestion.mandatory}
               questiontext={phaseQuestion.questiontext}
               questionnote={phaseQuestion.questionnote}
+              answerid={phaseAnswers.find((answer) => answer.questionid == phaseQuestion.questionid)?.answerid}
               {...phaseQuestion.params}
             />
           );

@@ -7,9 +7,11 @@ import {
   fetchMultipleChoiceAnswer,
   saveMultipleChoiceAnswer,
 } from "@/actions/answers/multipleChoice";
+import { AwaitingChild } from "../awaiting";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {
+  answerid: string | null;
   choices: ChoiceProps[];
 }
 
@@ -19,15 +21,20 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  answerid,
   choices,
 }) => {
   const [selectedChoice, setSelectedChoice] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const savedAnswer = await fetchMultipleChoiceAnswer(questionid);
-        setSelectedChoice(savedAnswer || "");
+        if(answerid){
+          const savedAnswer = await fetchMultipleChoiceAnswer(answerid);
+          setSelectedChoice(savedAnswer || "");
+        }
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -53,18 +60,20 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
     >
-      <div role="group" aria-labelledby={questionid} className="mt-2">
-        {choices.map((choice) => (
-          <Choice
-            key={choice.choiceid}
-            choiceid={choice.choiceid}
-            choicetext={choice.choicetext}
-            isSelected={selectedChoice === choice.choiceid}
-            mandatory={mandatory}
-            onChange={() => handleChange(choice)}
-          />
-        ))}
-      </div>
+      <AwaitingChild isLoading={isLoading}>
+        <div role="group" aria-labelledby={questionid} className="mt-2">
+          {choices.map((choice) => (
+            <Choice
+              key={choice.choiceid}
+              choiceid={choice.choiceid}
+              choicetext={choice.choicetext}
+              isSelected={selectedChoice === choice.choiceid}
+              mandatory={mandatory}
+              onChange={() => handleChange(choice)}
+            />
+          ))}
+        </div>
+      </AwaitingChild>
     </QuestionTypes>
   );
 };

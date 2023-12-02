@@ -1,5 +1,8 @@
 import { getURL } from "@/utils/helpers";
-import { initSupabaseRoute, supabaseServiceRole } from "@/utils/supabaseServerClients";
+import {
+  initSupabaseRoute,
+  supabaseServiceRole,
+} from "@/utils/supabaseServerClients";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

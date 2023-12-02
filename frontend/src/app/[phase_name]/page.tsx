@@ -9,6 +9,7 @@ import { RedirectType, redirect } from "next/navigation";
 import { ProgressBar } from "@/components/progressbar";
 import { fetch_answer_table } from "@/actions/phase";
 import OverviewButton from "@/components/overviewButton";
+import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
 
 export default async function Page({
   params,
@@ -32,6 +33,7 @@ export default async function Page({
   const isEditable = currentDate >= startDate && currentDate <= endDate;
   const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
 
+  const phase_answers = await fetchAllAnswersOfApplication()
   const mandatoryQuestionIds = phase_questions
     .filter((q) => q.mandatory)
     .map((q) => q.questionid);
@@ -62,6 +64,7 @@ export default async function Page({
             <Questionnaire
               phaseData={phaseData}
               phaseQuestions={phase_questions}
+              phaseAnswers={phase_answers}
             />
           </div>
         </div>

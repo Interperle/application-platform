@@ -5,9 +5,11 @@ import {
   fetchNumberPickerAnswer,
   saveNumberPickerAnswer,
 } from "@/actions/answers/numberPicker";
+import { AwaitingChild } from "../awaiting";
 
 export interface NumberPickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
+  answerid: string | null;
   min: number;
   max: number;
 }
@@ -18,16 +20,21 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  answerid,
   min,
   max,
 }) => {
   const [answer, setAnswer] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const savedAnswer = await fetchNumberPickerAnswer(questionid);
-        setAnswer(savedAnswer);
+        if(answerid){
+          const savedAnswer = await fetchNumberPickerAnswer(answerid);
+          setAnswer(savedAnswer);
+        }
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -47,20 +54,22 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
     >
-      <input
-        type="number"
-        id={questionid}
-        name={questionid}
-        required={mandatory}
-        min={min}
-        max={max}
-        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-        onBlur={(event) =>
-          saveNumberPickerAnswer(event.target.value, questionid)
-        }
-        onChange={handleChange}
-        value={answer}
-      />
+      <AwaitingChild isLoading={isLoading}>
+        <input
+          type="number"
+          id={questionid}
+          name={questionid}
+          required={mandatory}
+          min={min}
+          max={max}
+          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          onBlur={(event) =>
+            saveNumberPickerAnswer(event.target.value, questionid)
+          }
+          onChange={handleChange}
+          value={answer}
+        />
+      </AwaitingChild>
     </QuestionTypes>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 import { supabase } from "@/utils/supabaseBrowserClient";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import Awaiting, { AwaitingChild } from "./awaiting";
 
 export const ProgressBar = ({
   mandatoryQuestionIds,
@@ -11,6 +11,8 @@ export const ProgressBar = ({
   numAnswers: number;
 }) => {
   const [numAnswered, setNumAnswered] = useState(numAnswers);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const progressbarChannel = supabase
       .channel("progressbar-channel")
@@ -39,18 +41,21 @@ export const ProgressBar = ({
         },
       )
       .subscribe();
+    setIsLoading(false);
     return () => {
       supabase.removeChannel(progressbarChannel);
     };
-  });
+  }, [mandatoryQuestionIds]);
   return (
-    <div className="w-full bg-gray-300 rounded-2xl border">
-      <div
-        style={{
-          width: `${(numAnswered / mandatoryQuestionIds.length) * 100}%`,
-        }}
-        className="bg-blue-600 h-4 rounded-2xl border"
-      />
-    </div>
+    <AwaitingChild isLoading={isLoading}>
+      <div className="w-full bg-gray-300 rounded-2xl border">
+        <div
+          style={{
+            width: `${(numAnswered / mandatoryQuestionIds.length) * 100}%`,
+          }}
+          className="bg-blue-600 h-4 rounded-2xl border"
+        />
+      </div>
+    </AwaitingChild>
   );
 };

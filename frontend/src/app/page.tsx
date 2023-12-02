@@ -16,9 +16,6 @@ export default async function Home() {
 
   const mandatoryQuestions = phase_questions.filter((q) => q.mandatory);
 
-  const already_answered = await fetch_answer_table(
-    mandatoryQuestions.map((q) => q.phaseid),
-  );
   return (
     <>
       <div className="flex flex-col items-start justify-between space-y-4">

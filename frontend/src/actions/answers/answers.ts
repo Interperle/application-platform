@@ -11,6 +11,14 @@ export interface saveAnswerType {
   reqtype: string;
 }
 
+export interface Answer {
+  answerid: string;
+  questionid: string;
+  applicationid: string;
+  lastupdated: string;
+  created: string;
+}
+
 export async function getCurrentUser(supabase: SupabaseClient) {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) {
@@ -56,8 +64,23 @@ export async function fetchAnswerId(
   return answerData![0].answerid;
 }
 
+export async function fetchAllAnswersOfApplication():Promise<Answer[]> {
+  const supabase = initSupabaseActions();
+  const user = await getCurrentUser(supabase);
+  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
+  const { data: answerData, error: answerError } = await supabase
+    .from("answer_table")
+    .select("*")
+    .eq("applicationid", applicationid);
+
+  if (answerError) {
+    console.log(answerError);
+  }
+  return answerData as Answer[];
+}
+
 export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
-  const supabase = await initSupabaseActions();
+  const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
@@ -96,7 +119,7 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
 }
 
 export async function deleteAnswer(questionid: string, answertype: string) {
-  const supabase = await initSupabaseActions();
+  const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);

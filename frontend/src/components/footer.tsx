@@ -8,9 +8,15 @@ const Apl_Footer: React.FC = () => {
     <footer className="bg-primary h-[256px] items-center justify-center space-y-8 mt-4">
       <div className="items-center justify-center flex flex-row md:flex-col md:space-x-8 space-y-8">
         <div className="flex flex-col md:flex-row space-x-0 md:space-x-8 space-y-4 md:space-y-0 text-secondary font-nunito">
-          <Link href="https://generation-d.org/legal/" target="_blank">Impressum</Link>
-          <Link href="https://generation-d.org/legal/" target="_blank">Disclaimer</Link>
-          <Link href="https://generation-d.org/legal/" target="_blank">Datenschutzerklärung</Link>
+          <Link href="https://generation-d.org/legal/" target="_blank">
+            Impressum
+          </Link>
+          <Link href="https://generation-d.org/legal/" target="_blank">
+            Disclaimer
+          </Link>
+          <Link href="https://generation-d.org/legal/" target="_blank">
+            Datenschutzerklärung
+          </Link>
         </div>
         <div className="flex flex-col md:flex-row space-x-0 md:space-x-8 space-y-4 md:space-y-0">
           <Link href="https://de-de.facebook.com/GenerationD/" target="_blank">
@@ -61,7 +67,8 @@ const Apl_Footer: React.FC = () => {
         </div>
       </div>
       <div className="items-center justify-center text-secondary font-nunito flex flex-col ">
-        ©{new Date(Date.now()).getFullYear()} Generation-D. All rights reserved.
+        ©{new Date(Date.now()).getFullYear()} Generation-D. All rights
+        reserved.
       </div>
     </footer>
   );

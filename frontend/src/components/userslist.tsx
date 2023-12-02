@@ -6,8 +6,12 @@ import {
   userData,
 } from "@/actions/admin";
 import ToggleSwitch from "./fields/toggleswitch";
-import { toggleUserActive, changeUserRole } from "@/store/slices/usersSlice";
-import { useAppDispatch } from "@/store/store";
+import {
+  toggleUserActive,
+  changeUserRole,
+  setUsers,
+} from "@/store/slices/usersSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { UserRole } from "@/utils/userRole";
 import { UserSpecificRoleDropdown } from "./fields/dropdown";
 
@@ -17,6 +21,9 @@ interface UserListProps {
 
 const UserList: React.FC<UserListProps> = ({ users }) => {
   const dispatch = useAppDispatch();
+  dispatch(setUsers(users));
+  const usersGlobal = useAppSelector((state) => state.userReducer.users);
+
   const handleToggle = async (user: userData) => {
     const updatedUser = await toggleStatusOfUser(user);
     if (updatedUser) {
@@ -70,7 +77,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {users.map((user) => (
+          {usersGlobal.map((user) => (
             <tr key={user.id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {user.email}

@@ -42,18 +42,12 @@ export async function saveNumberPickerAnswer(
   }
 }
 
-export async function fetchNumberPickerAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  if (answerid) {
-    const { data: numberPickerData, error: numberPickerError } = await supabase
-      .from("number_picker_answer_table")
-      .select("pickednumber")
-      .eq("answerid", answerid)
-      .single();
-    return numberPickerData!.pickednumber;
-  }
-  return "";
+export async function fetchNumberPickerAnswer(answerid: string) {
+  const supabase = initSupabaseActions();
+  const { data: numberPickerData, error: numberPickerError } = await supabase
+    .from("number_picker_answer_table")
+    .select("pickednumber")
+    .eq("answerid", answerid)
+    .single();
+  return numberPickerData!.pickednumber;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { transformReadableDate } from "@/utils/helpers";
+import { calcPhaseStatus, transformReadableDate } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ProgressBar } from "./progressbar";
@@ -24,7 +24,7 @@ const PhaseOverview: React.FC<{
   const handleRedirect = () => {
     router.push(`/${phaseName}`);
   };
-
+  const phaseStatus = calcPhaseStatus(phaseStart, phaseEnd);
   return (
     <div
       key={key}
@@ -34,21 +34,33 @@ const PhaseOverview: React.FC<{
         <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 md:grid-cols-1 md:grid-rows-2">
           <h2 className="rounded font-bold">{phaseName}</h2>
           <h4 className="rounded">
-            {transformReadableDate(phaseStart)}{" - "}{transformReadableDate(phaseEnd)}
+            {transformReadableDate(phaseStart)}
+            {" - "}
+            {transformReadableDate(phaseEnd)}
           </h4>
         </div>
         <div className="p-4 rounded">
-          <ProgressBar
-            mandatoryQuestionIds={mandatoryQuestionIds}
-            numAnswers={numAnswers}
-          />
+          {phaseStatus != "UPCOMING" ? (
+            <ProgressBar
+              mandatoryQuestionIds={mandatoryQuestionIds}
+              numAnswers={numAnswers}
+            />
+          ) : (
+            `Phase startet am ${transformReadableDate(phaseStart)}`
+          )}
         </div>
-        <button
-          onClick={() => handleRedirect()}
-          className="apl-button-fixed-short"
-        >
-          Phase fortsetzen
-        </button>
+        {phaseStatus != "UPCOMING" ? (
+          <button
+            onClick={() => handleRedirect()}
+            className="apl-button-fixed-short"
+          >
+            Phase fortsetzen
+          </button>
+        ) : (
+          <button aria-disabled={true} className="apl-button-fixed-short">
+            Phase bevorstehend
+          </button>
+        )}
       </div>
     </div>
   );

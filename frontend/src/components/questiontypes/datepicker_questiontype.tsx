@@ -5,8 +5,11 @@ import {
   fetchDatePickerAnswer,
   saveDatePickerAnswer,
 } from "@/actions/answers/datePicker";
+import { AwaitingChild } from "../awaiting";
 
-export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {}
+export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
+  answerid: string | null;
+}
 
 const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   phasename,
@@ -14,16 +17,21 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  answerid
 }) => {
   const [answer, setAnswer] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const savedAnswer = await fetchDatePickerAnswer(questionid);
-        setAnswer(savedAnswer || "");
+        if(answerid){
+          const savedAnswer = await fetchDatePickerAnswer(answerid);
+          setAnswer(savedAnswer || "");
+        }
+        setIsLoading(false);
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        alert("Failed to fetch answer");
       }
     }
     loadAnswer();
@@ -41,20 +49,22 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
     >
-      <div className="mt-1">
-        <input
-          type="date"
-          id={questionid}
-          name={questionid}
-          required={mandatory}
-          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-          onBlur={(event) =>
-            saveDatePickerAnswer(event.target.value, questionid)
-          }
-          onChange={handleChange}
-          value={answer}
-        />
-      </div>
+      <AwaitingChild isLoading={isLoading}>
+        <div className="mt-1">
+          <input
+            type="date"
+            id={questionid}
+            name={questionid}
+            required={mandatory}
+            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            onBlur={(event) =>
+              saveDatePickerAnswer(event.target.value, questionid)
+            }
+            onChange={handleChange}
+            value={answer}
+          />
+        </div>
+      </AwaitingChild>
     </QuestionTypes>
   );
 };

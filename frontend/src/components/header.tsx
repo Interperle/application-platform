@@ -7,10 +7,12 @@ import { useFormState } from "react-dom";
 import { signOutUser } from "@/actions/auth";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { toggle } from "@/store/slices/menuSlice";
+import { SubmitButton } from "./submitButton";
 
 const Apl_Header: React.FC = () => {
   const initialState = {
     message: "",
+    status: "",
   };
   const [state, signOutAction] = useFormState(signOutUser, initialState);
   const isMenuOpen = useAppSelector((state) => state.menuReducer.isOpen);
@@ -18,14 +20,16 @@ const Apl_Header: React.FC = () => {
 
   return (
     <div className="w-full bg-white h-24 flex items-center justify-between p-4 md:p-6">
-      <div className="min-w-[20px] max-w-[200px]">
+      <div className="min-w-[20px] max-w-[200px] h-auto">
         <Link href="https://generation-d.org" target="_blank">
           <Image
             src="/logos/gend_img_font.png"
             alt="Generation-D Logo"
             className="max-w-full h-auto"
+            priority={true}
             width={200}
-            height={24}
+            height={34}
+            style={{minWidth: "20px", maxWidth: "200px", maxHeight: "34px" }}
           />
         </Link>
       </div>
@@ -50,12 +54,13 @@ const Apl_Header: React.FC = () => {
           <span className="text-secondary block text-center">FAQs</span>
         </Link>
         <Link href="/settings">
-          <span className="text-secondary block text-center">Einstellungen</span>
+          <span className="text-secondary block text-center">
+            Einstellungen
+          </span>
         </Link>
         <form action={signOutAction}>
-          <button type="submit" className="apl-button-fixed block mx-auto">
-            Ausloggen
-          </button>
+          <SubmitButton text={"Ausloggen"} expanded={false} />
+          <div className={`italic text-red-600`}>{state?.message}</div>
         </form>
       </div>
     </div>

@@ -42,11 +42,8 @@ export async function saveDatePickerAnswer(
   }
 }
 
-export async function fetchDatePickerAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
+export async function fetchDatePickerAnswer(answerid: string) {
+  const supabase = initSupabaseActions();
   if (answerid) {
     const { data: datePickerData, error: datePickerError } = await supabase
       .from("date_picker_answer_table")

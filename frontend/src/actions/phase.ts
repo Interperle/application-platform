@@ -8,6 +8,7 @@ import {
 import { PhaseData } from "@/store/slices/phaseSlice";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 import { RedirectType, redirect } from "next/navigation";
+import { getApplicationIdOfCurrentUser, getCurrentUser } from "./answers/answers";
 
 type IdType = {
   questionid: string;
@@ -41,8 +42,7 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
       continue;
     }
 
-    const { data: questionTypeData, error: questionTypeError } =
-      await initSupabaseActions()
+    const { data: questionTypeData, error: questionTypeError } = await initSupabaseActions()
         .from(tableName)
         .select("*")
         .in(
@@ -180,8 +180,7 @@ export async function fetch_question_table(
 export async function fetch_phase_by_name(
   phaseName: string,
 ): Promise<PhaseData> {
-
-  const supabase = await initSupabaseActions()
+  const supabase = initSupabaseActions();
   const { data: phaseData, error: phaseError } = await supabase
     .from("phase_table")
     .select("*")
@@ -202,8 +201,7 @@ export async function fetch_phase_by_name(
 }
 
 export async function fetch_all_phases(): Promise<PhaseData[]> {
-
-  const supabase = await initSupabaseActions()
+  const supabase = initSupabaseActions();
 
   const { data: phasesData, error: phasesError } = await supabase
     .from("phase_table")
@@ -254,10 +252,15 @@ export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
 export async function fetch_answer_table(
   questionIds: string[],
 ): Promise<number> {
-  const { data: answerData, error: answerError } = await initSupabaseActions()
+  const supabase = initSupabaseActions();
+  const user = await getCurrentUser(supabase);
+  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
+
+  const { data: answerData, error: answerError } = await supabase
     .from("answer_table")
     .select("answerid")
-    .in("questionid", questionIds);
+    .in("questionid", questionIds)
+    .eq("applicationid", applicationid);
 
   if (answerError) {
     console.log("Error:" && answerError);

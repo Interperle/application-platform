@@ -6,9 +6,12 @@ import {
   fetchDateTimePickerAnswer,
   saveDateTimePickerAnswer,
 } from "@/actions/answers/dateTimePicker";
+import { AwaitingChild } from "../awaiting";
 
 export interface DatetimePickerQuestionTypeProps
-  extends DefaultQuestionTypeProps {}
+  extends DefaultQuestionTypeProps {
+    answerid: string | null;
+  }
 
 const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   phasename,
@@ -16,14 +19,19 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  answerid,
 }) => {
   const [answer, setAnswer] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const savedAnswer = await fetchDateTimePickerAnswer(questionid);
-        setAnswer(savedAnswer || "");
+        if(answerid){
+          const savedAnswer = await fetchDateTimePickerAnswer(answerid);
+          setAnswer(savedAnswer || "");
+        }
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -43,21 +51,23 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
     >
-      <input
-        type="datetime-local"
-        id={questionid}
-        name={questionid}
-        required={mandatory}
-        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-        onBlur={(event) =>
-          saveDateTimePickerAnswer(
-            setToPrefferedTimeZone(event.target.value),
-            questionid,
-          )
-        }
-        onChange={handleChange}
-        value={answer}
-      />
+      <AwaitingChild isLoading={isLoading}>
+        <input
+          type="datetime-local"
+          id={questionid}
+          name={questionid}
+          required={mandatory}
+          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          onBlur={(event) =>
+            saveDateTimePickerAnswer(
+              setToPrefferedTimeZone(event.target.value),
+              questionid,
+            )
+          }
+          onChange={handleChange}
+          value={answer}
+        />
+      </AwaitingChild>
     </QuestionTypes>
   );
 };

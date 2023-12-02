@@ -7,8 +7,11 @@ import {
   savePdfUploadAnswer,
 } from "@/actions/answers/pdfUpload";
 import { fetchPdfUploadAnswer } from "@/utils/helpers";
+import { SubmitButton } from "../submitButton";
+import { AwaitingChild } from "../awaiting";
 
 export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
+  answerid: string | null;
   maxSizeInMB: number;
 }
 
@@ -18,17 +21,23 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  answerid,
   maxSizeInMB,
 }) => {
   const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid);
   const [uploadUrl, setUploadPdf] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        const pdfUploadBucketData = await fetchPdfUploadAnswer(questionid);
-        const url = URL.createObjectURL(pdfUploadBucketData!);
-        setUploadPdf(url);
+        if (answerid) {
+          const pdfUploadBucketData = await fetchPdfUploadAnswer(questionid, answerid);
+          const url = URL.createObjectURL(pdfUploadBucketData!);
+          setUploadPdf(url);
+        }
+        setIsLoading(false);
+
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
@@ -43,8 +52,10 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    deletePdfUploadAnswer(questionid);
-    setUploadPdf("");
+    if(answerid){
+      deletePdfUploadAnswer(questionid, answerid);
+      setUploadPdf("");
+    }
   };
 
   return (
@@ -56,15 +67,17 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       questionnote={questionnote}
     >
       <form action={savePdfUploadAnswerWithId}>
-        <input
-          type="file"
-          id={questionid}
-          name={questionid}
-          accept="application/pdf"
-          required={mandatory}
-          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-          onChange={(event) => handleUploadChange(event)}
-        />
+        <AwaitingChild isLoading={isLoading}>
+          <input
+            type="file"
+            id={questionid}
+            name={questionid}
+            accept="application/pdf"
+            required={mandatory}
+            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            onChange={(event) => handleUploadChange(event)}
+          />
+        </AwaitingChild>
         {uploadUrl && (
           <div className="mt-4">
             <iframe
@@ -76,7 +89,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
             <button onClick={handleDeleteOnClick}>Delete</button>
           </div>
         )}
-        <button type="submit">Upload Bild</button>
+        <SubmitButton text={"PDF hochladen"} expanded={false} />
       </form>
     </QuestionTypes>
   );

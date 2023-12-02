@@ -5,28 +5,15 @@ import { JSX } from "react";
 import ForgottenPasswordForm from "./forgottenpassword-form";
 import { useAppDispatch } from "@/store/store";
 import { openPopup } from "@/store/slices/popupSlice";
+import { SubmitButton } from "../submitButton";
 
 interface messageType {
-  message: string,
+  message: string;
 }
 
 const initialState: messageType = {
   message: "",
 };
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="apl-button-expanded"
-    >
-      Bestätigen
-    </button>
-  );
-}
 
 export default function SignInForm() {
   const [state, formAction] = useFormState(signInUser, initialState);
@@ -76,11 +63,9 @@ export default function SignInForm() {
             Passwort vergessen?
           </button>
         </div>
-        <div className="text-red-600 italic">
-          {state?.message}
-        </div>
+        <div className="text-red-600 italic">{state?.message}</div>
         <div>
-          <SubmitButton />
+          <SubmitButton text={"Bestätigen"} expanded={true} />
         </div>
       </form>
     </div>

@@ -4,7 +4,10 @@ import { getURL } from "@/utils/helpers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { initSupabaseActions, supabaseServiceRole } from "@/utils/supabaseServerClients";
+import {
+  initSupabaseActions,
+  supabaseServiceRole,
+} from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
 import { SupabaseClient } from "@supabase/supabase-js";
 
@@ -21,14 +24,16 @@ export async function signUpUser(prevState: any, formData: FormData) {
   });
 
   if (!signUpFormData.success) {
-    return { message: 'User Registrierung fehlgeschlagen', status: 'ERROR' }
+    return { message: "User Registrierung fehlgeschlagen", status: "ERROR" };
   }
 
-  if (signUpFormData.data.password != signUpFormData.data.passwordConfirmation) {
-    return { message: `Passwörter stimmen nicht überein!`, status: 'ERROR' };
+  if (
+    signUpFormData.data.password != signUpFormData.data.passwordConfirmation
+  ) {
+    return { message: `Passwörter stimmen nicht überein!`, status: "ERROR" };
   }
   try {
-    const supabase = await initSupabaseActions()
+    const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.data.password,
@@ -40,7 +45,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
     revalidatePath("/login");
     if (userError) {
       console.log(userError);
-      return { message: userError.message, status: 'ERROR' };
+      return { message: userError.message, status: "ERROR" };
     }
     console.log(userData);
     console.log("Success");
@@ -60,14 +65,17 @@ export async function signUpUser(prevState: any, formData: FormData) {
       await supabaseServiceRole.from("application_table").insert(sendData);
     if (applicationError) {
       console.log(applicationError);
-      return { message: applicationError.message, status: 'ERROR' };
+      return { message: applicationError.message, status: "ERROR" };
     }
 
-    return { message: `Wir haben dir eine Email geschickt!`, status: 'SUCCESS' };
+    return {
+      message: `Wir haben dir eine Email geschickt!`,
+      status: "SUCCESS",
+    };
   } catch (e) {
     return {
       message: "Etwas ist schief gelaufen, bitte probiere es nocheinmal.",
-      status: 'ERROR'
+      status: "ERROR",
     };
   }
 }
@@ -84,36 +92,38 @@ export async function signInUser(prevState: any, formData: FormData) {
   });
 
   if (!signInFormData.success) {
-    return { message: 'User Login fehlgeschlagen' }
+    return { message: "User Login fehlgeschlagen" };
   }
 
   try {
-    const supabase = await initSupabaseActions();
+    const supabase = initSupabaseActions();
     const { data, error } = await supabase.auth.signInWithPassword({
       email: signInFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signInFormData.data.password,
     });
     if (error) {
       console.log(error);
-      return { message: "Fehler: " + error.message }
+      return { message: "Fehler: " + error.message };
     }
     revalidatePath("/");
   } catch (e) {
-    return { message: "Etwas ist schief gelaufen. Bitte probiere es nocheinmal" };
+    return {
+      message: "Etwas ist schief gelaufen. Bitte probiere es nocheinmal",
+    };
   }
   redirect("/");
 }
 
 export async function signOutUser(prevState: any, formData: FormData) {
-  //try {
-  const supabase = await initSupabaseActions();
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    return{"message": error.message};
+  try {
+    const supabase = initSupabaseActions();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      return { message: error.message, status: "ERROR" };
+    }
+  } catch (e) {
+    return { message: String(e), status: "ERROR" };
   }
-  /*} catch (e) {
-    return{"message": };
-  }*/
   redirect("/");
 }
 
@@ -129,32 +139,35 @@ export async function sendResetPasswordLink(
   });
 
   if (!resetPasswordFormData.success) {
-    return { message: 'Passwort zurücksetzen fehlgeschlagen', status: 'ERROR' }
+    return { message: "Passwort zurücksetzen fehlgeschlagen", status: "ERROR" };
   }
   try {
-    const supabase = await initSupabaseActions();
+    const supabase = initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
       resetPasswordFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       {
         redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
       },
     );
-    console.log(error)
-    if(error){
-      return { message: error.message, status: 'ERROR' };
+    console.log(error);
+    if (error) {
+      return { message: error.message, status: "ERROR" };
     }
 
     revalidatePath("/login");
-    return { message: `Wenn du einen Account bei uns besitzt wurde dir ein Passwort Zurücksetzen Link gesendet!`, status: 'SUCCESS' };
+    return {
+      message: `Wenn du einen Account bei uns besitzt wurde dir ein Passwort Zurücksetzen Link gesendet!`,
+      status: "SUCCESS",
+    };
   } catch (e) {
-    return { message: "Error", status: 'ERROR' };
+    return { message: "Error", status: "ERROR" };
   }
 }
 
 export async function deleteUser() {
   console.log("Action");
   try {
-    const supabase = await initSupabaseActions();
+    const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError) {
       return { message: userError.message };
@@ -193,7 +206,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
     return { message: "Passwords don't match" };
   }
   try {
-    const supabase = await initSupabaseActions();
+    const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.updateUser(
       {
         password: updatePasswordFormData.new_password,
@@ -210,7 +223,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
 }
 
 export async function signInWithSlack() {
-  const supabase = await initSupabaseActions();
+  const supabase = initSupabaseActions();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "slack",
     options: {

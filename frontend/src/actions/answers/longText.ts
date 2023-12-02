@@ -42,18 +42,12 @@ export async function saveLongTextAnswer(
   }
 }
 
-export async function fetchLongTextAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  if (answerid) {
-    const { data: longTextData, error: longTextError } = await supabase
-      .from("long_text_answer_table")
-      .select("answertext")
-      .eq("answerid", answerid)
-      .single();
-    return longTextData!.answertext;
-  }
-  return "";
+export async function fetchLongTextAnswer(answerid: string) {
+  const supabase = initSupabaseActions();
+  const { data: longTextData, error: longTextError } = await supabase
+    .from("long_text_answer_table")
+    .select("answertext")
+    .eq("answerid", answerid)
+    .single();
+  return longTextData!.answertext;
 }

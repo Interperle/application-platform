@@ -42,18 +42,12 @@ export async function saveDropdownAnswer(
   }
 }
 
-export async function fetchDropdownAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  if (answerid) {
-    const { data: dropdownData, error: dropdownError } = await supabase
-      .from("dropdown_answer_table")
-      .select("selectedoptions")
-      .eq("answerid", answerid)
-      .single();
-    return dropdownData!.selectedoptions;
-  }
-  return "";
+export async function fetchDropdownAnswer(answerid: string) {
+  const supabase = initSupabaseActions();
+  const { data: dropdownData, error: dropdownError } = await supabase
+    .from("dropdown_answer_table")
+    .select("selectedoptions")
+    .eq("answerid", answerid)
+    .single();
+  return dropdownData!.selectedoptions;
 }

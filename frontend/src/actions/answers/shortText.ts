@@ -42,19 +42,12 @@ export async function saveShortTextAnswer(
   }
 }
 
-export async function fetchShortTextAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-
-  if (answerid) {
-    const { data: shortTextData, error: shortTextError } = await supabase
-      .from("short_text_answer_table")
-      .select("answertext")
-      .eq("answerid", answerid)
-      .single();
-    return shortTextData!.answertext;
-  }
-  return "";
+export async function fetchShortTextAnswer(answerid: string) {
+  const supabase = initSupabaseActions();
+  const { data: shortTextData, error: shortTextError } = await supabase
+    .from("short_text_answer_table")
+    .select("answertext")
+    .eq("answerid", answerid)
+    .single();
+  return shortTextData!.answertext;
 }

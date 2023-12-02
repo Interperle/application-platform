@@ -42,19 +42,13 @@ export async function saveDateTimePickerAnswer(
   }
 }
 
-export async function fetchDateTimePickerAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  if (answerid) {
-    const { data: datetimePickerData, error: datetimePickerError } =
-      await supabase
-        .from("datetime_picker_answer_table")
-        .select("pickeddatetime")
-        .eq("answerid", answerid)
-        .single();
-    return datetimePickerData!.pickeddatetime;
-  }
-  return "";
+export async function fetchDateTimePickerAnswer(answerid: string) {
+  const supabase = initSupabaseActions();
+  const { data: datetimePickerData, error: datetimePickerError } =
+    await supabase
+      .from("datetime_picker_answer_table")
+      .select("pickeddatetime")
+      .eq("answerid", answerid)
+      .single();
+  return datetimePickerData!.pickeddatetime;
 }

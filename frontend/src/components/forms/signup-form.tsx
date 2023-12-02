@@ -1,30 +1,17 @@
 "use client";
 import { useFormState, useFormStatus } from "react-dom";
 import { signUpUser } from "@/actions/auth";
+import { SubmitButton } from "../submitButton";
 
 interface messageType {
-  message: string,
-  status: string,
+  message: string;
+  status: string;
 }
 
 const initialState: messageType = {
   message: "",
-  status: ""
+  status: "",
 };
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      aria-disabled={pending}
-      className="apl-button-expanded"
-    >
-      Bestätigen
-    </button>
-  );
-}
 
 export default function SignUpForm() {
   const [state, formAction] = useFormState(signUpUser, initialState);
@@ -79,12 +66,14 @@ export default function SignUpForm() {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <div className={`italic ${state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"}`}>
+        <div
+          className={`italic ${
+            state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
+          }`}
+        >
           {state?.message}
         </div>
-        <div>
-          <SubmitButton />
-        </div>
+        <SubmitButton text={"Registrieren"} expanded={true} />
       </form>
     </div>
   );

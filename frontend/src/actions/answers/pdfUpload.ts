@@ -62,11 +62,9 @@ export async function savePdfUploadAnswer(
   }
 }
 
-export async function deletePdfUploadAnswer(questionid: string) {
-  const supabase = await initSupabaseActions();
-  const user = await getCurrentUser(supabase);
-  const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
+export async function deletePdfUploadAnswer(questionid: string, answerid: string) {
+  const supabase = initSupabaseActions();
+  const user = await getCurrentUser(supabase);  
   const bucket_name = "pdf-" + questionid;
   const { data: pdfUploadData, error: pdfUploadError } = await supabase
     .from("pdf_upload_answer_table")
