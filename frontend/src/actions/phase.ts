@@ -8,7 +8,10 @@ import {
 import { PhaseData } from "@/store/slices/phaseSlice";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 import { RedirectType, redirect } from "next/navigation";
-import { getApplicationIdOfCurrentUser, getCurrentUser } from "./answers/answers";
+import {
+  getApplicationIdOfCurrentUser,
+  getCurrentUser,
+} from "./answers/answers";
 
 type IdType = {
   questionid: string;
@@ -42,7 +45,8 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
       continue;
     }
 
-    const { data: questionTypeData, error: questionTypeError } = await initSupabaseActions()
+    const { data: questionTypeData, error: questionTypeError } =
+      await initSupabaseActions()
         .from(tableName)
         .select("*")
         .in(

@@ -30,7 +30,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchMultipleChoiceAnswer(answerid);
           setSelectedChoice(savedAnswer || "");
         }
@@ -40,7 +40,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (choice: ChoiceProps) => {
     if (selectedChoice === choice.choiceid) {

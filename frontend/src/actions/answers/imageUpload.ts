@@ -62,7 +62,10 @@ export async function saveImageUploadAnswer(
   }
 }
 
-export async function deleteImageUploadAnswer(questionid: string, answerid: string) {
+export async function deleteImageUploadAnswer(
+  questionid: string,
+  answerid: string,
+) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const bucket_name = "image-" + questionid;

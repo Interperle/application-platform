@@ -18,7 +18,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
-  answerid
+  answerid,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchLongTextAnswer(answerid);
           setAnswer(savedAnswer || "");
         }
@@ -36,7 +36,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setAnswer(event.target.value);

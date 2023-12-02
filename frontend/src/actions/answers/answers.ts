@@ -11,7 +11,7 @@ export interface saveAnswerType {
   reqtype: string;
 }
 
-export interface Answer {
+export interface Answer {
   answerid: string;
   questionid: string;
   applicationid: string;
@@ -64,7 +64,7 @@ export async function fetchAnswerId(
   return answerData![0].answerid;
 }
 
-export async function fetchAllAnswersOfApplication():Promise<Answer[]> {
+export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);

@@ -8,7 +8,7 @@ import {
 import { AwaitingChild } from "../awaiting";
 
 export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {
-  answerid: string | null,
+  answerid: string | null;
 }
 
 const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
@@ -25,7 +25,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchShortTextAnswer(answerid);
           setAnswer(savedAnswer || "");
         }
@@ -36,7 +36,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
     }
 
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value);

@@ -12,8 +12,7 @@ import { fetchImageUploadAnswer } from "@/utils/helpers";
 import { SubmitButton } from "../submitButton";
 import { AwaitingChild } from "../awaiting";
 
-export interface ImageUploadQuestionTypeProps
-  extends DefaultQuestionTypeProps {
+export interface ImageUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
 }
 
@@ -23,7 +22,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
-  answerid
+  answerid,
 }) => {
   const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
     null,
@@ -36,7 +35,10 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         if (answerid) {
-          const imageUploadBucketData = await fetchImageUploadAnswer(questionid, answerid);
+          const imageUploadBucketData = await fetchImageUploadAnswer(
+            questionid,
+            answerid,
+          );
           const url = URL.createObjectURL(imageUploadBucketData!);
           setUploadImage(url);
         }
@@ -46,7 +48,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {

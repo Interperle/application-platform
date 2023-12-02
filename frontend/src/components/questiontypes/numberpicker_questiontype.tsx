@@ -30,7 +30,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchNumberPickerAnswer(answerid);
           setAnswer(savedAnswer);
         }
@@ -40,7 +40,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value);

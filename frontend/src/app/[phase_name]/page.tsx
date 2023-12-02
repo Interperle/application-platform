@@ -33,7 +33,7 @@ export default async function Page({
   const isEditable = currentDate >= startDate && currentDate <= endDate;
   const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
 
-  const phase_answers = await fetchAllAnswersOfApplication()
+  const phase_answers = await fetchAllAnswersOfApplication();
   const mandatoryQuestionIds = phase_questions
     .filter((q) => q.mandatory)
     .map((q) => q.questionid);

@@ -10,8 +10,8 @@ import { AwaitingChild } from "../awaiting";
 
 export interface DatetimePickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
-    answerid: string | null;
-  }
+  answerid: string | null;
+}
 
 const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   phasename,
@@ -27,7 +27,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchDateTimePickerAnswer(answerid);
           setAnswer(savedAnswer || "");
         }
@@ -37,7 +37,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value);

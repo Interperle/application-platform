@@ -3,7 +3,7 @@ import { getURL } from "@/utils/helpers";
 import { initSupabaseRoute } from "@/utils/supabaseServerClients";
 
 export async function POST(request: Request) {
-  const supabase = await initSupabaseRoute();
+  const supabase = initSupabaseRoute();
 
   await supabase.auth.signOut();
 

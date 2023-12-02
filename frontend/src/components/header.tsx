@@ -29,7 +29,7 @@ const Apl_Header: React.FC = () => {
             priority={true}
             width={200}
             height={34}
-            style={{minWidth: "20px", maxWidth: "200px", maxHeight: "34px" }}
+            style={{ minWidth: "20px", maxWidth: "200px", maxHeight: "34px" }}
           />
         </Link>
       </div>

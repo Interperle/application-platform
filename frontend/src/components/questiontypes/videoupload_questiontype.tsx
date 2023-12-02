@@ -10,10 +10,9 @@ import { fetchVideoUploadAnswer } from "@/utils/helpers";
 import { SubmitButton } from "../submitButton";
 import { AwaitingChild } from "../awaiting";
 
-export interface VideoUploadQuestionTypeProps
-  extends DefaultQuestionTypeProps {
-    answerid: string | null;
-  }
+export interface VideoUploadQuestionTypeProps extends DefaultQuestionTypeProps {
+  answerid: string | null;
+}
 
 const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   phasename,
@@ -33,8 +32,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if (answerid){
-          const VideoUploadBucketData = await fetchVideoUploadAnswer(questionid);
+        if (answerid) {
+          const VideoUploadBucketData =
+            await fetchVideoUploadAnswer(questionid);
           const url = URL.createObjectURL(VideoUploadBucketData!);
           setUploadVideo(url);
         }
@@ -44,7 +44,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -53,7 +53,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if(answerid){
+    if (answerid) {
       deleteVideoUploadAnswer(questionid, answerid);
       setUploadVideo("");
     }

@@ -17,7 +17,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
-  answerid
+  answerid,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +25,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchDatePickerAnswer(answerid);
           setAnswer(savedAnswer || "");
         }
@@ -35,7 +35,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswer(event.target.value);

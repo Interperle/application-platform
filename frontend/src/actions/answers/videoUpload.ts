@@ -62,7 +62,10 @@ export async function saveVideoUploadAnswer(
   }
 }
 
-export async function deleteVideoUploadAnswer(questionid: string, answerid: string) {
+export async function deleteVideoUploadAnswer(
+  questionid: string,
+  answerid: string,
+) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const bucket_name = "video-" + questionid;

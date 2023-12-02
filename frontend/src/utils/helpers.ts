@@ -33,7 +33,10 @@ export function transformReadableDate(dateString: string) {
   return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY");
 }
 
-export async function fetchImageUploadAnswer(questionid: string, answerid: string) {
+export async function fetchImageUploadAnswer(
+  questionid: string,
+  answerid: string,
+) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -57,7 +60,10 @@ export async function fetchImageUploadAnswer(questionid: string, answerid: strin
   return imageUploadBucketData;
 }
 
-export async function fetchPdfUploadAnswer(questionid: string, answerid: string) {
+export async function fetchPdfUploadAnswer(
+  questionid: string,
+  answerid: string,
+) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

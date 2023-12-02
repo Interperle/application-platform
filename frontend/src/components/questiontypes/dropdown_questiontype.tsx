@@ -9,7 +9,7 @@ import {
 import { AwaitingChild } from "../awaiting";
 
 export interface DropdownQuestionTypeProps extends DefaultQuestionTypeProps {
-  answerid: string | null,
+  answerid: string | null;
   options: DropdownOptionProps[];
 }
 
@@ -28,7 +28,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if(answerid){
+        if (answerid) {
           const savedAnswer = await fetchDropdownAnswer(answerid);
           setAnswer(savedAnswer || "");
         }
@@ -38,7 +38,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption =

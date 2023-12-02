@@ -32,18 +32,20 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         if (answerid) {
-          const pdfUploadBucketData = await fetchPdfUploadAnswer(questionid, answerid);
+          const pdfUploadBucketData = await fetchPdfUploadAnswer(
+            questionid,
+            answerid,
+          );
           const url = URL.createObjectURL(pdfUploadBucketData!);
           setUploadPdf(url);
         }
         setIsLoading(false);
-
       } catch (error) {
         console.error("Failed to fetch answer", error);
       }
     }
     loadAnswer();
-  }, [questionid]);
+  }, [questionid, answerid]);
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -52,7 +54,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if(answerid){
+    if (answerid) {
       deletePdfUploadAnswer(questionid, answerid);
       setUploadPdf("");
     }
