@@ -25,16 +25,12 @@ WORKDIR /app
 
 COPY frontend/package*.json ./
 
-# Install dependencies
 RUN npm install
 
-# Copy the rest of your app's source code from your host to your image filesystem.
 COPY frontend/ .
 
-# Build the project
 RUN npm run build
 
-# Start a new stage from node:20
 FROM node:20
 
 WORKDIR /app
@@ -43,7 +39,7 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/tailwing.config.ts ./
 COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/src ./src
-COPY --from=builder /app/postcss.config.json ./
+COPY --from=builder /app/postcss.config.js ./
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
