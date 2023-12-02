@@ -36,7 +36,7 @@ FROM node:20
 WORKDIR /app
 
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/tailwing.config.ts ./
+COPY --from=builder /app/tailwind.config.ts ./
 COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/postcss.config.js ./
