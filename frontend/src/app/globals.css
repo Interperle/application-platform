@@ -3,25 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --primary-color: #fdcc89;
+  --secondary-color: #153757;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.apl-button-fixed-short {
+  @apply rounded px-1 py-2 text-primary bg-secondary;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.apl-button-fixed {
+  @apply rounded px-4 py-2 text-primary bg-secondary;
+}
+
+.apl-button-fixed-big {
+  @apply rounded px-6 py-3 text-primary bg-secondary;
+}
+
+.apl-button-expanded {
+  @apply w-full flex justify-center rounded px-4 py-2 text-primary bg-secondary;
+}
+
+.apl-alert-button-fixed {
+  @apply rounded px-4 py-2 text-white bg-red-600;
+}
+
+.apl-alert-button-fixed-big {
+  @apply rounded px-6 py-3 text-white bg-red-600;
+}
+
+.apl-alert-button-fixed-expanded {
+  @apply w-full flex justify-center rounded px-4 py-2 text-white bg-red-600;
 }

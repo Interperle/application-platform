@@ -1,0 +1,111 @@
+
+### Uncomment to configure additional attributes of Application
+# application:
+#   timezone: Europe/Berlin  #default
+#   admin_email: string
+#   admin_password: string
+
+# application_table:
+questions:
+  phase-1:
+    startDate: 2024-01-02  # format: %Y-%m-%d
+    endDate: 2024-02-15  # format: %Y-%m-%d
+    questions:
+      - questionType: shortText
+        order: 1
+        question: What's your name?
+        mandatory: true
+        maxTextLength: 20
+        formattingRegex: PHONE_NUMBER  # optional; Other predefined values: "EMAIL", "NUMBERS", "LETTERS", any JS Regex
+        note: e.g. Max Mustermann
+      - questionType: longText
+        order: 2
+        question: What's your name and birthday?
+        mandatory: true
+        maxTextLength: 200
+        note: "hint: please use dd/mm/yyyy for your birthday"
+      - questionType: multipleChoice
+        order: 4
+        question: What's your name and birthday?
+        minAnswers: 0
+        maxAnswers: 2
+        Answers:
+          - Possible Answer 1
+          - Possible Answer 2
+          - Possible Answer 3
+        mandatory: false
+        userInput: true
+      - questionType: videoUpload
+        order: 3
+        question: Please Upload this Video
+        mandatory: false
+        maxFileSizeInMB: 2.0  # in Mega Byte
+      - questionType: datePicker
+        order: 5
+        question: When do you have birthday?
+        minDate: 1993-06-21  # format: %Y-%m-%d
+        maxDate: 2023-06-21  # format: %Y-%m-%d
+        mandatory: false
+      - questionType: datetimePicker
+        order: 6
+        question: When were you born?
+        minDatetime: 1993-06-21T00:00:00  # format: %Y-%m-%dT%H:%M:%S
+        maxDatetime: 2023-06-21T23:59:59  # format: %Y-%m-%dT%H:%M:%S
+        mandatory: false
+      - questionType: numberPicker
+        order: 7
+        question: How old are you?
+        minNumber: -100
+        maxNumber: 100
+        mandatory: false
+      - questionType: pdfUpload
+        order: 8
+        question: Please upload your CV
+        maxFileSizeInMB: 2.0  # in Mega Byte
+        mandatory: false
+      - questionType: imageUpload
+        order: 9
+        question: Please upload your Profile picture
+        maxFileSizeInMB: 2.0  # in Mega Byte
+        mandatory: false
+      - questionType: dropdown
+        order: 10
+        question: What's your favourite animal?
+        minAnswers: 1
+        maxAnswers: 1
+        Answers:
+          - Chameleon
+          - Salmon
+          - Amadillo
+        mandatory: false
+        userInput: true
+  phase-2:
+    startDate: 2024-01-09
+    endDate: 2024-02-15
+    questions:
+      - questionType: shortText
+        order: 1
+        question: What's your name?
+        maxTextLength: 20
+        mandatory: true
+      - questionType: longText
+        order: 2
+        question: What's your name and birthday?
+        mandatory: true
+        maxTextLength: 200
+      - questionType: multipleChoice
+        order: 4
+        question: What's your name and birthday?
+        minAnswers: 2
+        maxAnswers: 2
+        Answers:
+          - Possible Answer 1
+          - Possible Answer 2
+          - Possible Answer 3
+        mandatory: false
+        userInput: true
+      - questionType: videoUpload
+        order: 3
+        question: Please Upload this Video
+        mandatory: false
+        maxFileSizeInMB: 10.0  # in Mega Byte
