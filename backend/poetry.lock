@@ -682,17 +682,17 @@ test = ["pylint", "pytest", "pytest-black", "pytest-cov", "pytest-pylint"]
 
 [[package]]
 name = "supabase"
-version = "2.1.0"
+version = "2.2.0"
 description = "Supabase client for Python."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "supabase-2.1.0-py3-none-any.whl", hash = "sha256:7467261d6b7c3e9b62a396a1718c2c73fb07d51b70e4bb0fe0cde7e029c3b320"},
-    {file = "supabase-2.1.0.tar.gz", hash = "sha256:44facb425162061176d22ff0baed3055503c54a61cfd84c47eb438df44052ee3"},
+    {file = "supabase-2.2.0-py3-none-any.whl", hash = "sha256:e1417b4a5067cbec153494a455b15fea29c110d0e96788ed4e5f81d260045dbd"},
+    {file = "supabase-2.2.0.tar.gz", hash = "sha256:93f2754182451a5a5d75e957eb1ee41ecb5f5d0e28055870dbaa0598e63dd6bb"},
 ]
 
 [package.dependencies]
-gotrue = ">=1.3.0,<2.0.0"
+gotrue = ">=1.3,<3.0"
 httpx = ">=0.24.0,<0.25.0"
 postgrest = ">=0.10.8,<0.14.0"
 realtime = ">=1.0.0,<2.0.0"
