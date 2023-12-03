@@ -174,7 +174,6 @@ CREATE TABLE
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid),
     maxfilesizeinmb DECIMAL NOT NULL,
-    allowedfiletypes TEXT NOT NULL
   );
 
 ALTER TABLE
@@ -296,7 +295,7 @@ ALTER TABLE
 create table PUBLIC.USER_PROFILES_TABLE (
   userid uuid not null references auth.users on delete cascade,
   userrole INT REFERENCES user_roles_table(userroleid),
-  isactive BOOLEAN DEFAULT TRUE
+  isactive BOOLEAN DEFAULT TRUE,
 
   PRIMARY KEY (userid)
 );
@@ -349,11 +348,135 @@ CREATE POLICY select_policy ON IMAGE_UPLOAD_QUESTION_TABLE
 CREATE POLICY select_policy ON USER_ROLES_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
+CREATE POLICY select_profile ON public.user_profiles_table 
+  FOR SELECT USING (userid = auth.uid());
+
 CREATE POLICY insert_profile ON user_profiles_table FOR INSERT
+  WITH CHECK (userid = auth.uid());
+
+CREATE POLICY select_application ON application_table FOR SELECT
+  USING (userid = auth.uid());
+
+CREATE POLICY insert_application ON application_table FOR INSERT
+  WITH CHECK (userid = auth.uid());
+
+CREATE POLICY insert_answer ON public.answer_table
+FOR INSERT TO authenticated
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.application_table
+    WHERE application_table.applicationid = answer_table.applicationid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY select_answer ON public.answer_table
+FOR SELECT TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.application_table
+    WHERE application_table.applicationid = answer_table.applicationid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY update_answer ON public.answer_table
+FOR UPDATE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.application_table
+    WHERE application_table.applicationid = answer_table.applicationid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY delete_answer ON public.answer_table
+FOR DELETE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.application_table
+    WHERE application_table.applicationid = answer_table.applicationid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY insert_shorttext_answer ON short_text_answer_table FOR INSERT
   WITH CHECK (auth.uid() IS NOT NULL);
 
-CREATE POLICY select_own_profile ON public.user_profiles_table FOR SELECT
-  USING (userid = auth.uid());
+CREATE POLICY select_shorttext_answer ON short_text_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
 
-CREATE POLICY select_own_application ON application_table FOR SELECT
-  USING (userid = auth.uid());
+CREATE POLICY update_shorttext_answer ON short_text_answer_table FOR UPDATE
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_longtext_answer ON long_text_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_longtext_answer ON long_text_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_datetimepicker_answer ON datetime_picker_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_datetimepicker_answer ON datetime_picker_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_numberpicker_answer ON number_picker_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_numberpicker_answer ON number_picker_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+
+CREATE POLICY insert_multiple_choice_answer ON multiple_choice_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_multiple_choice_answer ON multiple_choice_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY update_multiple_choice_answer ON multiple_choice_answer_table FOR UPDATE
+  USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY delete_multiple_choice_answer ON multiple_choice_answer_table FOR DELETE
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_dropdown_answer ON dropdown_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_dropdown_answer ON dropdown_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY update_dropdown_answer ON dropdown_answer_table FOR UPDATE
+  USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY delete_dropdown_answer ON dropdown_answer_table FOR DELETE
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_pdf_upload_answer ON pdf_upload_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_pdf_upload_answer ON pdf_upload_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY update_pdf_upload_answer ON pdf_upload_answer_table FOR UPDATE
+  USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY delete_pdf_upload_answer ON pdf_upload_answer_table FOR DELETE
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY insert_video_upload_answer ON video_upload_answer_table FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_video_upload_answer ON video_upload_answer_table FOR SELECT
+  USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY update_video_upload_answer ON video_upload_answer_table FOR UPDATE
+  USING (auth.uid() IS NOT NULL)
+  WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY delete_video_upload_answer ON video_upload_answer_table FOR DELETE
+  USING (auth.uid() IS NOT NULL);
+
