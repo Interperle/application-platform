@@ -76,7 +76,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             />
           );
         })}
-      <button type="submit">Speichern</button>
     </div>
   );
 };
