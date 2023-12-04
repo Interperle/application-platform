@@ -1,6 +1,6 @@
 "use client";
 
-import { calcPhaseStatus, transformReadableDate } from "@/utils/helpers";
+import { calcPhaseStatus, transformReadableDate, transformReadableDateTime } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ProgressBar } from "./progressbar";
@@ -34,9 +34,14 @@ const PhaseOverview: React.FC<{
         <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 md:grid-cols-1 md:grid-rows-2">
           <h2 className="rounded font-bold">{phaseName}</h2>
           <h4 className="rounded">
-            {transformReadableDate(phaseStart)}
-            {" - "}
-            {transformReadableDate(phaseEnd)}
+            <div className="flex-row-2 gap-x-2">
+              <div>
+                Beginn: {transformReadableDateTime(phaseStart)} Uhr
+              </div>
+              <div>
+                Ende: {transformReadableDateTime(phaseEnd)} Uhr
+              </div>
+            </div>
           </h4>
         </div>
         <div className="p-4 rounded">

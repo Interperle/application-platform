@@ -50,7 +50,7 @@ const Apl_Header: React.FC = () => {
             : "hidden md:flex items-center"
         } space-x-4`}
       >
-        <Link href="/faqs">
+        <Link href="/files/FAQ_Runde1_2024.pdf">
           <span className="text-secondary block text-center">FAQs</span>
         </Link>
         <Link href="/settings">

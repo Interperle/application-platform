@@ -32,6 +32,10 @@ export function transformReadableDate(dateString: string) {
   return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY");
 }
 
+export function transformReadableDateTime(dateString: string) {
+  return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY hh:mm");
+}
+
 export async function fetchImageUploadAnswer(
   questionid: string,
   answerid: string,

@@ -74,9 +74,11 @@ export async function deleteImageUploadAnswer(
     .select("imagename")
     .eq("answerid", answerid)
     .single();
-  const { data: imageDeleteData, error: imageDeleteError } =
-    await supabase.storage
-      .from(bucket_name)
-      .remove([`${user.id}_${imageUploadData!.imagename}`]);
+  if(!imageUploadError){
+    const { data: imageDeleteData, error: imageDeleteError } =
+      await supabase.storage
+        .from(bucket_name)
+        .remove([`${user.id}_${imageUploadData!.imagename}`]);
+  }
   await deleteAnswer(questionid, "image_upload_answer_table");
 }

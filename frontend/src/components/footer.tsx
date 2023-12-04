@@ -19,7 +19,7 @@ const Apl_Footer: React.FC = () => {
           </Link>
         </div>
         <div className="flex flex-col md:flex-row space-x-0 md:space-x-8 space-y-4 md:space-y-0">
-          <Link href="https://de-de.facebook.com/GenerationD/" target="_blank">
+          {/*<Link href="https://de-de.facebook.com/GenerationD/" target="_blank">
             <Image
               src="/icons/social_media/facebook.svg"
               width={24}
@@ -27,7 +27,7 @@ const Apl_Footer: React.FC = () => {
               alt="Facebook"
               className="w-6 h-6"
             />
-          </Link>
+          </Link>*/}
           <Link
             href="https://www.instagram.com/generationd_org/?hl=de"
             target="_blank"
@@ -41,7 +41,7 @@ const Apl_Footer: React.FC = () => {
             />
           </Link>
           <Link
-            href="https://www.linkedin.com/company/generation-d.org?original_referer=https%3A%2F%2Fwww.google.com%2F"
+            href="https://www.linkedin.com/company/generation-d.org?"
             target="_blank"
           >
             <Image
