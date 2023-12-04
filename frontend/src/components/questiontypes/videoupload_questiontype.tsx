@@ -80,15 +80,16 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
           />
         </AwaitingChild>
         {uploadUrl && (
-          <div className="mt-4">
-            <video width="320" height="240" controls>
-              <source src={uploadUrl} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            <button onClick={handleDeleteOnClick}>Delete</button>
-          </div>
+          <div className="mt-4 flex flex-col gap-y-2">
+          <button className="self-end text-red-600" onClick={handleDeleteOnClick}>Löschen</button>
+          <video width="100%"
+              height="600px max-w-xs self-center" style={{ border: "none" }} controls>
+            <source src={uploadUrl} type="video/mp4" />
+            Dein Browser supported diese Darstellung leider nicht
+          </video>
+          <SubmitButton text={"Video hochladen"} expanded={false} />
+        </div>
         )}
-        <SubmitButton text={"Video hochladen"} expanded={false} />
       </form>
     </QuestionTypes>
   );

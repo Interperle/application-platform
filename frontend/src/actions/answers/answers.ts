@@ -32,6 +32,7 @@ export async function getApplicationIdOfCurrentUser(
   supabase: SupabaseClient,
   user: User,
 ) {
+  console.log(user)
   const { data: applicationData, error: applicationError } = await supabase
     .from("application_table")
     .select("applicationid")
@@ -68,6 +69,7 @@ export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
+  console.log(applicationid)
   const { data: answerData, error: answerError } = await supabase
     .from("answer_table")
     .select("*")

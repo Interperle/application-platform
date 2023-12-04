@@ -57,10 +57,8 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if (answerid) {
-      deleteImageUploadAnswer(questionid, answerid);
-      setUploadImage("");
-    }
+    deleteImageUploadAnswer(questionid, answerid || "");
+    setUploadImage("");
   };
 
   return (
@@ -86,19 +84,19 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
           </AwaitingChild>
         </div>
         {uploadUrl && (
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col gap-y-2">
+            <button className="self-end text-red-600" onClick={handleDeleteOnClick}>Löschen</button>
             <Image
               alt="Preview"
               src={uploadUrl}
-              className="max-w-xs"
+              className="max-w-xs self-center"
               id="imagePreview"
               width={100}
               height={100}
             />
-            <button onClick={handleDeleteOnClick}>Delete</button>
+            <SubmitButton text={"Bild hochladen"} expanded={false} />
           </div>
         )}
-        <SubmitButton text={"Bild hochladen"} expanded={false} />
       </form>
     </QuestionTypes>
   );

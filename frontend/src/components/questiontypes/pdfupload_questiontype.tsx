@@ -54,10 +54,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if (answerid) {
-      deletePdfUploadAnswer(questionid, answerid);
-      setUploadPdf("");
-    }
+    deletePdfUploadAnswer(questionid, answerid || "");
+    setUploadPdf("");
   };
 
   return (
@@ -81,17 +79,17 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
           />
         </AwaitingChild>
         {uploadUrl && (
-          <div className="mt-4">
-            <iframe
+          <div className="mt-4 flex flex-col gap-y-2">
+          <button className="self-end text-red-600" onClick={handleDeleteOnClick}>Löschen</button>
+          <iframe
               src={uploadUrl}
               width="100%"
-              height="600px"
+              height="600px max-w-xs self-center"
               style={{ border: "none" }}
             />
-            <button onClick={handleDeleteOnClick}>Delete</button>
-          </div>
+          <SubmitButton text={"PDF hochladen"} expanded={false} />
+        </div>
         )}
-        <SubmitButton text={"PDF hochladen"} expanded={false} />
       </form>
     </QuestionTypes>
   );
