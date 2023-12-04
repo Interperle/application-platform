@@ -1,28 +1,36 @@
-# Herzlich willkommen zur Generation-D Bewerbung 2023!
+Wir freuen uns sehr, dass ihr euch bei Generation-D bewerben möchtet.
 
-Wir freuen uns sehr, dass Ihr Euch bei Generation-D bewerben möchtet.
+Aktuell läuft die erste Bewerbungsphase, in welcher es darum geht einige Fragen zu eurem Start-up/Projekt zu beantworten. Im ersten Teil dieser Bewerbung beantwortet ihr die bewertungsrelevanten Fragen zu eurer Idee und dem/den bearbeiteten SDG(s). Im zweiten Teil geht es um die nicht in die Bewertung einfließenden statistischen Details und euren Kontakt!
 
-Aktuell läuft die erste Bewerbungsphase, in welcher es darum geht einige Fragen zu Euerem Start-up/Projekt zu beantworten und zu jedem Teammitglied einen Lebenslauf hochzuladen.
 
-**Seid Euch bewusst, dass Generation-D keine Bewerbungen akzeptieren kann…**
+Seid euch bewusst, dass Generation-D keine Bewerbungen akzeptieren kann…
 
-- …in welchen ein Teammitglied aktueller oder ehemaliger Stipendiat\*in der Bayerischen EliteAkademie ist,
-- …das Projekt bereits in einem Generation-D Finale gewesen ist,
-- …es sich um ein langfristig rein spenden basiertes Projekt handelt,
-- …oder das Unternehmen bereits länger als 5 Jahre im Handelsregister eingetragen ist.
+…in welchen ein Teammitglied aktueller oder ehemaliger Stipendiat*in der Bayerischen EliteAkademie ist, 
 
-Weitere Details zum Ablauf und der Bewertung könnt Ihr auch nochmal in unserem [Leitfaden](https://generation-d.org/wp-content/uploads/2022/12/Ablauf_des_Bewerbungsprozesses_2023.pdf)
+…das Projekt bereits in einem Gen-D Finale gewesen ist,
 
-## Kurz noch einige allgemeine Hinweise:
+…es sich um ein langfristig rein spendenbasiertes Projekt handelt,
 
-Alle eure Angaben werden automatisch gespeichert. Ihr könnt eure Antworten aber vor der Deadline (**18.02.2023**) so oft Ihr wollt weiterhin bearbeiten.
+…oder das Unternehmen bereits länger als 5 Jahre im Handelsregister eingetragen ist.
 
-Eine Bewerbung wird erst berücksichtigt, wenn sie vollständig ist. Vollständig ist eine Bewerbung, wenn alle Fragen beantwortet wurden. Den Status eurer Bewerbung könnt Ihr auch immer auf dieser Übersichtsseite einsehen.
+Nach Absenden eurer Bewerbung erhaltet ihr eine Bestätigungsmail. Wie es danach weitergeht und  über alle weiteren Phasen werdet Ihr ebenfalls per E-Mail informiert. 
 
-_Ihr werdet auch über alle weiteren Phasen und Vorgehen per E-Mail informiert._ Kontrolliert dafür bitte, dass die angegebene E-Mail korrekt ist und checkt auch den Spam Ordner.
+Weitere Details zum Ablauf und der Bewertung könnt ihr auch nochmal in unserem <a><u>FAQ</u></a> nachlesen.
 
-### Dann kann es jetzt losgehen! Klickt unten auf “Bewerbung bearbeiten” und startet durch!
+Kurz noch einige allgemeine Hinweise:
 
-Wir freuen uns auf Euch und eure Ideen und wünschen Euch viel Erfolg!
+- <b>Alle eure Angaben werden automatisch gespeichert. Ihr könnt Eure Antworten aber vor der Deadline so oft Ihr wollt weiterhin bearbeiten.</b>
+
+- <b>Eine Bewerbung wird erst berücksichtigt, wenn sie vollständig ist. Vollständig ist eine Bewerbung, wenn alle Fragen beantwortet wurden. Den Status eurer Bewerbung könnt ihr auch immer auf dieser Übersichtsseite einsehen.</b>
+
+- Kontrolliere dafür bitte, dass Deine angegebene E-Mail korrekt ist und checke auch deinen Spamordner.
+
+
+Jede Frage hat klare Vorgaben zur maximalen Antwortlänge. Ihr müsst die Fragen nicht konsekutiv beantworten und könnt jederzeit unterbrechen. Solltet ihr noch Fragen zum genauen Antwortverfahren haben, so schaut gerne in die FAQ-Sektion oder meldet euch bei uns.
+
+Dann kann es jetzt losgehen! Klickt unten auf “Bewerbung bearbeiten” und startet durch!
+
+
+Wir freuen uns auf Euch und Eure Ideen und wünschen Euch viel Erfolg!  
 
 Euer Generation-D Team
