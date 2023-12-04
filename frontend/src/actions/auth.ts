@@ -203,7 +203,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
     updatePasswordFormData.new_password !=
     updatePasswordFormData.reenter_password
   ) {
-    return { message: "Passwords don't match" };
+    return { message: "Passwords don't match", status: "ERROR" };
   }
   try {
     const supabase = initSupabaseActions();
@@ -213,13 +213,13 @@ export async function updatePassword(prevState: any, formData: FormData) {
       },
     );
     if (userError) {
-      console.log(userError);
+      return { message: userError.message, status: "ERROR" };
     }
-    console.log(userData);
     revalidatePath("/");
   } catch (e) {
-    return { message: "Error" };
+    return { message: "Es ist ein Fehler aufgetreten, probiere es nocheinmal!", status: "ERROR" };
   }
+  redirect("/");
 }
 
 export async function signInWithSlack() {

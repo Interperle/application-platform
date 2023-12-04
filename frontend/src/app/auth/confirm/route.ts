@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     });
     console.log(error);
     if (!error) {
-      return NextResponse.redirect(next);
+      return NextResponse.redirect(`${getURL()}${next}`);
     }
   }
 
