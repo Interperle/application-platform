@@ -17,7 +17,8 @@ def process_config():
     supabase = init_supabase()
 
     for phase_counter, (phase_name, phase) in enumerate(config_data['questions'].items()):
-        data_phase_table = create_data_phase_table(phase_name, phase['phaseLabel'], phase_counter, phase['startDate'], phase['endDate'])
+        data_phase_table = create_data_phase_table(phase_name, phase['phaseLabel'], phase_counter, phase['startDate'],
+                                                   phase['endDate'])
         log.info(f'Create Phase {phase}')
 
         response_phase_table = supabase.table('phase_table').insert(data_phase_table).execute()
@@ -74,7 +75,8 @@ def process_config():
         log.info(f'Processed Phase {phase} successfully')
 
 
-def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, startdate: datetime, enddate: datetime) -> dict:
+def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, startdate: datetime,
+                            enddate: datetime) -> dict:
     return {
         'phasename': phasename,
         'phaselabel': phaselabel,

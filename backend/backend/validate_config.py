@@ -88,8 +88,7 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
     for phase_name, phase in yaml_data['questions'].items():
         if 'phaseLabel' not in phase or not isinstance(phase['startDate'], str):
             raise ValueError(
-                f"The phase {phase_name} is missing the 'startLabel' field or 'startLabel' is not a String."
-            )
+                f"The phase {phase_name} is missing the 'startLabel' field or 'startLabel' is not a String.")
 
         if 'startDate' not in phase or not isinstance(phase['startDate'], date):
             raise ValueError(
