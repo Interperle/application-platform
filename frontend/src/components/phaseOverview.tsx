@@ -8,6 +8,8 @@ import { ProgressBar } from "./progressbar";
 const PhaseOverview: React.FC<{
   key: string;
   phaseName: string;
+  phaseLabel: string;
+  phaseOrder: number;
   phaseStart: string;
   phaseEnd: string;
   mandatoryQuestionIds: string[];
@@ -15,6 +17,8 @@ const PhaseOverview: React.FC<{
 }> = ({
   key,
   phaseName,
+  phaseLabel,
+  phaseOrder,
   phaseStart,
   phaseEnd,
   mandatoryQuestionIds,
@@ -32,7 +36,7 @@ const PhaseOverview: React.FC<{
     >
       <div className="grid grid-rows-3 md:grid-rows-1 md:grid-cols-3 gap-4">
         <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 md:grid-cols-1 md:grid-rows-2">
-          <h2 className="rounded font-bold">{phaseName}</h2>
+          <h2 className="rounded font-bold">Phase {phaseOrder + 1}: {phaseLabel}</h2>
           <h4 className="rounded">
             <div className="flex-row-2 gap-x-2">
               <div>

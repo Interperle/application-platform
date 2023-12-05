@@ -38,6 +38,8 @@ export default async function Home() {
             <PhaseOverview
               key={phase.phaseid}
               phaseName={phase.phasename}
+              phaseLabel={phase.phaselabel}
+              phaseOrder={phase.phaseorder}
               phaseStart={phase.startdate}
               phaseEnd={phase.enddate}
               mandatoryQuestionIds={mandatoryPhaseQuestionIds}

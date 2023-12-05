@@ -5,6 +5,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export interface PhaseData {
   phaseid: string;
   phasename: string;
+  phaselabel: string;
   phaseorder: number;
   startdate: string;
   enddate: string;
