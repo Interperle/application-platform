@@ -71,7 +71,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
         setSelectedChoices(
           selectedChoices.filter((selected) => selected !== choice.choiceid),
         );
-        alert("Du musst kannst maximal " + maxanswers + " auswählen!");
+        alert("Du kannst maximal " + maxanswers + " auswählen!");
         return;
       }/*else if (selectedChoices.length > 0 && selectedChoices.length - 1 < minanswers && mandatory) {
         setSelectedChoices(
