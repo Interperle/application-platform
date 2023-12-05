@@ -73,13 +73,13 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
         );
         alert("Du musst kannst maximal " + maxanswers + " auswählen!");
         return;
-      } else if (selectedChoices.length - 1 < minanswers && mandatory) {
+      }/*else if (selectedChoices.length > 0 && selectedChoices.length - 1 < minanswers && mandatory) {
         setSelectedChoices(
           selectedChoices.filter((selected) => selected !== choice.choiceid),
         );
         alert("Du musst mindestens " + minanswers + " auswählen!");
         return;
-      }
+      }*/
     }
     let newChoices;
     if (selectedChoices.includes(choice.choiceid)) {
