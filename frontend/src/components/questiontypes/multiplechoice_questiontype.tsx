@@ -41,7 +41,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       try {
         if (answerid) {
           const savedAnswer = await fetchMultipleChoiceAnswer(answerid);
-          if (maxanswers == 1){
+          if (maxanswers == 1) {
             setSelectedChoice(savedAnswer || "");
           } else {
             setSelectedChoices(savedAnswer.split(",") || []);
@@ -53,7 +53,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, maxanswers]);
 
   const handleSingleChange = (choice: ChoiceProps) => {
     if (selectedChoice === choice.choiceid) {
@@ -66,20 +66,26 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   };
 
   const handleMultiChange = (choice: ChoiceProps) => {
-    if (!selectedChoices.includes(choice.choiceid)){
-      if (selectedChoices.length + 1 > maxanswers){
-        setSelectedChoices(selectedChoices.filter((selected) => selected !== choice.choiceid));
-        alert("Du musst kannst maximal " + maxanswers + " auswählen!")
-        return
-      } else if ((selectedChoices.length - 1 < minanswers) && mandatory){
-        setSelectedChoices(selectedChoices.filter((selected) => selected !== choice.choiceid));
-        alert("Du musst mindestens " + minanswers + " auswählen!")
-        return
+    if (!selectedChoices.includes(choice.choiceid)) {
+      if (selectedChoices.length + 1 > maxanswers) {
+        setSelectedChoices(
+          selectedChoices.filter((selected) => selected !== choice.choiceid),
+        );
+        alert("Du musst kannst maximal " + maxanswers + " auswählen!");
+        return;
+      } else if (selectedChoices.length - 1 < minanswers && mandatory) {
+        setSelectedChoices(
+          selectedChoices.filter((selected) => selected !== choice.choiceid),
+        );
+        alert("Du musst mindestens " + minanswers + " auswählen!");
+        return;
       }
     }
     let newChoices;
     if (selectedChoices.includes(choice.choiceid)) {
-      newChoices = selectedChoices.filter((selected) => selected !== choice.choiceid);
+      newChoices = selectedChoices.filter(
+        (selected) => selected !== choice.choiceid,
+      );
     } else {
       newChoices = [...selectedChoices, choice.choiceid];
     }
@@ -103,7 +109,11 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
               key={choice.choiceid}
               choiceid={choice.choiceid}
               choicetext={choice.choicetext}
-              isSelected={(maxanswers == 1) ? selectedChoice === choice.choiceid : selectedChoices.includes(choice.choiceid)}
+              isSelected={
+                maxanswers == 1
+                  ? selectedChoice === choice.choiceid
+                  : selectedChoices.includes(choice.choiceid)
+              }
               mandatory={mandatory}
               minanswers={minanswers}
               maxanswers={maxanswers}

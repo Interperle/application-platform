@@ -29,7 +29,11 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
         className="block font-semibold text-secondary py-3"
       >
         <h4 className="py-1 text-base">
-          {questionorder}. <span className="break-after-avoid" dangerouslySetInnerHTML={{ __html: questiontext }}></span>
+          {questionorder}.{" "}
+          <span
+            className="break-after-avoid"
+            dangerouslySetInnerHTML={{ __html: questiontext }}
+          ></span>
           {mandatory && <span className="text-red-500">*</span>}
         </h4>
         {questionnote && (

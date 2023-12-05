@@ -9,8 +9,8 @@ import { AwaitingChild } from "../awaiting";
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
-  mindate: Date | null;
-  maxdate: Date | null;
+  mindate: Date | null;
+  maxdate: Date | null;
 }
 
 const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
@@ -49,15 +49,24 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
     const selectedDate = new Date(event.target.value);
     const minDate = mindate ? new Date(mindate) : null;
     const maxDate = maxdate ? new Date(maxdate) : null;
-    if ((minDate === null || selectedDate >= minDate) &&
-      (maxDate === null || selectedDate <= maxDate)) {
-        saveDatePickerAnswer(event.target.value, questionid)
+    if (
+      (minDate === null || selectedDate >= minDate) &&
+      (maxDate === null || selectedDate <= maxDate)
+    ) {
+      saveDatePickerAnswer(event.target.value, questionid);
     } else {
       setAnswer("");
-      alert("Dein ausgewähltes Datum " + selectedDate.toDateString() + " liegt nicht zwischen " + mindate + " und " + maxdate);
+      alert(
+        "Dein ausgewähltes Datum " +
+          selectedDate.toDateString() +
+          " liegt nicht zwischen " +
+          mindate +
+          " und " +
+          maxdate,
+      );
     }
   };
-  
+
   return (
     <QuestionTypes
       phasename={phasename}

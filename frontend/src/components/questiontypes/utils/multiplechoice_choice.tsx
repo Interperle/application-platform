@@ -23,7 +23,7 @@ export const Choice: React.FC<ChoiceProps> = ({
 }) => {
   return (
     <div key={choiceid} className="flex items-center mb-4">
-      {(maxanswers == 1) ? (
+      {maxanswers == 1 ? (
         <input
           id={choiceid}
           name={choiceid}

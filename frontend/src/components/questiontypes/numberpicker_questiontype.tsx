@@ -10,8 +10,8 @@ import { AwaitingChild } from "../awaiting";
 export interface NumberPickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
   answerid: string | null;
-  min: number;
-  max: number;
+  minnumber: number;
+  maxnumber: number;
 }
 
 const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
@@ -22,8 +22,8 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   questionnote,
   questionorder,
   answerid,
-  min,
-  max,
+  minnumber,
+  maxnumber,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -62,8 +62,6 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
           id={questionid}
           name={questionid}
           required={mandatory}
-          min={min}
-          max={max}
           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
           onBlur={(event) =>
             saveNumberPickerAnswer(event.target.value, questionid)

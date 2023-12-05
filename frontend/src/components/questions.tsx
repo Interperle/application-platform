@@ -73,7 +73,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
                   (answer) => answer.questionid == phaseQuestion.questionid,
                 )?.answerid
               }
-              {...(phaseQuestion.params)}
+              {...phaseQuestion.params}
             />
           );
         })}

@@ -53,13 +53,19 @@ export const ProgressBar = ({
           style={{
             width: `${(numAnswered / mandatoryQuestionIds.length) * 100}%`,
           }}
-          className={`h-4 rounded-2xl border ${numAnswered != mandatoryQuestionIds.length ? "bg-secondary" : "bg-green-600"}`}
+          className={`h-4 rounded-2xl border ${
+            numAnswered != mandatoryQuestionIds.length
+              ? "bg-secondary"
+              : "bg-green-600"
+          }`}
         />
       </div>
-      {
-        (numAnswered == mandatoryQuestionIds.length) &&
-        (<div>Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum xx.xx.xxxx weiter ändern.</div>)
-      }
+      {numAnswered == mandatoryQuestionIds.length && (
+        <div>
+          Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum
+          xx.xx.xxxx weiter ändern.
+        </div>
+      )}
     </AwaitingChild>
   );
 };

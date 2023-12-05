@@ -217,7 +217,10 @@ export async function updatePassword(prevState: any, formData: FormData) {
     }
     revalidatePath("/");
   } catch (e) {
-    return { message: "Es ist ein Fehler aufgetreten, probiere es nocheinmal!", status: "ERROR" };
+    return {
+      message: "Es ist ein Fehler aufgetreten, probiere es nocheinmal!",
+      status: "ERROR",
+    };
   }
   redirect("/");
 }

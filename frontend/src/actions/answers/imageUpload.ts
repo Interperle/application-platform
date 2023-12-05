@@ -74,7 +74,7 @@ export async function deleteImageUploadAnswer(
     .select("imagename")
     .eq("answerid", answerid)
     .single();
-  if(!imageUploadError){
+  if (!imageUploadError) {
     const { data: imageDeleteData, error: imageDeleteError } =
       await supabase.storage
         .from(bucket_name)

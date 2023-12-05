@@ -1,6 +1,10 @@
 "use client";
 
-import { calcPhaseStatus, transformReadableDate, transformReadableDateTime } from "@/utils/helpers";
+import {
+  calcPhaseStatus,
+  transformReadableDate,
+  transformReadableDateTime,
+} from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ProgressBar } from "./progressbar";
@@ -36,15 +40,13 @@ const PhaseOverview: React.FC<{
     >
       <div className="grid grid-rows-3 md:grid-rows-1 md:grid-cols-3 gap-4">
         <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 md:grid-cols-1 md:grid-rows-2">
-          <h2 className="rounded font-bold">Phase {phaseOrder + 1}: {phaseLabel}</h2>
+          <h2 className="rounded font-bold">
+            Phase {phaseOrder + 1}: {phaseLabel}
+          </h2>
           <h4 className="rounded">
             <div className="flex-row-2 gap-x-2">
-              <div>
-                Beginn: {transformReadableDateTime(phaseStart)} Uhr
-              </div>
-              <div>
-                Ende: {transformReadableDateTime(phaseEnd)} Uhr
-              </div>
+              <div>Beginn: {transformReadableDateTime(phaseStart)} Uhr</div>
+              <div>Ende: {transformReadableDateTime(phaseEnd)} Uhr</div>
             </div>
           </h4>
         </div>
@@ -59,21 +61,23 @@ const PhaseOverview: React.FC<{
           )}
         </div>
         {phaseStatus == "UPCOMING" ? (
+          <button className="apl-button-fixed-short">Phase bevorstehend</button>
+        ) : phaseStatus == "ENDED" ? (
           <button
+            aria-disabled={true}
             className="apl-button-fixed-short"
+            onClick={() => handleRedirect()}
           >
-            Phase bevorstehend
-          </button>
-        ) : (
-          phaseStatus == "ENDED" ? (
-          <button aria-disabled={true} className="apl-button-fixed-short" onClick={() => handleRedirect()}>
             Phase einsehen
           </button>
-          ) : (
-            <button aria-disabled={true} className="apl-button-fixed-short" onClick={() => handleRedirect()}>
-              Phase bearbeiten
-            </button>
-          )
+        ) : (
+          <button
+            aria-disabled={true}
+            className="apl-button-fixed-short"
+            onClick={() => handleRedirect()}
+          >
+            Phase bearbeiten
+          </button>
         )}
       </div>
     </div>

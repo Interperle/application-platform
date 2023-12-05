@@ -42,7 +42,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const textinput = event.target.value
+    const textinput = event.target.value;
     setAnswer(event.target.value);
   };
 
@@ -69,7 +69,13 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
           }
           onChange={(event) => handleChange(event)}
         />
-        <p className={`italic  text-sm text-right ${answer.length == maxtextlength ? "text-red-500" : "text-gray-500"} `}>{answer.length}/{maxtextlength} Zeichen</p>
+        <p
+          className={`italic  text-sm text-right ${
+            answer.length == maxtextlength ? "text-red-500" : "text-gray-500"
+          } `}
+        >
+          {answer.length}/{maxtextlength} Zeichen
+        </p>
       </AwaitingChild>
     </QuestionTypes>
   );
