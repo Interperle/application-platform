@@ -68,7 +68,6 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       setMultiAnswer(selectedOptions);
       alert("Du musst mindestens " + minanswers + " und kannst maximal " + maxanswers + " Antworten auswählen!")
     }
-    
   };
 
   return (
