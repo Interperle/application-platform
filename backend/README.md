@@ -42,6 +42,7 @@ erDiagram
     PHASE-TABLE {
         int phaseid PK
         string phasename
+        string phaselabel
         int phaseorder
         datetime startdate
         datetime enddate

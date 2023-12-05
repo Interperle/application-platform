@@ -15,6 +15,7 @@ CREATE TABLE
   PHASE_TABLE (
     phaseid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     phasename VARCHAR(255) NOT NULL,
+    phaselabel VARCHAR(255) NOT NULL,
     phaseorder INT NOT NULL,
     startdate TIMESTAMPTZ NOT NULL,
     enddate TIMESTAMPTZ NOT NULL
