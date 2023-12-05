@@ -11,6 +11,8 @@ import { AwaitingChild } from "../awaiting";
 export interface DatetimePickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
   answerid: string | null;
+  mindatetime: Date,
+  maxdatetime: Date,
 }
 
 const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
@@ -20,6 +22,8 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  mindatetime,
+  maxdatetime,
   answerid,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -44,6 +48,22 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
     setAnswer(event.target.value);
   };
 
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = new Date(event.target.value);
+    const minDateTime = mindatetime ? new Date(mindatetime) : null;
+    const maxDateTime = maxdatetime ? new Date(maxdatetime) : null;
+    if ((minDateTime === null || selectedDate >= minDateTime) &&
+      (maxDateTime === null || selectedDate <= maxDateTime)) {
+        saveDateTimePickerAnswer(
+          setToPrefferedTimeZone(event.target.value),
+          questionid,
+        )
+    } else {
+      setAnswer("");
+      alert("Dein ausgewählter Zeitpunkt " + selectedDate.toDateString() + " liegt nicht zwischen " + mindatetime + " und " + maxdatetime);
+    }
+  };
+
   return (
     <QuestionTypes
       phasename={phasename}
@@ -61,10 +81,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
           required={mandatory}
           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
           onBlur={(event) =>
-            saveDateTimePickerAnswer(
-              setToPrefferedTimeZone(event.target.value),
-              questionid,
-            )
+            handleBlur(event)
           }
           onChange={handleChange}
           value={answer}
