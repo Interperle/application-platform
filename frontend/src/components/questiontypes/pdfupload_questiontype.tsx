@@ -21,6 +21,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
   maxSizeInMB,
 }) => {
@@ -65,6 +66,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <form action={savePdfUploadAnswerWithId}>
         <AwaitingChild isLoading={isLoading}>

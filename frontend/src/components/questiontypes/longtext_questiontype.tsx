@@ -18,6 +18,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -49,6 +50,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <textarea

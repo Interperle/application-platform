@@ -21,6 +21,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
   choices,
 }) => {
@@ -59,6 +60,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <div role="group" aria-labelledby={questionid} className="mt-2">

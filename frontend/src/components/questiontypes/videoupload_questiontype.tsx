@@ -20,6 +20,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
 }) => {
   const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(
@@ -66,6 +67,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <form action={saveVideoUploadAnswerWithId}>
         <AwaitingChild isLoading={isLoading}>

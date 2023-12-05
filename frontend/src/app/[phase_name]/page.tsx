@@ -67,7 +67,12 @@ export default async function Page({
               phaseAnswers={phase_answers}
             />
           </div>
+          <ProgressBar
+            mandatoryQuestionIds={mandatoryQuestionIds}
+            numAnswers={already_answered}
+          />
         </div>
+        <OverviewButton />
       </div>
     </span>
   );

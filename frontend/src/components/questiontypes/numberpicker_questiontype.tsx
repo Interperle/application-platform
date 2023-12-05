@@ -20,6 +20,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
   min,
   max,
@@ -53,6 +54,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <input

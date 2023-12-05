@@ -19,6 +19,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -50,6 +51,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <input

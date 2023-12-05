@@ -19,6 +19,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
   options,
 }) => {
@@ -53,6 +54,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <select

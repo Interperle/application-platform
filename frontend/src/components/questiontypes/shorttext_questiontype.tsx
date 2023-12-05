@@ -17,6 +17,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -49,6 +50,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <input

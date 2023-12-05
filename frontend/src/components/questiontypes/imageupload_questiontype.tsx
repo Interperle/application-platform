@@ -22,6 +22,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
 }) => {
   const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
@@ -68,6 +69,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <form action={saveImageUploadAnswerWithId}>
         <div className="mt-1">

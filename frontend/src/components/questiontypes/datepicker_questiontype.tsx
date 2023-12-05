@@ -17,6 +17,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   answerid,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -48,6 +49,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
     >
       <AwaitingChild isLoading={isLoading}>
         <div className="mt-1">

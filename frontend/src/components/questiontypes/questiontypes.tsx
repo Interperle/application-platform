@@ -1,4 +1,5 @@
-import React from "react";
+import markdownToHtml from "@/utils/markdownToHtml";
+import React, { useEffect, useState } from "react";
 
 export interface DefaultQuestionTypeProps {
   phasename: string;
@@ -6,6 +7,7 @@ export interface DefaultQuestionTypeProps {
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
+  questionorder: number;
 }
 
 interface QuestionTypesProps extends DefaultQuestionTypeProps {
@@ -17,6 +19,7 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
   children,
 }) => {
   return (
@@ -26,7 +29,7 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
         className="block font-semibold text-secondary py-3"
       >
         <h4 className="py-1 text-base">
-          {questiontext}
+          {questionorder}. <span className="break-after-avoid" dangerouslySetInnerHTML={{ __html: questiontext }}></span>
           {mandatory && <span className="text-red-500">*</span>}
         </h4>
         {questionnote && (

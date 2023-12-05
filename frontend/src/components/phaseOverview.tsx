@@ -54,17 +54,22 @@ const PhaseOverview: React.FC<{
             `Phase startet am ${transformReadableDate(phaseStart)}`
           )}
         </div>
-        {phaseStatus != "UPCOMING" ? (
+        {phaseStatus == "UPCOMING" ? (
           <button
-            onClick={() => handleRedirect()}
             className="apl-button-fixed-short"
           >
-            Phase fortsetzen
-          </button>
-        ) : (
-          <button aria-disabled={true} className="apl-button-fixed-short">
             Phase bevorstehend
           </button>
+        ) : (
+          phaseStatus == "ENDED" ? (
+          <button aria-disabled={true} className="apl-button-fixed-short" onClick={() => handleRedirect()}>
+            Phase einsehen
+          </button>
+          ) : (
+            <button aria-disabled={true} className="apl-button-fixed-short" onClick={() => handleRedirect()}>
+              Phase bearbeiten
+            </button>
+          )
         )}
       </div>
     </div>

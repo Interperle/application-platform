@@ -67,6 +67,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
               mandatory={phaseQuestion.mandatory}
               questiontext={phaseQuestion.questiontext}
               questionnote={phaseQuestion.questionnote}
+              questionorder={phaseQuestion.questionorder}
               answerid={
                 phaseAnswers.find(
                   (answer) => answer.questionid == phaseQuestion.questionid,
