@@ -8,11 +8,15 @@ import {
   saveMultipleChoiceAnswer,
 } from "@/actions/answers/multipleChoice";
 import { AwaitingChild } from "../awaiting";
+import { exit } from "process";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {
   answerid: string | null;
   choices: ChoiceProps[];
+  minanswers: number;
+  maxanswers: number;
+  userinput: boolean;
 }
 
 const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
@@ -24,8 +28,12 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   questionorder,
   answerid,
   choices,
+  minanswers,
+  maxanswers,
+  userinput,
 }) => {
   const [selectedChoice, setSelectedChoice] = useState("");
+  const [selectedChoices, setSelectedChoices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +41,11 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       try {
         if (answerid) {
           const savedAnswer = await fetchMultipleChoiceAnswer(answerid);
-          setSelectedChoice(savedAnswer || "");
+          if (maxanswers == 1){
+            setSelectedChoice(savedAnswer || "");
+          } else {
+            setSelectedChoices(savedAnswer.split(",") || []);
+          }
         }
         setIsLoading(false);
       } catch (error) {
@@ -43,7 +55,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     loadAnswer();
   }, [questionid, answerid]);
 
-  const handleChange = (choice: ChoiceProps) => {
+  const handleSingleChange = (choice: ChoiceProps) => {
     if (selectedChoice === choice.choiceid) {
       saveMultipleChoiceAnswer("", questionid);
       setSelectedChoice("");
@@ -51,6 +63,28 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       saveMultipleChoiceAnswer(choice.choiceid, questionid);
       setSelectedChoice(choice.choiceid);
     }
+  };
+
+  const handleMultiChange = (choice: ChoiceProps) => {
+    if (!selectedChoices.includes(choice.choiceid)){
+      if (selectedChoices.length + 1 > maxanswers){
+        setSelectedChoices(selectedChoices.filter((selected) => selected !== choice.choiceid));
+        alert("Du musst kannst maximal " + maxanswers + " auswählen!")
+        return
+      } else if ((selectedChoices.length - 1 < minanswers) && mandatory){
+        setSelectedChoices(selectedChoices.filter((selected) => selected !== choice.choiceid));
+        alert("Du musst mindestens " + minanswers + " auswählen!")
+        return
+      }
+    }
+    let newChoices;
+    if (selectedChoices.includes(choice.choiceid)) {
+      newChoices = selectedChoices.filter((selected) => selected !== choice.choiceid);
+    } else {
+      newChoices = [...selectedChoices, choice.choiceid];
+    }
+    saveMultipleChoiceAnswer(newChoices.toString(), questionid);
+    setSelectedChoices(newChoices);
   };
 
   return (
@@ -69,9 +103,12 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
               key={choice.choiceid}
               choiceid={choice.choiceid}
               choicetext={choice.choicetext}
-              isSelected={selectedChoice === choice.choiceid}
+              isSelected={(maxanswers == 1) ? selectedChoice === choice.choiceid : selectedChoices.includes(choice.choiceid)}
               mandatory={mandatory}
-              onChange={() => handleChange(choice)}
+              minanswers={minanswers}
+              maxanswers={maxanswers}
+              onSingleChange={() => handleSingleChange(choice)}
+              onMultiChange={() => handleMultiChange(choice)}
             />
           ))}
         </div>
