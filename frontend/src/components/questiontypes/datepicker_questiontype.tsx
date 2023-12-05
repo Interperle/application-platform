@@ -9,6 +9,8 @@ import { AwaitingChild } from "../awaiting";
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
+  mindate: Date | null;
+  maxdate: Date | null;
 }
 
 const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
@@ -18,11 +20,12 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  mindate,
+  maxdate,
   answerid,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     async function loadAnswer() {
       try {
@@ -42,6 +45,19 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
     setAnswer(event.target.value);
   };
 
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = new Date(event.target.value);
+    const minDate = mindate ? new Date(mindate) : null;
+    const maxDate = maxdate ? new Date(maxdate) : null;
+    if ((minDate === null || selectedDate >= minDate) &&
+      (maxDate === null || selectedDate <= maxDate)) {
+        saveDatePickerAnswer(event.target.value, questionid)
+    } else {
+      setAnswer("");
+      alert("Dein ausgewähltes Datum " + selectedDate.toDateString() + " liegt nicht zwischen " + mindate + " und " + maxdate);
+    }
+  };
+  
   return (
     <QuestionTypes
       phasename={phasename}
@@ -59,9 +75,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
             name={questionid}
             required={mandatory}
             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-            onBlur={(event) =>
-              saveDatePickerAnswer(event.target.value, questionid)
-            }
+            onBlur={(e) => handleBlur(e)}
             onChange={handleChange}
             value={answer}
           />
