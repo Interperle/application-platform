@@ -44,11 +44,8 @@ export async function signUpUser(prevState: any, formData: FormData) {
     });
     revalidatePath("/login");
     if (userError) {
-      console.log(userError);
       return { message: userError.message, status: "ERROR" };
     }
-    console.log(userData);
-    console.log("Success");
 
     const { data: userProfileData, error: userProfileError } =
       await supabaseServiceRole
