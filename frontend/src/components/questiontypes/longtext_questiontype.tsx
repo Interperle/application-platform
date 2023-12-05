@@ -10,6 +10,7 @@ import { AwaitingChild } from "../awaiting";
 
 export interface LongTextQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
+  maxtextlength: number;
 }
 
 const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
@@ -20,6 +21,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   questionnote,
   questionorder,
   answerid,
+  maxtextlength,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -56,13 +58,13 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
         <textarea
           className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out resize-none"
           required={mandatory}
-          maxLength={200}
-          rows={4}
-          style={{ minHeight: "100px" }}
+          maxLength={maxtextlength}
+          style={{ minHeight: "200px" }}
           onBlur={(event) => saveLongTextAnswer(event.target.value, questionid)}
           onChange={handleChange}
           value={answer}
         />
+        <p className={`italic  text-sm text-right ${answer.length == maxtextlength ? "text-red-500" : "text-gray-500"} `}>{answer.length}/{maxtextlength} Zeichen</p>
       </AwaitingChild>
     </QuestionTypes>
   );

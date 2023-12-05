@@ -9,6 +9,7 @@ import { AwaitingChild } from "../awaiting";
 
 export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
+  maxtextlength: number;
 }
 
 const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
@@ -19,6 +20,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   questionnote,
   questionorder,
   answerid,
+  maxtextlength,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +42,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const textinput = event.target.value
     setAnswer(event.target.value);
   };
 
@@ -60,12 +63,13 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
           value={answer}
           className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
           required={mandatory}
-          maxLength={50}
+          maxLength={maxtextlength}
           onBlur={(event) =>
             saveShortTextAnswer(event.target.value, questionid)
           }
-          onChange={handleChange}
+          onChange={(event) => handleChange(event)}
         />
+        <p className={`italic  text-sm text-right ${answer.length == maxtextlength ? "text-red-500" : "text-gray-500"} `}>{answer.length}/{maxtextlength} Zeichen</p>
       </AwaitingChild>
     </QuestionTypes>
   );
