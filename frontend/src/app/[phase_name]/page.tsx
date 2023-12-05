@@ -46,7 +46,7 @@ export default async function Page({
         <OverviewButton />
         <div>
           <h2 className="p-4 rounded text-secondary">
-            <b>Bewerbungs-Phase: {phaseName}</b>
+            <b>Bewerbungs-Phase {phaseData.phaseorder}: {phaseData.phaselabel}</b>
           </h2>
           {!isEditable && (
             <div>
