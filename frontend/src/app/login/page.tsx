@@ -25,7 +25,7 @@ export default function Login() {
       <div className="py-12 px-8 max-w-xl bg-[#FFFFFF] text-secondary space-y-4 rounded text-center">
         <p>
           Um eine neue Bewerbung zu starten, lege ein neues Konto an. Wenn du
-          bereits ein Konto hast, logge dich ein um deine Bewerbung
+          bereits ein Konto hast, logge dich ein, um deine Bewerbung
           fortzusetzen.
         </p>
         <button
