@@ -16,15 +16,22 @@ export async function signUpUser(prevState: any, formData: FormData) {
     email: z.string().min(1),
     password: z.string().min(1),
     passwordConfirmation: z.string().min(1),
+    legalConfirmation: z.string()
   });
   const signUpFormData = schema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     passwordConfirmation: formData.get("confirm-password"),
+    legalConfirmation: formData.get("confirm-legal")
   });
 
   if (!signUpFormData.success) {
+    console.log(formData.get("confirm-legal"))
     return { message: "User Registrierung fehlgeschlagen", status: "ERROR" };
+  }
+
+  if (signUpFormData.data.legalConfirmation != "on"){
+    return { message: "Du musst der Datenschutzerklärung zustimmen", status: "ERROR" };
   }
 
   if (
@@ -34,6 +41,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
   }
   try {
     const supabase = initSupabaseActions();
+    supabase.auth.getUser()
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.data.password,
@@ -45,6 +53,10 @@ export async function signUpUser(prevState: any, formData: FormData) {
     revalidatePath("/login");
     if (userError) {
       return { message: userError.message, status: "ERROR" };
+    }
+
+    if (userData.user?.identities?.length === 0){
+      return { message: "User ist bereits registriert!", status: "ERROR" };
     }
 
     const { data: userProfileData, error: userProfileError } =

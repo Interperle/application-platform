@@ -2,6 +2,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { signUpUser } from "@/actions/auth";
 import { SubmitButton } from "../submitButton";
+import Link from "next/link";
 
 interface messageType {
   message: string;
@@ -65,6 +66,21 @@ export default function SignUpForm() {
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            id="confirm-legal"
+            name="confirm-legal"
+            required
+            className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
+            />
+          <label
+            htmlFor="confirm-legal"
+            className="text-sm text-gray-700"
+          >
+            <span className="text-red-500">*</span>Ich habe die <Link className="underline" href="https://generation-d.org/legal/" target="_blank">Datenschutzerklärung</Link> gelesen und stimme dieser zu!
+          </label>
         </div>
         <div
           className={`italic ${
