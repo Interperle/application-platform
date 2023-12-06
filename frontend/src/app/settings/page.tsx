@@ -33,6 +33,7 @@ const SettingsPage: React.FC = () => {
 
   const initialState = {
     message: "",
+    status: "",
   };
 
   const [state, updatePasswordAction] = useFormState(
@@ -78,6 +79,13 @@ const SettingsPage: React.FC = () => {
               id="reenter_password"
               className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
             />
+          </div>
+          <div
+            className={`italic ${
+              state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {state?.message}
           </div>
           <SubmitButton text={"Passwort ändern"} expanded={true} />
         </form>
