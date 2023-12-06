@@ -55,6 +55,12 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
+      const file = event.target.files[0];
+      const fileSizeInMB = file.size / 1024 / 1024;
+      if (fileSizeInMB > maxfilesizeinmb) {
+        alert(`Die Bilddatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
+        return;
+      }
       setUploadImage(URL.createObjectURL(event.target.files[0]));
     }
   };
@@ -102,7 +108,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
                     per Drag and Drop
                   </p>
                   <p className="text-xs text-secondary">
-                    PNG, JPG oder JPEG (MAX. 2MB)
+                    PNG, JPG oder JPEG (MAX. {maxfilesizeinmb}MB)
                   </p>
                 </div>
                 <input
