@@ -28,7 +28,7 @@ export const Choice: React.FC<ChoiceProps> = ({
           id={choiceid}
           name={choiceid}
           type="radio"
-          className="w-4 h-4 text-secondary bg-gray-100 border-gray-300 focus:secondary focus:ring-2"
+          className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 focus:secondary focus:ring-2"
           checked={isSelected}
           onChange={onSingleChange}
           onClick={onSingleChange}
@@ -40,7 +40,7 @@ export const Choice: React.FC<ChoiceProps> = ({
           type="checkbox"
           checked={isSelected}
           onChange={onMultiChange}
-          className="w-4 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
+          className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
         />
       )}
       <label
