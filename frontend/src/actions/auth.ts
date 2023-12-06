@@ -111,6 +111,9 @@ export async function signInUser(prevState: any, formData: FormData) {
       password: signInFormData.data.password,
     });
     if (error) {
+      if (error.status == 400){
+        return { message: "Deine Login Daten sind ungültig!" };
+      }
       console.log(error);
       return { message: "Fehler: " + error.message };
     }
@@ -212,7 +215,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
     updatePasswordFormData.new_password !=
     updatePasswordFormData.reenter_password
   ) {
-    return { message: "Passwords don't match", status: "ERROR" };
+    return { message: "Passwörter stimmen nicht überein!", status: "ERROR" };
   }
   try {
     const supabase = initSupabaseActions();
