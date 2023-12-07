@@ -151,3 +151,17 @@ export function calcPhaseStatus(phaseStart: string, phaseEnd: string) {
   }
   return "ENDED";
 }
+
+export function isValidPassword(password: string): boolean {
+  const minLengthRegex = /.{8,}/;
+  const upperCaseRegex = /[A-Z]/;
+  const lowerCaseRegex = /[a-z]/;
+  const numberRegex = /[0-9]/;
+  const specialCharRegex = /[^A-Za-z0-9]/;
+
+  return minLengthRegex.test(password) &&
+         upperCaseRegex.test(password) &&
+         lowerCaseRegex.test(password) &&
+         numberRegex.test(password) &&
+         specialCharRegex.test(password);
+}

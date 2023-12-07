@@ -1,6 +1,6 @@
 "use server";
 
-import { getURL } from "@/utils/helpers";
+import { getURL, isValidPassword } from "@/utils/helpers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { redirect } from "next/navigation";
@@ -32,6 +32,9 @@ export async function signUpUser(prevState: any, formData: FormData) {
 
   if (signUpFormData.data.legalConfirmation != "on"){
     return { message: "Du musst der Datenschutzerklärung zustimmen", status: "ERROR" };
+  }
+  if (!isValidPassword(signUpFormData.data.password)){
+    return { message: "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und mind. 8 Zeichen lang sein!", status: "ERROR" };
   }
 
   if (
