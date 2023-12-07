@@ -60,5 +60,7 @@ DROP TABLE IF EXISTS USER_PROFILES_TABLE CASCADE;
 
 DROP TABLE IF EXISTS USER_ROLES_TABLE CASCADE;
 
+DELETE FROM auth.users;
+
 -- Re-enable foreign key constraint check
 SET session_replication_role = DEFAULT;
