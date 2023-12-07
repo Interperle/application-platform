@@ -55,6 +55,7 @@ const PhaseOverview: React.FC<{
             <ProgressBar
               mandatoryQuestionIds={mandatoryQuestionIds}
               numAnswers={numAnswers}
+              endDate={new Date(phaseEnd)}
             />
           ) : (
             `Phase startet am ${transformReadableDate(phaseStart)}`

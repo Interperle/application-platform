@@ -1,14 +1,17 @@
 "use client";
 import { supabase } from "@/utils/supabaseBrowserClient";
 import React, { useEffect, useState } from "react";
-import Awaiting, { AwaitingChild } from "./awaiting";
+import { AwaitingChild } from "./awaiting";
+import { transformReadableDate } from "@/utils/helpers";
 
 export const ProgressBar = ({
   mandatoryQuestionIds,
   numAnswers,
+  endDate,
 }: {
   mandatoryQuestionIds: string[];
   numAnswers: number;
+  endDate: Date;
 }) => {
   const [numAnswered, setNumAnswered] = useState(numAnswers);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +49,7 @@ export const ProgressBar = ({
       supabase.removeChannel(progressbarChannel);
     };
   }, [mandatoryQuestionIds]);
+  const stringDate = transformReadableDate(endDate.toString())
   return (
     <AwaitingChild isLoading={isLoading}>
       <div className="w-full bg-gray-300 rounded-2xl border">
@@ -60,12 +64,19 @@ export const ProgressBar = ({
           }`}
         />
       </div>
-      {numAnswered == mandatoryQuestionIds.length && (
-        <div>
-          Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum
-          xx.xx.xxxx weiter ändern.
-        </div>
-      )}
+      {
+        numAnswered == mandatoryQuestionIds.length ?
+      
+        (endDate > new Date(Date.now()) && (
+          <div>
+            Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum {stringDate} weiter ändern.
+          </div>
+        )) : (
+          <div>
+            Deine Bewerbungsphase ist vollständig. Die Phase ist seit dem {stringDate} zu Ende. Du kannst deine Ergebnisse weiterhin einsehen.
+          </div>
+        )
+      }
     </AwaitingChild>
   );
 };
