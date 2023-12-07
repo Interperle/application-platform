@@ -1,6 +1,6 @@
 from datetime import datetime
 from backend.logger import Logger
-from backend.utils.consts import DATETIME_FORMAT
+from backend.utils.consts import DATETIME_FORMAT, REGEX_TO_DESCRIPTION
 from backend.utils.utils_file import read_yaml_file
 from backend.utils.utils_supabase import init_supabase
 from backend.enums.question_type import QuestionType
@@ -108,9 +108,8 @@ def create_data_question_type_table(question_id: str, question_type: str, questi
             continue
         if opt_param == 'formattingRegex':
             data_question_type_table[opt_param.lower()] = REGEX_JS.get(question[opt_param], None)
-            data_question_type_table["formattingdescription"] = REGEX_JS.get(question[opt_param], None)
-        elif question_type == "SHORT_TEXT" and "formattingDescription" in question:
-            data_question_type_table["formattingdescription"] = question["formattingDescription"]
+            data_question_type_table["formattingdescription"] = REGEX_TO_DESCRIPTION.get(
+                question_type, question.get("formattingDescription", None))
     return data_question_type_table
 
 
