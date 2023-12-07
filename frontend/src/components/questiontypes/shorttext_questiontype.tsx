@@ -6,10 +6,13 @@ import {
   saveShortTextAnswer,
 } from "@/actions/answers/shortText";
 import { AwaitingChild } from "../awaiting";
+import { checkRegex } from "@/utils/helpers";
 
 export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
   maxtextlength: number;
+  formattingregex: string | null;
+  formattingdescription: string | null;
 }
 
 const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
@@ -21,6 +24,8 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   questionorder,
   answerid,
   maxtextlength,
+  formattingregex,
+  formattingdescription,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -42,8 +47,21 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const textinput = event.target.value;
     setAnswer(event.target.value);
+  };
+
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const textinput = event.target.value;
+    if (
+      textinput != "" &&
+      formattingregex &&
+      !checkRegex(formattingregex, textinput)
+    ) {
+      setAnswer("");
+      alert(`Dieses ${formattingdescription} Format wird nicht unterstützt!`);
+      return;
+    }
+    saveShortTextAnswer(textinput, questionid);
   };
 
   return (
@@ -64,9 +82,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
           className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
           required={mandatory}
           maxLength={maxtextlength}
-          onBlur={(event) =>
-            saveShortTextAnswer(event.target.value, questionid)
-          }
+          onBlur={(event) => handleBlur(event)}
           onChange={(event) => handleChange(event)}
         />
         <p

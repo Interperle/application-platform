@@ -1,11 +1,5 @@
-import {
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
-} from "@/actions/answers/answers";
 import { createBrowserClient } from "@supabase/ssr";
 import moment from "moment-timezone";
-import { initSupabaseActions } from "./supabaseServerClients";
 
 export const getURL = () => {
   let url = process?.env?.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000/"; // Set this to your site URL in production env.
@@ -165,4 +159,11 @@ export function isValidPassword(password: string): boolean {
     numberRegex.test(password) &&
     specialCharRegex.test(password)
   );
+}
+
+export function checkRegex(
+  formattingregex: string,
+  texttocheck: string,
+): boolean {
+  return (new RegExp(formattingregex)).test(texttocheck);
 }
