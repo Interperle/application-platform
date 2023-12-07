@@ -64,19 +64,18 @@ export const ProgressBar = ({
           }`}
         />
       </div>
-      {numAnswered == mandatoryQuestionIds.length && (
-        new Date(endDate) > new Date(Date.now()) ? (
-            <div className="md-3 italic text-gray-500">
-              Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum{" "}
-              {stringDate} weiter ändern.
-            </div>
+      {numAnswered == mandatoryQuestionIds.length &&
+        (new Date(endDate) > new Date(Date.now()) ? (
+          <div className="md-3 italic text-gray-500">
+            Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum{" "}
+            {stringDate} weiter ändern.
+          </div>
         ) : (
           <div className="md-3 italic text-gray-500">
             Deine Bewerbungsphase ist vollständig. Die Phase ist seit dem{" "}
             {stringDate} zu Ende. Du kannst deine Ergebnisse weiterhin einsehen.
           </div>
-        )
-      )}
+        ))}
     </AwaitingChild>
   );
 };

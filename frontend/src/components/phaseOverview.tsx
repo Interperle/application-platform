@@ -48,7 +48,6 @@ const PhaseOverview: React.FC<{
               <div>Beginn: {transformReadableDateTime(phaseStart)} Uhr</div>
               <div>Ende: {transformReadableDateTime(phaseEnd)} Uhr</div>
             </div>
-            
           </h4>
         </div>
         <div className="p-4 rounded">
