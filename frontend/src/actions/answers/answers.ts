@@ -76,6 +76,9 @@ export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
     .eq("applicationid", applicationid);
 
   if (answerError) {
+    if (answerError.code == "PGRST116"){
+      return [];
+    }
     console.log(answerError);
   }
   return answerData as Answer[];
