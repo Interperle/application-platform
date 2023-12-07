@@ -133,8 +133,7 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
             if question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
                 if not isinstance(question[param], str):
                     raise ValueError(
-                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of str."
-                    )
+                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of str.")
                 if "formattingRegex" not in question:
                     raise ValueError(
                         f"The optional parameter field '{param}' can't be set if formattingRegex is not Set.")
