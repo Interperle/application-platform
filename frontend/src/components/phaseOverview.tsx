@@ -48,6 +48,7 @@ const PhaseOverview: React.FC<{
               <div>Beginn: {transformReadableDateTime(phaseStart)} Uhr</div>
               <div>Ende: {transformReadableDateTime(phaseEnd)} Uhr</div>
             </div>
+            
           </h4>
         </div>
         <div className="p-4 rounded">
@@ -55,7 +56,7 @@ const PhaseOverview: React.FC<{
             <ProgressBar
               mandatoryQuestionIds={mandatoryQuestionIds}
               numAnswers={numAnswers}
-              endDate={new Date(phaseEnd)}
+              endDate={phaseEnd}
             />
           ) : (
             `Phase startet am ${transformReadableDate(phaseStart)}`

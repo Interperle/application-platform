@@ -11,7 +11,7 @@ export const ProgressBar = ({
 }: {
   mandatoryQuestionIds: string[];
   numAnswers: number;
-  endDate: Date;
+  endDate: string;
 }) => {
   const [numAnswered, setNumAnswered] = useState(numAnswers);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +49,7 @@ export const ProgressBar = ({
       supabase.removeChannel(progressbarChannel);
     };
   }, [mandatoryQuestionIds]);
-  const stringDate = transformReadableDate(endDate.toString());
+  const stringDate = transformReadableDate(endDate);
   return (
     <AwaitingChild isLoading={isLoading}>
       <div className="w-full bg-gray-300 rounded-2xl border">
@@ -64,18 +64,18 @@ export const ProgressBar = ({
           }`}
         />
       </div>
-      {numAnswered == mandatoryQuestionIds.length ? (
-        endDate > new Date(Date.now()) && (
-          <div>
-            Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum{" "}
-            {stringDate} weiter ändern.
+      {numAnswered == mandatoryQuestionIds.length && (
+        new Date(endDate) > new Date(Date.now()) ? (
+            <div className="md-3 italic text-gray-500">
+              Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum{" "}
+              {stringDate} weiter ändern.
+            </div>
+        ) : (
+          <div className="md-3 italic text-gray-500">
+            Deine Bewerbungsphase ist vollständig. Die Phase ist seit dem{" "}
+            {stringDate} zu Ende. Du kannst deine Ergebnisse weiterhin einsehen.
           </div>
         )
-      ) : (
-        <div>
-          Deine Bewerbungsphase ist vollständig. Die Phase ist seit dem{" "}
-          {stringDate} zu Ende. Du kannst deine Ergebnisse weiterhin einsehen.
-        </div>
       )}
     </AwaitingChild>
   );
