@@ -61,6 +61,7 @@ export default async function Page({
           <ProgressBar
             mandatoryQuestionIds={mandatoryQuestionIds}
             numAnswers={already_answered}
+            endDate={phaseData.enddate}
           />
           <div className="space-y-4 max-w-screen-xl">
             <Questionnaire
@@ -72,6 +73,7 @@ export default async function Page({
           <ProgressBar
             mandatoryQuestionIds={mandatoryQuestionIds}
             numAnswers={already_answered}
+            endDate={phaseData.enddate}
           />
         </div>
         <OverviewButton />
