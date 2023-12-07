@@ -8,8 +8,9 @@
 # application_table:
 questions:
   phase-1:
-    startDate: 2024-01-02  # format: %Y-%m-%d
-    endDate: 2024-02-15  # format: %Y-%m-%d
+    phaseLabel: "Test Phase 1"
+    startDate: 2023-12-01  # format: %Y-%m-%d
+    endDate: 2024-12-10  # format: %Y-%m-%d
     questions:
       - questionType: shortText
         order: 1
@@ -17,6 +18,7 @@ questions:
         mandatory: true
         maxTextLength: 20
         formattingRegex: PHONE_NUMBER  # optional; Other predefined values: "EMAIL", "NUMBERS", "LETTERS", any JS Regex
+        #formattingDescription: Telefonnummer # if formattinRegex not set or Predefined Value => ignored; else => mandatory
         note: e.g. Max Mustermann
       - questionType: longText
         order: 2
@@ -80,6 +82,7 @@ questions:
         mandatory: false
         userInput: true
   phase-2:
+    phaseLabel: "Test Phase 2"
     startDate: 2024-01-09
     endDate: 2024-02-15
     questions:

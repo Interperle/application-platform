@@ -18,3 +18,12 @@ REGEX_JS = {
     'NATURAL_NUMBER': "/^[1-9]\d+$/",
     'RATIONAL_NUMBER': "/^(-?)(0|[1-9]\d*)(\.\d*[1-9])?$/"
 }
+
+REGEX_TO_DESCRIPTION = {
+    'PHONE_NUMBER': "Telefonnummer",
+    'URL_SEGMENT': "URL Segment",
+    'EMAIL': "Email",
+    'TEXT': "Text",
+    'NATURAL_NUMBER': "Natürliche Zahl",
+    'RATIONAL_NUMBER': "Rationale Zahl"
+}

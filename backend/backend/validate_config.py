@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from backend.utils.consts import DATETIME_FORMAT
+from backend.utils.consts import DATETIME_FORMAT, REGEX_JS
 from backend.enums.question_type import QuestionType
 from typing import Any, Dict
 
@@ -86,9 +86,9 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
 
     # Check for necessary fields in each question
     for phase_name, phase in yaml_data['questions'].items():
-        if 'phaseLabel' not in phase or not isinstance(phase['startDate'], str):
+        if 'phaseLabel' not in phase or not isinstance(phase['phaseLabel'], str):
             raise ValueError(
-                f"The phase {phase_name} is missing the 'startLabel' field or 'startLabel' is not a String.")
+                f"The phase {phase_name} is missing the 'phaseLabel' field or 'phaseLabel' is not a String.")
 
         if 'startDate' not in phase or not isinstance(phase['startDate'], date):
             raise ValueError(
@@ -129,6 +129,18 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                 if param in question and not isinstance(question[param], paramtype):
                     raise ValueError(
                         f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
+                    )
+            if question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
+                if not isinstance(question[param], str):
+                    raise ValueError(
+                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of str."
+                    )
+                if "formattingRegex" not in question:
+                    raise ValueError(
+                        f"The optional parameter field '{param}' can't be set if formattingRegex is not Set.")
+                if question["formattingRegex"] in REGEX_JS.keys():
+                    raise ValueError(
+                        f"The optional parameter field '{param}' can't be set if formattingRegex is one of the Predefined Values."
                     )
 
 

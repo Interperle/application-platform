@@ -14,8 +14,8 @@ ALTER TABLE
 CREATE TABLE
   PHASE_TABLE (
     phaseid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    phasename VARCHAR(255) NOT NULL,
-    phaselabel VARCHAR(255) NOT NULL,
+    phasename TEXT NOT NULL,
+    phaselabel TEXT NOT NULL,
     phaseorder INT NOT NULL,
     startdate TIMESTAMPTZ NOT NULL,
     enddate TIMESTAMPTZ NOT NULL
@@ -27,12 +27,12 @@ ALTER TABLE
 CREATE TABLE
   QUESTION_TABLE (
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    questiontype VARCHAR(255) NOT NULL,
+    questiontype TEXT NOT NULL,
     questionorder INT NOT NULL,
     phaseid UUID NOT NULL REFERENCES PHASE_TABLE (phaseid),
     mandatory BOOLEAN NOT NULL,
     questiontext TEXT NOT NULL,
-    questionnote VARCHAR(255)
+    questionnote TEXT
   );
 
 ALTER TABLE
@@ -55,7 +55,8 @@ CREATE TABLE
     questionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     FOREIGN KEY (questionid) REFERENCES QUESTION_TABLE (questionid),
     maxtextlength INT NOT NULL,
-    formattingregex VARCHAR(255)
+    formattingregex TEXT,
+    formattingdescription TEXT
   );
 
 ALTER TABLE
@@ -87,7 +88,7 @@ CREATE TABLE
   MULTIPLE_CHOICE_QUESTION_CHOICE_TABLE (
     choiceid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     questionid UUID NOT NULL,
-    choicetext VARCHAR(255) NOT NULL,
+    choicetext TEXT NOT NULL,
     FOREIGN KEY (questionid) REFERENCES MULTIPLE_CHOICE_QUESTION_TABLE (questionid)
   );
 
@@ -153,7 +154,7 @@ CREATE TABLE
   DROPDOWN_QUESTION_OPTION_TABLE (
     optionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     questionid UUID NOT NULL,
-    optiontext VARCHAR(255) NOT NULL,
+    optiontext TEXT NOT NULL,
     FOREIGN KEY (questionid) REFERENCES DROPDOWN_QUESTION_TABLE (questionid)
   );
 
@@ -183,7 +184,7 @@ ALTER TABLE
 CREATE TABLE
   SHORT_TEXT_ANSWER_TABLE (
     answerid UUID PRIMARY KEY,
-    answertext VARCHAR(255) NOT NULL,
+    answertext TEXT NOT NULL,
     FOREIGN KEY (answerid) REFERENCES ANSWER_TABLE (answerid) ON DELETE CASCADE
   );
 

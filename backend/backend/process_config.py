@@ -108,6 +108,9 @@ def create_data_question_type_table(question_id: str, question_type: str, questi
             continue
         if opt_param == 'formattingRegex':
             data_question_type_table[opt_param.lower()] = REGEX_JS.get(question[opt_param], None)
+            data_question_type_table["formattingdescription"] = REGEX_JS.get(question[opt_param], None)
+        elif question_type == "SHORT_TEXT" and "formattingDescription" in question:
+            data_question_type_table["formattingdescription"] = question["formattingDescription"]
     return data_question_type_table
 
 

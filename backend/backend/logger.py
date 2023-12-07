@@ -27,6 +27,7 @@ class Logger:
         return self.__send_log_to_log_flare(message, "fatal")
 
     def __send_log_to_log_flare(self, message: str, level: int) -> bool:
+        return
         payload = {
             "event_message": message,
             "metadata": {
