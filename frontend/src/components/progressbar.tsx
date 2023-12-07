@@ -49,7 +49,7 @@ export const ProgressBar = ({
       supabase.removeChannel(progressbarChannel);
     };
   }, [mandatoryQuestionIds]);
-  const stringDate = transformReadableDate(endDate.toString())
+  const stringDate = transformReadableDate(endDate.toString());
   return (
     <AwaitingChild isLoading={isLoading}>
       <div className="w-full bg-gray-300 rounded-2xl border">
@@ -64,19 +64,19 @@ export const ProgressBar = ({
           }`}
         />
       </div>
-      {
-        numAnswered == mandatoryQuestionIds.length ?
-      
-        (endDate > new Date(Date.now()) && (
+      {numAnswered == mandatoryQuestionIds.length ? (
+        endDate > new Date(Date.now()) && (
           <div>
-            Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum {stringDate} weiter ändern.
-          </div>
-        )) : (
-          <div>
-            Deine Bewerbungsphase ist vollständig. Die Phase ist seit dem {stringDate} zu Ende. Du kannst deine Ergebnisse weiterhin einsehen.
+            Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum{" "}
+            {stringDate} weiter ändern.
           </div>
         )
-      }
+      ) : (
+        <div>
+          Deine Bewerbungsphase ist vollständig. Die Phase ist seit dem{" "}
+          {stringDate} zu Ende. Du kannst deine Ergebnisse weiterhin einsehen.
+        </div>
+      )}
     </AwaitingChild>
   );
 };

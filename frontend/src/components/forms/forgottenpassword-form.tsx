@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useFormState } from "react-dom";
 import { sendResetPasswordLink } from "@/actions/auth";
 import { SubmitButton } from "../submitButton";
@@ -63,7 +63,10 @@ export default function SignUpForm() {
         </div>
         <div>
           {buttonVisible ? (
-            <SubmitButton text={`${state?.message == "" ? "Bestätigen" : "Erneut senden"}`} expanded={false} />
+            <SubmitButton
+              text={`${state?.message == "" ? "Bestätigen" : "Erneut senden"}`}
+              expanded={false}
+            />
           ) : (
             <p>Erneut senden erst in {timer}s möglich!</p>
           )}

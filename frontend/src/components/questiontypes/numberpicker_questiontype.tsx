@@ -44,33 +44,50 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let inputNumber: number = +event.target.value
-    if(isNaN(inputNumber) && event.target.value != "+" && event.target.value != "-"){
-      alert("Du musst eine Zahl angeben! Andere Zeichen als Nummern sind nicht erlaubt.")
-      return
-    } else if(event.target.value == "+" || event.target.value == "-"){
+    let inputNumber: number = +event.target.value;
+    if (
+      isNaN(inputNumber) &&
+      event.target.value != "+" &&
+      event.target.value != "-"
+    ) {
+      alert(
+        "Du musst eine Zahl angeben! Andere Zeichen als Nummern sind nicht erlaubt.",
+      );
+      return;
+    } else if (event.target.value == "+" || event.target.value == "-") {
       setAnswer(event.target.value);
-      return
+      return;
     }
-    
-    if ((!minnumber || (minnumber <= inputNumber)) &&  (!maxnumber || (maxnumber >= inputNumber))){
+
+    if (
+      (!minnumber || minnumber <= inputNumber) &&
+      (!maxnumber || maxnumber >= inputNumber)
+    ) {
       setAnswer(event.target.value);
     } else {
-      alert("Deine Zahl " + inputNumber + " muss zwischen " + minnumber + " und " + maxnumber + " liegen.")
+      alert(
+        "Deine Zahl " +
+          inputNumber +
+          " muss zwischen " +
+          minnumber +
+          " und " +
+          maxnumber +
+          " liegen.",
+      );
     }
   };
 
-  function decrementNumber(){
-    const inputAnswer = +answer
-    if (inputAnswer > minnumber){
-      setAnswer((inputAnswer - 1).toString())
+  function decrementNumber() {
+    const inputAnswer = +answer;
+    if (inputAnswer > minnumber) {
+      setAnswer((inputAnswer - 1).toString());
     }
   }
 
-  function incrementNumber(){
-    const inputAnswer = +answer
-    if (inputAnswer < maxnumber){
-      setAnswer((inputAnswer + 1).toString())
+  function incrementNumber() {
+    const inputAnswer = +answer;
+    if (inputAnswer < maxnumber) {
+      setAnswer((inputAnswer + 1).toString());
     }
   }
 
@@ -85,10 +102,28 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
     >
       <AwaitingChild isLoading={isLoading}>
         <div className="relative flex items-center max-w-[8rem]">
-          <button type="button" id="decrement-button" onClick={decrementNumber} data-input-counter-decrement="quantity-input" className="bg-secondary hover:secondary rounded-s-lg p-3 h-11 focus:ring-secondary focus:ring-2 focus:outline-none">
-              <svg className="w-3 h-3 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
-              </svg>
+          <button
+            type="button"
+            id="decrement-button"
+            onClick={decrementNumber}
+            data-input-counter-decrement="quantity-input"
+            className="bg-secondary hover:secondary rounded-s-lg p-3 h-11 focus:ring-secondary focus:ring-2 focus:outline-none"
+          >
+            <svg
+              className="w-3 h-3 text-primary"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 18 2"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h16"
+              />
+            </svg>
           </button>
           <input
             type="text"
@@ -105,12 +140,30 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
             max={maxnumber}
             value={answer}
           />
-          <button type="button" id="increment-button" onClick={incrementNumber} data-input-counter-increment="quantity-input" className="bg-secondary hover:secondary rounded-e-lg p-3 h-11 focus:ring-secondary focus:ring-2 focus:outline-none">
-            <svg className="w-3 h-3 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+          <button
+            type="button"
+            id="increment-button"
+            onClick={incrementNumber}
+            data-input-counter-increment="quantity-input"
+            className="bg-secondary hover:secondary rounded-e-lg p-3 h-11 focus:ring-secondary focus:ring-2 focus:outline-none"
+          >
+            <svg
+              className="w-3 h-3 text-primary"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 18 18"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 1v16M1 9h16"
+              />
             </svg>
-        </button>
-    </div>
+          </button>
+        </div>
       </AwaitingChild>
     </QuestionTypes>
   );

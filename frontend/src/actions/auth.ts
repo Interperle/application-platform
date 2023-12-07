@@ -16,25 +16,32 @@ export async function signUpUser(prevState: any, formData: FormData) {
     email: z.string().min(1),
     password: z.string().min(1),
     passwordConfirmation: z.string().min(1),
-    legalConfirmation: z.string()
+    legalConfirmation: z.string(),
   });
   const signUpFormData = schema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     passwordConfirmation: formData.get("confirm-password"),
-    legalConfirmation: formData.get("confirm-legal")
+    legalConfirmation: formData.get("confirm-legal"),
   });
 
   if (!signUpFormData.success) {
-    console.log(formData.get("confirm-legal"))
+    console.log(formData.get("confirm-legal"));
     return { message: "User Registrierung fehlgeschlagen", status: "ERROR" };
   }
 
-  if (signUpFormData.data.legalConfirmation != "on"){
-    return { message: "Du musst der Datenschutzerklärung zustimmen", status: "ERROR" };
+  if (signUpFormData.data.legalConfirmation != "on") {
+    return {
+      message: "Du musst der Datenschutzerklärung zustimmen",
+      status: "ERROR",
+    };
   }
-  if (!isValidPassword(signUpFormData.data.password)){
-    return { message: "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und mind. 8 Zeichen lang sein!", status: "ERROR" };
+  if (!isValidPassword(signUpFormData.data.password)) {
+    return {
+      message:
+        "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und mind. 8 Zeichen lang sein!",
+      status: "ERROR",
+    };
   }
 
   if (
@@ -44,7 +51,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
   }
   try {
     const supabase = initSupabaseActions();
-    supabase.auth.getUser()
+    supabase.auth.getUser();
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.data.password,
@@ -58,7 +65,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
       return { message: userError.message, status: "ERROR" };
     }
 
-    if (userData.user?.identities?.length === 0){
+    if (userData.user?.identities?.length === 0) {
       return { message: "User ist bereits registriert!", status: "ERROR" };
     }
 
@@ -114,7 +121,7 @@ export async function signInUser(prevState: any, formData: FormData) {
       password: signInFormData.data.password,
     });
     if (error) {
-      if (error.status == 400){
+      if (error.status == 400) {
         return { message: "Deine Login Daten sind ungültig!" };
       }
       console.log(error);

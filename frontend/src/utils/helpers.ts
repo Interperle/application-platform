@@ -8,8 +8,7 @@ import moment from "moment-timezone";
 import { initSupabaseActions } from "./supabaseServerClients";
 
 export const getURL = () => {
-  let url =
-    process?.env?.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000/"; // Set this to your site URL in production env.
+  let url = process?.env?.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000/"; // Set this to your site URL in production env.
   // Make sure to include `https://` when not localhost.
   url = url.includes("http") ? url : `https://${url}`;
   // Make sure to including trailing `/`.
@@ -159,9 +158,11 @@ export function isValidPassword(password: string): boolean {
   const numberRegex = /[0-9]/;
   const specialCharRegex = /[^A-Za-z0-9]/;
 
-  return minLengthRegex.test(password) &&
-         upperCaseRegex.test(password) &&
-         lowerCaseRegex.test(password) &&
-         numberRegex.test(password) &&
-         specialCharRegex.test(password);
+  return (
+    minLengthRegex.test(password) &&
+    upperCaseRegex.test(password) &&
+    lowerCaseRegex.test(password) &&
+    numberRegex.test(password) &&
+    specialCharRegex.test(password)
+  );
 }

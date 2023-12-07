@@ -73,7 +73,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
         );
         alert("Du kannst maximal " + maxanswers + " auswählen!");
         return;
-      }/*else if (selectedChoices.length > 0 && selectedChoices.length - 1 < minanswers && mandatory) {
+      } /*else if (selectedChoices.length > 0 && selectedChoices.length - 1 < minanswers && mandatory) {
         setSelectedChoices(
           selectedChoices.filter((selected) => selected !== choice.choiceid),
         );
