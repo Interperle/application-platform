@@ -165,5 +165,5 @@ export function checkRegex(
   formattingregex: string,
   texttocheck: string,
 ): boolean {
-  return (new RegExp(formattingregex)).test(texttocheck);
+  return new RegExp(formattingregex).test(texttocheck);
 }
