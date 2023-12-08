@@ -1,7 +1,7 @@
 "use client";
 
 import { CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseBrowserClient";
 import { User } from "@supabase/supabase-js";
 import { updatePassword } from "@/actions/auth";
@@ -14,11 +14,13 @@ import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
 import Popup from "@/components/popup";
 import { SubmitButton } from "@/components/submitButton";
 import Awaiting from "@/components/awaiting";
+import PasswordRequirementsComponent from "@/components/passwordRequirements";
 
 const SettingsPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -40,6 +42,10 @@ const SettingsPage: React.FC = () => {
     updatePassword,
     initialState,
   );
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
 
   return (
     <span className="w-full">
@@ -67,9 +73,11 @@ const SettingsPage: React.FC = () => {
               placeholder="********"
               name="new_password"
               id="new_password"
+              onChange={(e) => handlePasswordChange(e)}
               className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
             />
           </div>
+          <PasswordRequirementsComponent password={password}/>
           <div className="mb-4">
             <h4 className="py-1 text-base">Passwort bestätigen</h4>
             <input

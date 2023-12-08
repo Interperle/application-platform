@@ -209,21 +209,30 @@ export async function deleteUser() {
 }
 
 export async function updatePassword(prevState: any, formData: FormData) {
-  console.log("Action");
   const schema = z.object({
     // For Implementation with Old Password Check: https://github.com/orgs/supabase/discussions/4042#discussioncomment-1707356
     //old_password: z.string().min(1),
     new_password: z.string().min(1),
     reenter_password: z.string().min(1),
   });
-  const updatePasswordFormData = schema.parse({
+  const updatePasswordFormData = schema.safeParse({
     //old_password: formData.get("old_password"),
     new_password: formData.get("new_password"),
     reenter_password: formData.get("reenter_password"),
   });
+  if (!updatePasswordFormData.success) {
+    return { message: "Passwort updaten fehlgeschlagen", status: "ERROR" };
+  }
+  if (!isValidPassword(updatePasswordFormData.data.new_password)) {
+    return {
+      message:
+        "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und mind. 8 Zeichen lang sein!",
+      status: "ERROR",
+    };
+  }
   if (
-    updatePasswordFormData.new_password !=
-    updatePasswordFormData.reenter_password
+    updatePasswordFormData.data.new_password !=
+    updatePasswordFormData.data.reenter_password
   ) {
     return { message: "Passwörter stimmen nicht überein!", status: "ERROR" };
   }
@@ -231,7 +240,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
     const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.updateUser(
       {
-        password: updatePasswordFormData.new_password,
+        password: updatePasswordFormData.data.new_password,
       },
     );
     if (userError) {

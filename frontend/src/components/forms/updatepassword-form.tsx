@@ -3,6 +3,8 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { signUpUser, updatePassword } from "@/actions/auth";
 import { SubmitButton } from "../submitButton";
+import PasswordRequirementsComponent from "../passwordRequirements";
+import { ChangeEvent, useState } from "react";
 
 interface messageType {
   message: string;
@@ -14,8 +16,13 @@ const initialState: messageType = {
   status: "",
 };
 
-export default function SignUpForm() {
+export default function UpdatePasswordForm() {
   const [state, formAction] = useFormState(updatePassword, initialState);
+  const [password, setPassword] = useState("");
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
 
   return (
     <div>
@@ -33,9 +40,12 @@ export default function SignUpForm() {
             type="password"
             name="new_password"
             required
+            onChange={(e) => handlePasswordChange(e)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
+          
         </div>
+        <PasswordRequirementsComponent password={password}/>
         <div>
           <label
             htmlFor="reenter_password"
