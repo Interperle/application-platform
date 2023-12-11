@@ -9,6 +9,7 @@ type PasswordRequirement = {
 
 type PasswordRequirements = {
   minLength: PasswordRequirement;
+  maxLength: PasswordRequirement;
   upperCase: PasswordRequirement;
   lowerCase: PasswordRequirement;
   number: PasswordRequirement;
@@ -22,6 +23,7 @@ const PasswordRequirementsComponent: React.FC<{ password: string }> = ({
 
   const passwordRequirements: PasswordRequirements = {
     minLength: { text: "Mindestens 8 Zeichen", test: (pw) => pw.length >= 8 },
+    maxLength: { text: "Maximal 72 Zeichen", test: (pw) => pw.length <= 72 },
     upperCase: {
       text: "Mindestens ein großer Buchstabe",
       test: (pw) => /[A-Z]/.test(pw),

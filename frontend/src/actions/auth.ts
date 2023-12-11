@@ -26,7 +26,6 @@ export async function signUpUser(prevState: any, formData: FormData) {
   });
 
   if (!signUpFormData.success) {
-    console.log(formData.get("confirm-legal"));
     return { message: "User Registrierung fehlgeschlagen", status: "ERROR" };
   }
 
@@ -39,7 +38,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
   if (!isValidPassword(signUpFormData.data.password)) {
     return {
       message:
-        "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und mind. 8 Zeichen lang sein!",
+        "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und 8-72 Zeichen lang sein!",
       status: "ERROR",
     };
   }
@@ -51,7 +50,6 @@ export async function signUpUser(prevState: any, formData: FormData) {
   }
   try {
     const supabase = initSupabaseActions();
-    supabase.auth.getUser();
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.data.password,
@@ -65,8 +63,8 @@ export async function signUpUser(prevState: any, formData: FormData) {
       return { message: userError.message, status: "ERROR" };
     }
 
-    if (userData.user?.identities?.length === 0) {
-      return { message: "User ist bereits registriert!", status: "ERROR" };
+    if (userData.user && userData.user.identities && userData.user.identities.length === 0) {
+      return { message: "Der User ist bereits registriert!", status: "ERROR" };
     }
 
     const { data: userProfileData, error: userProfileError } =
@@ -75,10 +73,11 @@ export async function signUpUser(prevState: any, formData: FormData) {
         .insert({ userid: userData.user!.id, userrole: 1, isactive: true });
 
     if (userProfileError) {
-      console.log(userProfileError);
-      return { message: userProfileError.message };
+      if(userProfileError.code == "23505"){
+        return { message: "Der User war zwar bereits registriert, dir wurde jedoch erneut eine Email gesendet, bitte schau in dein Postfach!", status: "SUCCESS" };
+      }
+      return { message: userProfileError.message, status: "ERROR" };
     }
-    console.log("Success");
     const sendData = { userid: userData!.user!.id };
     const { data: applicationData, error: applicationError } =
       await supabaseServiceRole.from("application_table").insert(sendData);
@@ -226,7 +225,7 @@ export async function updatePassword(prevState: any, formData: FormData) {
   if (!isValidPassword(updatePasswordFormData.data.new_password)) {
     return {
       message:
-        "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und mind. 8 Zeichen lang sein!",
+        "Das Passwort muss mind. 1 Goßbuchstaben, mind. 1 Kleinbuchstaben, mind. 1 Zahl, mind. 1 Sonderzeichen enthalten und 8-72 Zeichen lang sein!",
       status: "ERROR",
     };
   }
@@ -244,6 +243,9 @@ export async function updatePassword(prevState: any, formData: FormData) {
       },
     );
     if (userError) {
+      if (userError.message == "New password should be different from the old password."){
+        return { message: "Dein neues Passwort muss sich vom vorherigen Passwort unterscheiden!", status: "ERROR" };
+      }
       return { message: userError.message, status: "ERROR" };
     }
     revalidatePath("/");
@@ -300,4 +302,32 @@ export async function isAuthorized(
     : userProfileData.userrole === UserRole.Admin
       ? "/admin"
       : "/";
+}
+
+
+export async function sendResetPasswordLinkFromSettings(
+  prevState: any,
+  formData: FormData,
+) {
+  const email = prevState.email;
+  try {
+    const supabase = initSupabaseActions();
+    const { data, error } = await supabase.auth.resetPasswordForEmail(
+      email.replace("@googlemail.com", "@gmail.com"),
+      {
+        redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
+      },
+    );
+    if (error) {
+      return { message: error.message, status: "ERROR" };
+    }
+
+    revalidatePath("/login");
+    return {
+      message: `Dir wurde ein Passwort Zurücksetzen Link gesendet!`,
+      status: "SUCCESS",
+    };
+  } catch (e) {
+    return { message: "Error", status: "ERROR" };
+  }
 }
