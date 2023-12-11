@@ -14,7 +14,7 @@ Seid euch bewusst, dass Generation-D keine Bewerbungen akzeptieren kann…
 
 Nach Absenden eurer Bewerbung erhaltet ihr eine Bestätigungsmail. Wie es danach weitergeht und über alle weiteren Phasen werdet Ihr ebenfalls per E-Mail informiert.
 
-Weitere Details zum Ablauf und der Bewertung könnt ihr auch nochmal in unserem <a href="https://bewerbung-test.generation-d.org/files/FAQ_Runde1_2024.pdf" target="_blank"><u>FAQ</u></a> nachlesen.
+Weitere Details zum Ablauf und der Bewertung könnt ihr auch nochmal in unserem <a href="https://generation-d.org/faq/" target="_blank"><u>FAQ</u></a> nachlesen.
 
 Kurz noch einige allgemeine Hinweise:
 
