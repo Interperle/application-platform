@@ -7,6 +7,8 @@ import {
   fetch_answer_table,
 } from "@/actions/phase";
 import PhaseOverview from "@/components/phaseOverview";
+import 'github-markdown-css/github-markdown-light.css';
+
 
 export default async function Home() {
   const log = new Logger("Overview Page");
@@ -21,7 +23,7 @@ export default async function Home() {
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
         <div
-          className="markdown-content"
+          className="markdown-body"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
       </div>

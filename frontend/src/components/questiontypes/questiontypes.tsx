@@ -1,5 +1,4 @@
-import markdownToHtml from "@/utils/markdownToHtml";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export interface DefaultQuestionTypeProps {
   phasename: string;
