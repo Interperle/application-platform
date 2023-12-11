@@ -53,7 +53,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       const file = event.target.files[0];
       const fileSizeInMB = file.size / 1024 / 1024;
       if (fileSizeInMB > maxfilesizeinmb) {
-        alert(`Die Bilddatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
+        alert(`Die PDF Datei darf maximal ${maxfilesizeinmb} MB groß sein!`);
         return;
       }
       setUploadPdf(URL.createObjectURL(event.target.files[0]));
