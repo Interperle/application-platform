@@ -13,6 +13,7 @@ export function SubmitButton({
     <button
       type="submit"
       aria-disabled={pending}
+      disabled={pending}
       className={`${expanded ? "apl-button-expanded" : "apl-button-fixed"}`}
     >
       {pending ? "Bitte warten..." : text}
