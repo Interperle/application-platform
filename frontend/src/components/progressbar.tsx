@@ -5,10 +5,12 @@ import { AwaitingChild } from "./awaiting";
 import { transformReadableDate } from "@/utils/helpers";
 
 export const ProgressBar = ({
+  progressbarId,
   mandatoryQuestionIds,
   numAnswers,
   endDate,
 }: {
+  progressbarId: string;
   mandatoryQuestionIds: string[];
   numAnswers: number;
   endDate: string;
@@ -18,7 +20,7 @@ export const ProgressBar = ({
 
   useEffect(() => {
     const progressbarChannel = supabase
-      .channel("progressbar-channel")
+      .channel(`progressbar-channel-${progressbarId}`)
       .on(
         "postgres_changes",
         {

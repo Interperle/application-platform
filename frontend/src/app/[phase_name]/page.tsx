@@ -59,6 +59,7 @@ export default async function Page({
             </div>
           )}
           <ProgressBar
+            progressbarId={`${phaseData.phaseid}-top`}
             mandatoryQuestionIds={mandatoryQuestionIds}
             numAnswers={already_answered}
             endDate={phaseData.enddate}
@@ -71,6 +72,7 @@ export default async function Page({
             />
           </div>
           <ProgressBar
+            progressbarId={`${phaseData.phaseid}-bottom`}
             mandatoryQuestionIds={mandatoryQuestionIds}
             numAnswers={already_answered}
             endDate={phaseData.enddate}

@@ -8,6 +8,7 @@ import {
 import { useRouter } from "next/navigation";
 import React from "react";
 import { ProgressBar } from "./progressbar";
+import { CalendarDaysIcon, DocumentCheckIcon, PencilSquareIcon } from "@heroicons/react/24/solid"
 
 const PhaseOverview: React.FC<{
   key: string;
@@ -33,16 +34,30 @@ const PhaseOverview: React.FC<{
     router.push(`/${phaseName}`);
   };
   const phaseStatus = calcPhaseStatus(phaseStart, phaseEnd);
+  const statusIcon = () => {
+    switch (phaseStatus) {
+      case "UPCOMING":
+        return <CalendarDaysIcon className="h-6 w-6 text-secondary"/>;
+      case "ENDED":
+        return <DocumentCheckIcon className="h-6 w-6 text-secondary"/>;    // Replace with your actual check icon component
+      default:
+        return <PencilSquareIcon className="h-6 w-6 text-secondary"/>;      // Replace with your actual pen icon component
+    }
+  };
+
   return (
     <div
       key={key}
-      className="w-full max-w-screen-xl mx-auto bg-white p-8 rounded-lg shadow-md"
+      className={`w-full max-w-screen-xl mx-auto p-8 rounded-lg shadow-md  ${phaseStatus === "UPCOMING" ? "bg-[#B8B8B8] opacity-30" : "bg-white"}`}
     >
       <div className="grid grid-rows-3 md:grid-rows-1 md:grid-cols-3 gap-4">
         <div className="grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 md:grid-cols-1 md:grid-rows-2">
-          <h2 className="rounded font-bold">
-            Phase {phaseOrder + 1}: {phaseLabel}
-          </h2>
+          <div className="flex items-center">
+            {statusIcon()}
+            <h2 className="rounded font-bold ml-2">
+              Phase {phaseOrder + 1}: {phaseLabel}
+            </h2>
+          </div>
           <h4 className="rounded">
             <div className="flex-row-2 gap-x-2">
               <div>Beginn: {transformReadableDateTime(phaseStart)} Uhr</div>
@@ -53,6 +68,7 @@ const PhaseOverview: React.FC<{
         <div className="p-4 rounded">
           {phaseStatus != "UPCOMING" ? (
             <ProgressBar
+              progressbarId={`${key}-overview`}
               mandatoryQuestionIds={mandatoryQuestionIds}
               numAnswers={numAnswers}
               endDate={phaseEnd}
@@ -62,7 +78,7 @@ const PhaseOverview: React.FC<{
           )}
         </div>
         {phaseStatus == "UPCOMING" ? (
-          <button className="apl-button-fixed-short">Phase bevorstehend</button>
+          <button className="rounded px-1 py-2 text-[#B8B8B8] max-h-14 bg-[#4D4D4D] cursor-default">Phase bevorstehend</button>
         ) : phaseStatus == "ENDED" ? (
           <button
             aria-disabled={true}
