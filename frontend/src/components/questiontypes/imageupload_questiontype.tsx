@@ -33,7 +33,9 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   );
   const [uploadUrl, setUploadImage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [wasUploaded, setWasUploaded] = useState(false);
 
+  const validImgTypes = ["image/png", "image/jpeg"];
   useEffect(() => {
     async function loadAnswer() {
       try {
@@ -53,21 +55,50 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     loadAnswer();
   }, [questionid, answerid]);
 
+  function set_image_for_upload(file: File) {
+    const fileSizeInMB = file.size / 1024 / 1024;
+    if (!validImgTypes.includes(file.type)) {
+      alert(
+        `Es sind nur die folgenden Dateitypen erlaubt: ${validImgTypes.join(
+          ", ",
+        )}!`,
+      );
+      return;
+    }
+    if (fileSizeInMB > maxfilesizeinmb) {
+      alert(`Die Bilddatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
+      return;
+    }
+    setUploadImage(URL.createObjectURL(file));
+    setWasUploaded(false);
+  }
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
-      const fileSizeInMB = file.size / 1024 / 1024;
-      if (fileSizeInMB > maxfilesizeinmb) {
-        alert(`Die Bilddatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
-        return;
-      }
-      setUploadImage(URL.createObjectURL(event.target.files[0]));
+      set_image_for_upload(file);
     }
   };
 
   const handleDeleteOnClick = () => {
     deleteImageUploadAnswer(questionid, answerid || "");
     setUploadImage("");
+    setWasUploaded(false);
+  };
+
+  const handleSubmit = () => {
+    setWasUploaded(true);
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    if (event.dataTransfer.files && event.dataTransfer.files[0]) {
+      const file = event.dataTransfer.files[0];
+      set_image_for_upload(file);
+    }
   };
 
   return (
@@ -79,53 +110,56 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
     >
-      <form action={saveImageUploadAnswerWithId}>
-        <div className="mt-1">
-          <AwaitingChild isLoading={isLoading}>
-            <div className="flex items-center justify-center w-full">
-              <label
-                htmlFor={questionid}
-                className="flex flex-col items-center justify-center w-full h-34 border-2 border-secondary border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg
-                    className="w-8 h-8 mb-4 text-secondary"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
-                  <p className="mb-2 text-sm text-secondary text-center">
-                    <p className="font-semibold">Zum Uploaden klicken</p> oder
-                    per Drag and Drop
-                  </p>
-                  <p className="text-xs text-secondary">
-                    PNG, JPG oder JPEG (MAX. {maxfilesizeinmb}MB)
-                  </p>
-                </div>
-                <input
-                  type="file"
-                  id={questionid}
-                  name={questionid}
-                  accept="image/png, image/jpeg"
-                  required={mandatory}
-                  className="hidden"
-                  onChange={(event) => handleUploadChange(event)}
-                />
-              </label>
-            </div>
-          </AwaitingChild>
-        </div>
-        {uploadUrl && (
-          <div className="mt-4 flex flex-col gap-y-2">
+      <form action={saveImageUploadAnswerWithId} onSubmit={handleSubmit}>
+        {!uploadUrl ? (
+          <div className="mt-1">
+            <AwaitingChild isLoading={isLoading}>
+              <div className="flex items-center justify-center w-full">
+                <label
+                  htmlFor={questionid}
+                  className="flex flex-col items-center justify-center w-full h-34 border-2 border-secondary border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg
+                      className="w-8 h-8 mb-4 text-secondary"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 16"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                      />
+                    </svg>
+                    <p className="mb-2 text-sm text-secondary text-center">
+                      <p className="font-semibold">Zum Uploaden klicken</p> oder
+                      per Drag and Drop
+                    </p>
+                    <p className="text-xs text-secondary">
+                      PNG, JPG oder JPEG (MAX. {maxfilesizeinmb}MB)
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    id={questionid}
+                    name={questionid}
+                    accept={validImgTypes.join(", ")}
+                    required={mandatory}
+                    className="hidden"
+                    onChange={(event) => handleUploadChange(event)}
+                  />
+                </label>
+              </div>
+            </AwaitingChild>
+          </div>
+        ) : (
+          <div className="mt-4 flex flex-col gap-y-2 max-w-xs">
             <button
               className="self-end text-red-600"
               onClick={handleDeleteOnClick}
@@ -140,7 +174,19 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
               width={100}
               height={100}
             />
-            <SubmitButton text={"Bild hochladen"} expanded={false} />
+            {!wasUploaded ? (
+              <>
+                <div className="italic">
+                  Hinweis: Der Upload des ausgewählten Bildes muss noch
+                  bestätigt werden!
+                </div>
+                <SubmitButton text={"Bild hochladen"} expanded={false} />
+              </>
+            ) : (
+              <div className="text-green-600">
+                Der Upload des Bildes war erfolgreich!
+              </div>
+            )}
           </div>
         )}
       </form>
