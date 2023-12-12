@@ -26,7 +26,6 @@ const SettingsPage: React.FC = () => {
       setIsLoading(false);
     };
     fetchUser();
-    
   }, []);
 
   return (
@@ -41,11 +40,15 @@ const SettingsPage: React.FC = () => {
         </div>
         <h3 className="py-2 text-xl">Ändere dein Passwort</h3>
         <div>
-          <h2>Zum Zurücksetzen deines Passworts wird dir ein Passwort zurücksetzen Link an obige Email Adresse gesendet</h2>
-          {
-            user?.email == undefined ? <CircularProgress size={"1rem"} /> :
-            <SendPasswordResetForm email={user!.email!}/>
-          }
+          <h2>
+            Zum Zurücksetzen deines Passworts wird dir ein Passwort zurücksetzen
+            Link an obige Email Adresse gesendet
+          </h2>
+          {user?.email == undefined ? (
+            <CircularProgress size={"1rem"} />
+          ) : (
+            <SendPasswordResetForm email={user!.email!} />
+          )}
         </div>
         <h4 className="py-2 text-xl mb-3">Lösche deinen Account</h4>
         <button

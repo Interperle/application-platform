@@ -1,7 +1,11 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { sendResetPasswordLink, sendResetPasswordLinkFromSettings, updatePassword } from "@/actions/auth";
+import {
+  sendResetPasswordLink,
+  sendResetPasswordLinkFromSettings,
+  updatePassword,
+} from "@/actions/auth";
 import { SubmitButton } from "../submitButton";
 import { useEffect, useState } from "react";
 
@@ -20,8 +24,11 @@ export default function SendPasswordResetForm({ email }: { email: string }) {
     email: email,
     message: "",
     status: "",
-  }; 
-  const [state, formAction] = useFormState(sendResetPasswordLinkFromSettings, initialState);
+  };
+  const [state, formAction] = useFormState(
+    sendResetPasswordLinkFromSettings,
+    initialState,
+  );
   const [timer, setTimer] = useState(0);
   const [buttonVisible, setButtonVisible] = useState(true);
   useEffect(() => {
@@ -35,8 +42,6 @@ export default function SendPasswordResetForm({ email }: { email: string }) {
     return () => clearTimeout(countdown);
   }, [timer]);
 
-  
-
   const handleSubmit = () => {
     setButtonVisible(false);
     setTimer(30);
@@ -45,15 +50,18 @@ export default function SendPasswordResetForm({ email }: { email: string }) {
   return (
     <form action={formAction} onSubmit={handleSubmit} className="space-y-6">
       <div
-        className={`italic ${state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
-          }`}
+        className={`italic ${
+          state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
+        }`}
       >
         {state?.message}
       </div>
       <div>
         {buttonVisible ? (
           <SubmitButton
-            text={`${state?.message == "" ? "Link senden" : "Link erneut senden"}`}
+            text={`${
+              state?.message == "" ? "Link senden" : "Link erneut senden"
+            }`}
             expanded={false}
           />
         ) : (

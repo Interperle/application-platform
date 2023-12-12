@@ -7,8 +7,7 @@ import {
   fetch_answer_table,
 } from "@/actions/phase";
 import PhaseOverview from "@/components/phaseOverview";
-import 'github-markdown-css/github-markdown-light.css';
-
+import "github-markdown-css/github-markdown-light.css";
 
 export default async function Home() {
   const log = new Logger("Overview Page");

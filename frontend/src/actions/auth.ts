@@ -63,7 +63,11 @@ export async function signUpUser(prevState: any, formData: FormData) {
       return { message: userError.message, status: "ERROR" };
     }
 
-    if (userData.user && userData.user.identities && userData.user.identities.length === 0) {
+    if (
+      userData.user &&
+      userData.user.identities &&
+      userData.user.identities.length === 0
+    ) {
       return { message: "Der User ist bereits registriert!", status: "ERROR" };
     }
 
@@ -73,8 +77,12 @@ export async function signUpUser(prevState: any, formData: FormData) {
         .insert({ userid: userData.user!.id, userrole: 1, isactive: true });
 
     if (userProfileError) {
-      if(userProfileError.code == "23505"){
-        return { message: "Der User war zwar bereits registriert, dir wurde jedoch erneut eine Email gesendet, bitte schau in dein Postfach!", status: "SUCCESS" };
+      if (userProfileError.code == "23505") {
+        return {
+          message:
+            "Der User war zwar bereits registriert, dir wurde jedoch erneut eine Email gesendet, bitte schau in dein Postfach!",
+          status: "SUCCESS",
+        };
       }
       return { message: userProfileError.message, status: "ERROR" };
     }
@@ -243,8 +251,15 @@ export async function updatePassword(prevState: any, formData: FormData) {
       },
     );
     if (userError) {
-      if (userError.message == "New password should be different from the old password."){
-        return { message: "Dein neues Passwort muss sich vom vorherigen Passwort unterscheiden!", status: "ERROR" };
+      if (
+        userError.message ==
+        "New password should be different from the old password."
+      ) {
+        return {
+          message:
+            "Dein neues Passwort muss sich vom vorherigen Passwort unterscheiden!",
+          status: "ERROR",
+        };
       }
       return { message: userError.message, status: "ERROR" };
     }
@@ -303,7 +318,6 @@ export async function isAuthorized(
       ? "/admin"
       : "/";
 }
-
 
 export async function sendResetPasswordLinkFromSettings(
   prevState: any,

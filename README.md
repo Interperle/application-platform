@@ -1,10 +1,9 @@
 # application-platform
 
 ## Naming Convention
-
-- Everything in english (naming, comments, commits, ...)
+Everything in English (naming, comments, commits, ...)
 - we strictly follow [PEP8](https://peps.python.org/pep-0008) naming convention for everything <https://peps.python.org/pep-0008/#prescriptive-naming-conventions>
-- names end with the top level relation, e.g.:
+- names end with the top-level relation, e.g.:
   - short_text_question for the short text questions database table
   - short_text_answer for the short text answers database table
   - application_table for the list of all applications
@@ -122,8 +121,7 @@ Bewerbungsprozess easy aufsetzen als GenD IT Team mitglied
 #### Deployment
 
 import.py => config.file -1-> model -2-> DB
-
-1. Json Syntax Check:
+1. JSON Syntax Check:
   1.1 Model Check
   1.2 Key Words
   1.3 Values
