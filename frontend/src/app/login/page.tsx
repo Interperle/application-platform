@@ -23,11 +23,6 @@ export default function Login() {
       </h1>
       <Popup />
       <div className="py-12 px-8 max-w-xl bg-[#FFFFFF] text-secondary space-y-4 rounded text-center">
-        <p>
-          Um eine neue Bewerbung zu starten, lege ein neues Konto an. Wenn du
-          bereits ein Konto hast, logge dich ein, um deine Bewerbung
-          fortzusetzen.
-        </p>
         <button
           type="button"
           onClick={() => dispatch(openPopup(<SignUpForm />))}
@@ -35,8 +30,7 @@ export default function Login() {
         >
           Neues Konto anlegen
         </button>
-
-        <p>Oder logge dich ein, um deine Bewerbung fortzusetzen</p>
+        <p>Oder loggt euch ein um eure Bewerbung fortzusetzen</p>
         <div className="text-left">
           <SignInForm />
         </div>
