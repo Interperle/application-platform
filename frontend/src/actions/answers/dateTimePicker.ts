@@ -17,7 +17,6 @@ export async function saveDateTimePickerAnswer(
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-    console.log(answerid);
     if (reqtype == "created") {
       const insertDateTimePickerAnswerResponse = await supabase
         .from("datetime_picker_answer_table")

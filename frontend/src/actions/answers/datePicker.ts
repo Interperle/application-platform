@@ -12,7 +12,6 @@ export async function saveDatePickerAnswer(
   pickeddate: string,
   questionid: string,
 ) {
-  console.log("%" + pickeddate + "%");
   if (pickeddate == "") {
     await deleteAnswer(questionid, "date_picker_answer_table");
     return;

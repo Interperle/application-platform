@@ -157,8 +157,8 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M9 1v16M1 9h16"
               />
             </svg>

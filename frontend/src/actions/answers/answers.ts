@@ -22,7 +22,7 @@ export interface Answer {
 export async function getCurrentUser(supabase: SupabaseClient) {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) {
-    console.log(userError);
+    console.log("Error: " + userError);
     redirect("/");
   }
   return userData.user;
@@ -32,7 +32,6 @@ export async function getApplicationIdOfCurrentUser(
   supabase: SupabaseClient,
   user: User,
 ) {
-  console.log(user);
   const { data: applicationData, error: applicationError } = await supabase
     .from("application_table")
     .select("applicationid")
@@ -69,7 +68,6 @@ export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  console.log(applicationid);
   const { data: answerData, error: answerError } = await supabase
     .from("answer_table")
     .select("*")
@@ -128,19 +126,16 @@ export async function deleteAnswer(questionid: string, answertype: string) {
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
   let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  console.log(answerid);
   if (answerid != "") {
     const deleteAnswerResponse = await supabase
       .from("answer_table")
       .delete()
       .eq("questionid", questionid)
       .eq("applicationid", applicationid);
-    console.log(deleteAnswerResponse);
     const deleteAnswerTypeResponse = await supabase
       .from(answertype)
       .delete()
       .eq("answerid", answerid);
-    console.log(deleteAnswerTypeResponse);
   }
 }
 
