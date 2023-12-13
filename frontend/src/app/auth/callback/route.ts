@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         .insert({ userid: user!.id, userrole: 2, isactive: true });
     subdomain = "review";
   } else if (!roleData.isactive) {
-    subdomain = "";
+    subdomain = "403";
     await supabase.auth.signOut();
   } else if (roleData.userrole == 2) {
     subdomain = "review";

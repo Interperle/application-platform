@@ -57,7 +57,6 @@ export async function toggleStatusOfUser(currUser: userData) {
     if (userProfileError) {
       throw userProfileError;
     }
-
     console.log({ ...currUser, isactive: !currUser.isactive });
     return { ...currUser, isactive: !currUser.isactive };
   } catch (error) {

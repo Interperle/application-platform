@@ -123,16 +123,23 @@ export async function signInUser(prevState: any, formData: FormData) {
 
   try {
     const supabase = initSupabaseActions();
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data: userData, error: userError } = await supabase.auth.signInWithPassword({
       email: signInFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signInFormData.data.password,
     });
-    if (error) {
-      if (error.status == 400) {
+    if (userError) {
+      if (userError.status == 400) {
         return { message: "Deine Login Daten sind ungültig!" };
       }
-      console.log(error);
-      return { message: "Fehler: " + error.message };
+      console.log(userError);
+      return { message: "Fehler: " + userError.message };
+    }
+    const { data: profileData, error: profileError } = await supabase.from(
+      "user_profiles_table"
+    ).select("isactive").eq("userid", userData.user.id).single();
+    if (profileData && !profileData.isactive){
+      await supabase.auth.signOut();
+      return { message: "Dein User wurde deaktiviert, bitte kontaktiere uns über 'it-ressort@generation-d.org'!" };
     }
     revalidatePath("/");
   } catch (e) {
