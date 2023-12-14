@@ -1,3 +1,44 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "plugins": ["import", "unused-imports"],
+  "rules": {
+    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-vars": [
+      "off",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "import/no-unresolved": "warn",
+    "import/named": "warn",
+    "import/default": "warn",
+    "import/namespace": "warn",
+    "import/no-absolute-path": "warn",
+    "import/no-dynamic-require": "warn",
+    "import/no-webpack-loader-syntax": "warn",
+    "import/no-self-import": "warn",
+    "import/no-cycle": "warn",
+    "import/no-unused-modules": ["warn", {"unusedExports": true}],
+    "import/no-useless-path-segments": "warn",
+    "import/order": ["warn", {
+      "groups": ["builtin", "external", "internal"],
+      "pathGroups": [
+        {
+          "pattern": "react",
+          "group": "external",
+          "position": "before"
+        }
+      ],
+      "pathGroupsExcludedImportTypes": ["builtin"],
+      "newlines-between": "always",
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true
+      }
+    }],
+    "import/newline-after-import": "warn",
+    "import/prefer-default-export": "warn",
+    "import/no-named-as-default": "warn",
+    "import/no-deprecated": "warn",
+    "import/no-extraneous-dependencies": "warn",
+    "import/no-mutable-exports": "warn"
+  }
 }

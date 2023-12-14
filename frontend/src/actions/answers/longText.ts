@@ -1,10 +1,8 @@
 "use server";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
+
 import {
   deleteAnswer,
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
   saveAnswer,
 } from "./answers";
 

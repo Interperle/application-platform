@@ -1,18 +1,22 @@
 "use client";
 
-import {
-  calcPhaseStatus,
-  transformReadableDate,
-  transformReadableDateTime,
-} from "@/utils/helpers";
-import { useRouter } from "next/navigation";
 import React from "react";
-import { ProgressBar } from "./progressbar";
+
 import {
   CalendarDaysIcon,
   DocumentCheckIcon,
   PencilSquareIcon,
 } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
+
+import {
+  calcPhaseStatus,
+  transformReadableDate,
+  transformReadableDateTime,
+} from "@/utils/helpers";
+
+import { ProgressBar } from "./progressbar";
+
 
 const PhaseOverview: React.FC<{
   key: string;

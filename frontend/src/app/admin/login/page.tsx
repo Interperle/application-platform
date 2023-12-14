@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { signInWithSlack } from "@/actions/auth";
 
 export default async function Home() {

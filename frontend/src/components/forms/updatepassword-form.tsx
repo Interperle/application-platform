@@ -1,10 +1,13 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
-import { signUpUser, updatePassword } from "@/actions/auth";
-import { SubmitButton } from "../submitButton";
-import PasswordRequirementsComponent from "../passwordRequirements";
 import { ChangeEvent, useState } from "react";
+
+import { useFormState } from "react-dom";
+
+import { updatePassword } from "@/actions/auth";
+
+import PasswordRequirementsComponent from "../passwordRequirements";
+import { SubmitButton } from "../submitButton";
 
 interface messageType {
   message: string;

@@ -1,12 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+
 import {
   fetchShortTextAnswer,
   saveShortTextAnswer,
 } from "@/actions/answers/shortText";
-import { AwaitingChild } from "../awaiting";
 import { checkRegex } from "@/utils/helpers";
+
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+import { AwaitingChild } from "../awaiting";
+
 
 export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;

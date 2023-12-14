@@ -1,8 +1,11 @@
 "use client";
-import { supabase } from "@/utils/supabaseBrowserClient";
 import React, { useEffect, useState } from "react";
-import { AwaitingChild } from "./awaiting";
+
 import { transformReadableDate } from "@/utils/helpers";
+import { supabase } from "@/utils/supabaseBrowserClient";
+
+import { AwaitingChild } from "./awaiting";
+
 
 export const ProgressBar = ({
   progressbarId,
@@ -50,7 +53,7 @@ export const ProgressBar = ({
     return () => {
       supabase.removeChannel(progressbarChannel);
     };
-  }, [mandatoryQuestionIds]);
+  }, [mandatoryQuestionIds, progressbarId]);
   const stringDate = transformReadableDate(endDate);
   return (
     <AwaitingChild isLoading={isLoading}>

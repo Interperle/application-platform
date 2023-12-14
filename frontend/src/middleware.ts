@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+
 import { isAuthorized } from "./actions/auth";
 import { UserRole } from "./utils/userRole";
 

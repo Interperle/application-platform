@@ -1,10 +1,14 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
-import { signUpUser } from "@/actions/auth";
-import { SubmitButton } from "../submitButton";
-import Link from "next/link";
 import { ChangeEvent, useState } from "react";
+
+import Link from "next/link";
+import { useFormState } from "react-dom";
+
+import { signUpUser } from "@/actions/auth";
+
 import PasswordRequirementsComponent from "../passwordRequirements";
+import { SubmitButton } from "../submitButton";
+
 
 interface messageType {
   message: string;

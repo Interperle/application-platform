@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import Image from "next/image";
 
-import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import {
   deleteImageUploadAnswer,
   saveImageUploadAnswer,
 } from "@/actions/answers/imageUpload";
 import { fetchImageUploadAnswer } from "@/utils/helpers";
-import { SubmitButton } from "../submitButton";
+
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
+import { SubmitButton } from "../submitButton";
 
 export interface ImageUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;

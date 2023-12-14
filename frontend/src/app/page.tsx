@@ -1,12 +1,12 @@
-import Logger from "@/logger/logger";
-import Apl_Header from "@/components/header";
-import getOverviewPageText from "@/utils/getMarkdownText";
 import {
   fetch_all_phases,
   fetch_all_questions,
   fetch_answer_table,
 } from "@/actions/phase";
+import Apl_Header from "@/components/header";
 import PhaseOverview from "@/components/phaseOverview";
+import Logger from "@/logger/logger";
+import getOverviewPageText from "@/utils/getMarkdownText";
 import "github-markdown-css/github-markdown-light.css";
 
 export default async function Home() {

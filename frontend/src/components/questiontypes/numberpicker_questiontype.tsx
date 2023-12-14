@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+
 import {
   fetchNumberPickerAnswer,
   saveNumberPickerAnswer,
 } from "@/actions/answers/numberPicker";
+
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 
 export interface NumberPickerQuestionTypeProps

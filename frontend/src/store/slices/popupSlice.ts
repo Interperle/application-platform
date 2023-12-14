@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ReactNode } from "react";
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PopupState {
   isOpen: boolean;

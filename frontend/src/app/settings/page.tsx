@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabaseBrowserClient";
-import { User } from "@supabase/supabase-js";
-import OverviewButton from "@/components/overviewButton";
-import { useAppDispatch } from "@/store/store";
-import { openPopup } from "@/store/slices/popupSlice";
-import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
-import Popup from "@/components/popup";
-import Awaiting from "@/components/awaiting";
+
 import CircularProgress from "@mui/material/CircularProgress";
+import { User } from "@supabase/supabase-js";
+
+import Awaiting from "@/components/awaiting";
 import SendPasswordResetForm from "@/components/forms/sendPasswordReset-form";
+import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
 import Apl_Header from "@/components/header";
+import OverviewButton from "@/components/overviewButton";
+import Popup from "@/components/popup";
+import { openPopup } from "@/store/slices/popupSlice";
+import { useAppDispatch } from "@/store/store";
+import { supabase } from "@/utils/supabaseBrowserClient";
 
 const SettingsPage: React.FC = () => {
   const dispatch = useAppDispatch();

@@ -1,4 +1,3 @@
-import { fetchAllUsers } from "@/actions/admin";
 
 export default function Page() {
   return (

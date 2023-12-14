@@ -1,5 +1,7 @@
 "use server";
 
+import { RedirectType, redirect } from "next/navigation";
+
 import { DefaultQuestion, Question } from "@/components/questions";
 import {
   QuestionType,
@@ -7,7 +9,7 @@ import {
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData } from "@/store/slices/phaseSlice";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import { RedirectType, redirect } from "next/navigation";
+
 import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,

@@ -1,6 +1,6 @@
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import { Question } from "@/components/questions";
-import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface PhaseData {
   phaseid: string;

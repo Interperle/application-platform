@@ -1,13 +1,14 @@
 "use client";
 
-import { useFormState } from "react-dom";
-import {
-  sendResetPasswordLink,
-  sendResetPasswordLinkFromSettings,
-  updatePassword,
-} from "@/actions/auth";
-import { SubmitButton } from "../submitButton";
 import { useEffect, useState } from "react";
+
+import { useFormState } from "react-dom";
+
+import {
+  sendResetPasswordLinkFromSettings,
+} from "@/actions/auth";
+
+import { SubmitButton } from "../submitButton";
 
 interface messageType {
   message: string;

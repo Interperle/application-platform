@@ -5,11 +5,12 @@ import {
   useDispatch,
   useStore,
 } from "react-redux";
+
 import authReducer from "./slices/authSlice";
-import popupReducer from "./slices/popupSlice";
-import userReducer from "./slices/usersSlice";
 import menuReducer from "./slices/menuSlice";
 import phaseReducer from "./slices/phaseSlice";
+import popupReducer from "./slices/popupSlice";
+import userReducer from "./slices/usersSlice";
 
 export const makeStore = () => {
   return configureStore({

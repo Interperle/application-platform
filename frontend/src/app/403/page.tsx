@@ -1,7 +1,8 @@
 "use client"
 
-import { supabase } from "@/utils/supabaseBrowserClient";
 import { useEffect } from "react";
+
+import { supabase } from "@/utils/supabaseBrowserClient";
 
 const Custom403: React.FC = () => {
     useEffect(() => {

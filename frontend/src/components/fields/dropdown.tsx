@@ -1,6 +1,7 @@
+import React from "react";
+
 import { userData } from "@/actions/admin";
 import { UserRole } from "@/utils/userRole";
-import React from "react";
 
 interface DropdownProps<T extends Record<string, string | number>> {
   enum: T;

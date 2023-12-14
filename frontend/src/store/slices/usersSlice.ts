@@ -1,5 +1,6 @@
-import { userData } from "@/actions/admin";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
+import { userData } from "@/actions/admin";
 
 interface UsersState {
   users: userData[];

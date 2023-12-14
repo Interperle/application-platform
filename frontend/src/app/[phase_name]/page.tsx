@@ -1,15 +1,16 @@
+import { RedirectType, redirect } from "next/navigation";
+
+import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
+import { fetch_answer_table } from "@/actions/phase";
+import Apl_Header from "@/components/header";
+import OverviewButton from "@/components/overviewButton";
+import { ProgressBar } from "@/components/progressbar";
+import Questionnaire from "@/components/questions";
 import {
   cached_fetch_phase_by_name,
   cached_fetch_phase_questions,
 } from "@/utils/cached";
-import Apl_Header from "@/components/header";
-import Questionnaire from "@/components/questions";
 import { createCurrentTimestamp } from "@/utils/helpers";
-import { RedirectType, redirect } from "next/navigation";
-import { ProgressBar } from "@/components/progressbar";
-import { fetch_answer_table } from "@/actions/phase";
-import OverviewButton from "@/components/overviewButton";
-import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
 
 export default async function Page({
   params,

@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { openPopup } from "@/store/slices/popupSlice";
-import { useAppDispatch } from "@/store/store";
+
 import SignInForm from "@/components/forms/signin-form";
 import SignUpForm from "@/components/forms/signup-form";
 import Popup from "@/components/popup";
+import { openPopup } from "@/store/slices/popupSlice";
+import { useAppDispatch } from "@/store/store";
 
 export default function Login() {
   const dispatch = useAppDispatch();

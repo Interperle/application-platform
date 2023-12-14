@@ -1,9 +1,12 @@
 "use server";
 
-import path from "path";
 import fs from "fs";
-import markdownToHtml from "./markdownToHtml";
+import path from "path";
+
 import { extractCurrentPhase } from "@/actions/phase";
+
+import markdownToHtml from "./markdownToHtml";
+
 
 export default async function getOverviewPageText() {
   const currentTime = new Date(

@@ -1,9 +1,10 @@
 "use server";
 
+import { SupabaseClient, User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
+
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import { SupabaseClient, User, UserResponse } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
 
 export interface saveAnswerType {
   supabase: SupabaseClient;

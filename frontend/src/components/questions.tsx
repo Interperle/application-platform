@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+
+import { Answer } from "@/actions/answers/answers";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
-import { Answer } from "@/actions/answers/answers";
 
 export interface DefaultQuestion {
   questionid: string;

@@ -1,7 +1,8 @@
-import { getURL } from "@/utils/helpers";
-import { initSupabaseRoute } from "@/utils/supabaseServerClients";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+
+import { getURL } from "@/utils/helpers";
+import { initSupabaseRoute } from "@/utils/supabaseServerClients";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

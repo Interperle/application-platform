@@ -5,7 +5,6 @@ import {
   toggleStatusOfUser,
   userData,
 } from "@/actions/admin";
-import ToggleSwitch from "./fields/toggleswitch";
 import {
   toggleUserActive,
   changeUserRole,
@@ -13,7 +12,9 @@ import {
 } from "@/store/slices/usersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { UserRole } from "@/utils/userRole";
+
 import { UserSpecificRoleDropdown } from "./fields/dropdown";
+import ToggleSwitch from "./fields/toggleswitch";
 
 interface UserListProps {
   users: userData[];
