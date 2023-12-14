@@ -5,7 +5,12 @@
     "unused-imports/no-unused-imports": "warn",
     "unused-imports/no-unused-vars": [
       "off",
-      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
     ],
     "import/no-unresolved": "warn",
     "import/named": "warn",
@@ -16,24 +21,27 @@
     "import/no-webpack-loader-syntax": "warn",
     "import/no-self-import": "warn",
     "import/no-cycle": "warn",
-    "import/no-unused-modules": ["warn", {"unusedExports": true}],
+    "import/no-unused-modules": ["warn", { "unusedExports": true }],
     "import/no-useless-path-segments": "warn",
-    "import/order": ["warn", {
-      "groups": ["builtin", "external", "internal"],
-      "pathGroups": [
-        {
-          "pattern": "react",
-          "group": "external",
-          "position": "before"
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
         }
-      ],
-      "pathGroupsExcludedImportTypes": ["builtin"],
-      "newlines-between": "always",
-      "alphabetize": {
-        "order": "asc",
-        "caseInsensitive": true
       }
-    }],
+    ],
     "import/newline-after-import": "warn",
     "import/prefer-default-export": "warn",
     "import/no-named-as-default": "warn",

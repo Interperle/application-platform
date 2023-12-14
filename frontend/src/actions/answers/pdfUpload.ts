@@ -2,11 +2,7 @@
 
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
-import {
-  deleteAnswer,
-  getCurrentUser,
-  saveAnswer,
-} from "./answers";
+import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
 
 export async function savePdfUploadAnswer(
   questionid: string,

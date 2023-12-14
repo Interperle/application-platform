@@ -8,8 +8,6 @@ import { useFormStatus } from "react-dom";
 import { deleteUser } from "@/actions/auth";
 import { useAppDispatch } from "@/store/store";
 
-
-
 interface messageType {
   message: string;
   status: string;
@@ -36,10 +34,16 @@ export default function SubmitDeletionForm({
       //setTimeout(() => {
       //  dispatch(closePopup());
       //}, 10000);
-      setTimeout(() => { router.push('/login'); }, 10000);
+      setTimeout(() => {
+        router.push("/login");
+      }, 10000);
     } catch (error) {
       console.error("Error during user deletion:", error);
-      setState({ message: "Leider ist ein Fehler aufgetreten, bitte probier es nocheinmal", status: "ERROR" });
+      setState({
+        message:
+          "Leider ist ein Fehler aufgetreten, bitte probier es nocheinmal",
+        status: "ERROR",
+      });
     }
   };
 
@@ -59,8 +63,9 @@ export default function SubmitDeletionForm({
           onClick={handleDelete}
         >
           <div
-            className={`italic ${state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
-              }`}
+            className={`italic ${
+              state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
+            }`}
           >
             {state?.message}
           </div>

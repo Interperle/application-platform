@@ -9,7 +9,7 @@ export function SubmitButton({
 }: {
   text: string;
   expanded: boolean;
-  onSubmit?: FormEventHandler<HTMLButtonElement> | null;
+  onSubmit?: FormEventHandler<HTMLButtonElement> | null;
 }) {
   const { pending } = useFormStatus();
 

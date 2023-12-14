@@ -17,7 +17,6 @@ import {
 
 import { ProgressBar } from "./progressbar";
 
-
 const PhaseOverview: React.FC<{
   key: string;
   phaseName: string;

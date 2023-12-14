@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useFormState } from "react-dom";
 
-import {
-  sendResetPasswordLinkFromSettings,
-} from "@/actions/auth";
+import { sendResetPasswordLinkFromSettings } from "@/actions/auth";
 
 import { SubmitButton } from "../submitButton";
 

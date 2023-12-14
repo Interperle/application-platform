@@ -6,7 +6,6 @@ import { supabase } from "@/utils/supabaseBrowserClient";
 
 import { AwaitingChild } from "./awaiting";
 
-
 export const ProgressBar = ({
   progressbarId,
   mandatoryQuestionIds,

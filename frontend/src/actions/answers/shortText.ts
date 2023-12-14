@@ -2,10 +2,7 @@
 
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
-import {
-  deleteAnswer,
-  saveAnswer,
-} from "./answers";
+import { deleteAnswer, saveAnswer } from "./answers";
 
 export async function saveShortTextAnswer(
   answertext: string,

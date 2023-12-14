@@ -9,7 +9,6 @@ import { signUpUser } from "@/actions/auth";
 import PasswordRequirementsComponent from "../passwordRequirements";
 import { SubmitButton } from "../submitButton";
 
-
 interface messageType {
   message: string;
   status: string;

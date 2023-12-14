@@ -7,7 +7,6 @@ import { extractCurrentPhase } from "@/actions/phase";
 
 import markdownToHtml from "./markdownToHtml";
 
-
 export default async function getOverviewPageText() {
   const currentTime = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Etc/GMT-2" }),
