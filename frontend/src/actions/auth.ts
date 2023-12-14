@@ -233,10 +233,8 @@ export async function deleteUser(): Promise<{
       status: "ERROR",
     };
   }
-  redirect("/login");
   return {
-    message:
-      "Der Account wurde erfolgreich gelöscht! Ihr werdet gleich auf die Login Seite weitergeleitet",
+    message: "Der User wurde erfolgreich gelöscht!",
     status: "SUCCESS",
   };
 }

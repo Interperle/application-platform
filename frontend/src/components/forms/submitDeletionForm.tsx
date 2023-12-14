@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
-import router from "next/router";
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 
 import { deleteUser } from "@/actions/auth";
-import { useAppDispatch } from "@/store/store";
+import { FormEvent, useEffect, useState } from "react";
+import { supabase } from "@/utils/supabaseBrowserClient";
+import { useRouter } from "next/navigation";
+
 
 interface messageType {
   message: string;
@@ -23,52 +23,58 @@ export default function SubmitDeletionForm({
 }: {
   email: string | null;
 }) {
-  const dispatch = useAppDispatch();
-  const [state, setState] = useState(initialState);
-
+  const [state, setState] = useState<messageType>(initialState);
+  const [countdown, setCountdown] = useState<number>(-1);
+  const [countdownMessage, setCountdownMessage] = useState<string>('');
   const { pending } = useFormStatus();
-  const handleDelete = async () => {
-    try {
-      const response = await deleteUser();
-      setState(response);
-      //setTimeout(() => {
-      //  dispatch(closePopup());
-      //}, 10000);
-      setTimeout(() => {
-        router.push("/login");
-      }, 10000);
-    } catch (error) {
-      console.error("Error during user deletion:", error);
-      setState({
-        message:
-          "Leider ist ein Fehler aufgetreten, bitte probier es nocheinmal",
-        status: "ERROR",
-      });
+  const router = useRouter();
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      setCountdownMessage(`Du wirst in ${countdown}s automatisch auf unsere Loginseite weitergeleitet!`)
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    } else if (countdown === 0) {
+      supabase.auth.signOut();
+      router.push("/login");
     }
+
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const new_state = await deleteUser();
+    if (new_state.status == "SUCCESS"){
+      setCountdown(10);
+    }
+    setState(new_state);
   };
 
   return (
     <div>
-      <form>
+      <form onSubmit={(event) => handleSubmit(event)}>
         <h4 className="py-2 text-xl mb-3">Löschen bestätigen</h4>
         <div>
           Bist du dir sicher, dass du den folgenden User löschen willst?
         </div>
         <div>{email}</div>
+        <div>
+          Dies ist endgültig und kann nicht wiederhergestellt werden!
+        </div>
+        <div
+          className={`italic ${
+            state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {state?.message} {state.status === 'SUCCESS' && countdownMessage}
+        </div>
         <button
           disabled={pending}
           aria-disabled={pending}
           type="submit"
           className="apl-alert-button-fixed mt-3"
-          onClick={handleDelete}
         >
-          <div
-            className={`italic ${
-              state?.status == "SUCCESS" ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {state?.message}
-          </div>
           {pending ? "Bitte warten..." : "Account löschen"}
         </button>
       </form>
