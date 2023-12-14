@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 
 import SignInForm from "@/components/forms/signin-form";
 import SignUpForm from "@/components/forms/signup-form";
 import Popup from "@/components/popup";
-import { openPopup } from "@/store/slices/popupSlice";
-import { useAppDispatch } from "@/store/store";
 
 export default function Login() {
-  const dispatch = useAppDispatch();
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
+  const togglePopup = () => {
+    setPopupOpen(!isPopupOpen);
+  };
   return (
     <>
       <Image
@@ -22,11 +26,15 @@ export default function Login() {
       <h1 className="md:text-5xl text-4xl text-secondary justify-center text-center">
         Generation-D Bewerbung
       </h1>
-      <Popup />
+      {isPopupOpen && (
+        <Popup onClose={togglePopup}>
+          <SignUpForm />
+        </Popup>
+      )}
       <div className="py-12 px-8 max-w-xl bg-[#FFFFFF] text-secondary space-y-4 rounded text-center">
         <button
           type="button"
-          onClick={() => dispatch(openPopup(<SignUpForm />))}
+          onClick={togglePopup}
           className="apl-button-fixed"
         >
           Neues Konto anlegen

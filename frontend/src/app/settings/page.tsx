@@ -11,14 +11,13 @@ import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
 import Apl_Header from "@/components/header";
 import OverviewButton from "@/components/overviewButton";
 import Popup from "@/components/popup";
-import { openPopup } from "@/store/slices/popupSlice";
-import { useAppDispatch } from "@/store/store";
 import { supabase } from "@/utils/supabaseBrowserClient";
 
 const SettingsPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -30,13 +29,21 @@ const SettingsPage: React.FC = () => {
     fetchUser();
   }, []);
 
+  const togglePopup = () => {
+    setPopupOpen(!isPopupOpen);
+  };
+
   return (
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
         <OverviewButton />
         <h1 className="text-2xl font-bold mb-4">Einstellungen</h1>
-        <Popup />
+        {isPopupOpen && (
+          <Popup onClose={togglePopup}>
+            <SubmitDeletionForm email={user?.email || ""} />
+          </Popup>
+        )}
         <div>
           <label>Email: {Awaiting(isLoading, user?.email)}</label>
         </div>
@@ -56,11 +63,7 @@ const SettingsPage: React.FC = () => {
         <button
           type="submit"
           className="apl-alert-button-fixed-big"
-          onClick={() =>
-            dispatch(
-              openPopup(<SubmitDeletionForm email={user?.email || ""} />),
-            )
-          }
+          onClick={togglePopup}
         >
           Account löschen
         </button>

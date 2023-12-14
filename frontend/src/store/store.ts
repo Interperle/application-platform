@@ -9,14 +9,12 @@ import {
 import authReducer from "./slices/authSlice";
 import menuReducer from "./slices/menuSlice";
 import phaseReducer from "./slices/phaseSlice";
-import popupReducer from "./slices/popupSlice";
 import userReducer from "./slices/usersSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       authReducer,
-      popupReducer,
       userReducer,
       menuReducer,
       phaseReducer,
