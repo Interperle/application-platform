@@ -99,7 +99,7 @@ export async function middleware(request: NextRequest) {
     // if user is signed in and the current path is /login redirect the user to /
     if (request.nextUrl.pathname === "/login") {
       console.log("redirect to /");
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
@@ -107,5 +107,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/review", "/admin"],
+  matcher: ["/", "/login", "/review", "/admin", "/settings"],
 };
