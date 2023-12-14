@@ -1,15 +1,16 @@
 "use server";
 
-import { getURL, isValidPassword } from "@/utils/helpers";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+import { getURL, isValidPassword } from "@/utils/helpers";
 import {
   initSupabaseActions,
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
-import { SupabaseClient } from "@supabase/supabase-js";
 
 export async function signUpUser(prevState: any, formData: FormData) {
   const schema = z.object({
@@ -123,10 +124,14 @@ export async function signInUser(prevState: any, formData: FormData) {
 
   try {
     const supabase = initSupabaseActions();
-    const { data: userData, error: userError } = await supabase.auth.signInWithPassword({
-      email: signInFormData.data.email.replace("@googlemail.com", "@gmail.com"),
-      password: signInFormData.data.password,
-    });
+    const { data: userData, error: userError } =
+      await supabase.auth.signInWithPassword({
+        email: signInFormData.data.email.replace(
+          "@googlemail.com",
+          "@gmail.com",
+        ),
+        password: signInFormData.data.password,
+      });
     if (userError) {
       if (userError.status == 400) {
         return { message: "Deine Login Daten sind ungültig!" };
@@ -134,12 +139,17 @@ export async function signInUser(prevState: any, formData: FormData) {
       console.log(userError);
       return { message: "Fehler: " + userError.message };
     }
-    const { data: profileData, error: profileError } = await supabase.from(
-      "user_profiles_table"
-    ).select("isactive").eq("userid", userData.user.id).single();
-    if (profileData && !profileData.isactive){
+    const { data: profileData, error: profileError } = await supabase
+      .from("user_profiles_table")
+      .select("isactive")
+      .eq("userid", userData.user.id)
+      .single();
+    if (profileData && !profileData.isactive) {
       await supabase.auth.signOut();
-      return { message: "Dein User wurde deaktiviert, bitte kontaktiere uns über 'it-ressort@generation-d.org'!" };
+      return {
+        message:
+          "Dein User wurde deaktiviert, bitte kontaktiere uns über 'it-ressort@generation-d.org'!",
+      };
     }
     revalidatePath("/");
   } catch (e) {
@@ -200,26 +210,35 @@ export async function sendResetPasswordLink(
   }
 }
 
-export async function deleteUser() {
-  console.log("Action");
+export async function deleteUser(): Promise<{
+  message: string;
+  status: string;
+}> {
   try {
     const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError) {
-      return { message: userError.message };
+      return { message: userError.message, status: "ERROR" };
     }
-    console.log();
     const { data, error } = await supabaseServiceRole.auth.admin.deleteUser(
       userData.user!.id,
     );
     if (error) {
-      return { message: error.message };
+      return { message: error.message, status: "ERROR" };
     }
     revalidatePath("/");
   } catch (e) {
-    return { message: "Error" };
+    return {
+      message: "Fehler, bitte probiere es nocheinmal.",
+      status: "ERROR",
+    };
   }
   redirect("/login");
+  return {
+    message:
+      "Der Account wurde erfolgreich gelöscht! Ihr werdet gleich auf die Login Seite weitergeleitet",
+    status: "SUCCESS",
+  };
 }
 
 export async function updatePassword(prevState: any, formData: FormData) {
