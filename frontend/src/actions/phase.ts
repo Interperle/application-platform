@@ -8,12 +8,14 @@ import {
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData } from "@/store/slices/phaseSlice";
-import { initSupabaseActions } from "@/utils/supabaseServerClients";
+import { initSupabaseActions, supabaseServiceRole } from "@/utils/supabaseServerClients";
 
 import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,
 } from "./answers/answers";
+import { createCurrentTimestamp } from "@/utils/helpers";
+import { supabase } from "@supabase/auth-ui-shared";
 
 type IdType = {
   questionid: string;
@@ -290,4 +292,27 @@ export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
   }
 
   return questionData as DefaultQuestion[];
+}
+
+
+export async function fetch_first_phase_over(): Promise<boolean> {
+  const supabase = initSupabaseActions()
+  const { data: phaseData, error: phaseError } = await supabase
+    .from("phase_table")
+    .select("enddate")
+    .eq("phaseorder", 0)
+    .single();
+
+    if (phaseError) {
+    console.log("Error: " + JSON.stringify(phaseError, null, 2) + " -> Redirect");
+    return true;
+  }
+  
+  if (!phaseData) {
+    console.log("No Data: " + JSON.stringify(phaseData, null, 2) + " -> Redirect");
+    return true;
+  }
+  const currentDate = new Date(createCurrentTimestamp());
+  const endDate = new Date(phaseData!.enddate);
+  return currentDate < endDate;
 }
