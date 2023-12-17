@@ -81,6 +81,10 @@ questions:
           - Amadillo
         mandatory: false
         userInput: true
+      - questionType: checkBox
+        order: 11
+        question: Do you agree with the Terms and Conditions of ABC?
+        mandatory: false
   phase-2:
     phaseLabel: "Test Phase 2"
     startDate: 2024-01-09

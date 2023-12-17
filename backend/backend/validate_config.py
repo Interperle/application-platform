@@ -40,6 +40,7 @@ QUESTION_TYPE_PARAMS = {
     QuestionType.PDF_UPLOAD: ['maxFileSizeInMB'],
     QuestionType.IMAGE_UPLOAD: ['maxFileSizeInMB'],
     QuestionType.DROPDOWN: ['minAnswers', 'maxAnswers', 'Answers', 'userInput'],
+    QuestionType.CHECKBOX: [],
 }
 
 # Construct the mandatory parameters dictionary
@@ -72,6 +73,7 @@ QUESTION_TYPES_DB_TABLE = {
     QuestionType.PDF_UPLOAD: "pdf_upload_question_table",
     QuestionType.IMAGE_UPLOAD: "image_upload_question_table",
     QuestionType.DROPDOWN: "dropdown_question_table",
+    QuestionType.CHECKBOX: "checkbox_question_table",
 }
 
 
@@ -105,8 +107,8 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
             if 'questionType' not in question:
                 raise ValueError("A question is missing the 'questionType' field.")
 
-            question_type = QuestionType.str_to_enum(question['questionType'])
-            if not question_type:
+            this_question_type = QuestionType.str_to_enum(question['questionType'])
+            if not this_question_type:
                 raise ValueError(
                     f"Invalid 'questionType': {question['questionType']}. Has to be one of the followings: {QuestionType.list_enums()}"
                 )
@@ -116,21 +118,21 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                 raise ValueError(f"The order number {order} in phase '{phase}' is NOT Unique!")
             seen_orders_in_phase.add(order)
 
-            for param, paramtype in MANDATORY_PARAMS.get(question_type, {}).items():
+            for param, paramtype in MANDATORY_PARAMS.get(this_question_type, {}).items():
                 if param not in question:
                     raise ValueError(
-                        f"The {question_type} question {question} is missing the parameter '{param}' field!")
+                        f"The {this_question_type} question {question} is missing the parameter '{param}' field!")
                 if not isinstance(question[param], paramtype):
                     raise ValueError(
                         f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
                     )
 
-            for param, paramtype in OPTIONAL_PARAMS.get(question_type, {}).items():
+            for param, paramtype in OPTIONAL_PARAMS.get(this_question_type, {}).items():
                 if param in question and not isinstance(question[param], paramtype):
                     raise ValueError(
                         f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
                     )
-            if question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
+            if this_question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
                 if not isinstance(question[param], str):
                     raise ValueError(
                         f"The optional parameter field '{param}' is type of {type(question[param])} instead of str.")

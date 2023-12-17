@@ -13,6 +13,7 @@ class QuestionType(Enum):
     DATETIME_PICKER = "datetimePicker"
     NUMBER_PICKER = "numberPicker"
     DROPDOWN = "dropdown"
+    CHECKBOX = "checkBox"
 
     @classmethod
     def list_enums(cls):
