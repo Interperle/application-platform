@@ -106,6 +106,17 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
             raise ValueError(
                 f"The phase {phase_name} is missing the 'endDate' field or 'endDate' is not in ISO8601 standard: {DATETIME_FORMAT}."
             )
+        
+        sections_enabled = False
+        if 'sections' in phase:
+            if not isinstance(phase['sections'], list):
+                raise ValueError(
+                    f"The phase {phase_name} has the 'sections' field but it's is not a list.")
+            for section in phase['sections']:
+                if not isinstance(section, str):
+                    raise ValueError(
+                        f"The phase {phase_name} has the 'sections' field but the section {section} is not a string.")
+            sections_enabled = True
 
         seen_orders_in_phase = set()
         for question in phase["questions"]:
@@ -155,6 +166,16 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                     raise ValueError(
                         f"The optional parameter field '{param}' can't be set if formattingRegex is one of the Predefined Values."
                     )
+            
+            if sections_enabled:
+                if "sectionNumber" not in question:
+                    raise ValueError(f"In phase {phase_name} the Sections are enabled but ne question '{question['question']}' is missing the sectionNumber!")
+                if isinstance(question["sectionNumber"], int):
+                    raise ValueError(
+                            f"The field 'sectionNumber' is type of {type(question[param])} instead of int."
+                        )
+                if len(phase["sections"]) + 1 < question["sectionNumber"]:
+                    raise ValueError(f"The sectionNumber {question['sectionNumber']} in question '{question['question']}' is bigger than the number of sections in this phase!")
 
 
 def validate_config_structure():

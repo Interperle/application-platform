@@ -9,7 +9,17 @@ export interface PhaseData {
   phaseorder: number;
   startdate: string;
   enddate: string;
+  sectionsenabled: boolean;
 }
+
+export interface SectionData {
+  sectionid: string;
+  sectionname: string;
+  sectiondescription: string;
+  sectionorder: number;
+  phaseid: string;
+}
+
 
 export interface PhasesDataQuestions {
   data: PhaseData;

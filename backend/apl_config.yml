@@ -11,6 +11,11 @@ questions:
     phaseLabel: "Test Phase 1"
     startDate: 2023-12-01  # format: %Y-%m-%d
     endDate: 2024-12-10  # format: %Y-%m-%d
+    sections:
+      - name: Allgemein
+        description: Wir benötigen diese Informationen um ABC auszuwerten
+      - name: Euer Team
+        description: Hier fragen wir Informationen zu euerer Teamstruktur ab
     questions:
       - questionType: shortText
         order: 1
@@ -22,12 +27,14 @@ questions:
         note: e.g. Max Mustermann
         preInformationBox: We need your Email Address so we can contact you! # optional
         postInformationBox: We won't pass this data to a 3rd party! # optional
+        sectionNumber: 1
       - questionType: longText
         order: 2
         question: What's your name and birthday?
         mandatory: true
         maxTextLength: 200
         note: "hint: please use dd/mm/yyyy for your birthday"
+        sectionNumber: 1
       - questionType: multipleChoice
         order: 4
         question: What's your name and birthday?
@@ -39,39 +46,46 @@ questions:
           - Possible Answer 3
         mandatory: false
         userInput: true
+        sectionNumber: 1
       - questionType: videoUpload
         order: 3
         question: Please Upload this Video
         mandatory: false
         maxFileSizeInMB: 2.0  # in Mega Byte
+        sectionNumber: 1
       - questionType: datePicker
         order: 5
         question: When do you have birthday?
         minDate: 1993-06-21  # format: %Y-%m-%d
         maxDate: 2023-06-21  # format: %Y-%m-%d
         mandatory: false
+        sectionNumber: 2
       - questionType: datetimePicker
         order: 6
         question: When were you born?
         minDatetime: 1993-06-21T00:00:00  # format: %Y-%m-%dT%H:%M:%S
         maxDatetime: 2023-06-21T23:59:59  # format: %Y-%m-%dT%H:%M:%S
         mandatory: false
+        sectionNumber: 2
       - questionType: numberPicker
         order: 7
         question: How old are you?
         minNumber: -100
         maxNumber: 100
         mandatory: false
+        sectionNumber: 2
       - questionType: pdfUpload
         order: 8
         question: Please upload your CV
         maxFileSizeInMB: 2.0  # in Mega Byte
         mandatory: false
+        sectionNumber: 2
       - questionType: imageUpload
         order: 9
         question: Please upload your Profile picture
         maxFileSizeInMB: 2.0  # in Mega Byte
         mandatory: false
+        sectionNumber: 2
       - questionType: dropdown
         order: 10
         question: What's your favourite animal?
@@ -83,10 +97,12 @@ questions:
           - Amadillo
         mandatory: false
         userInput: true
+        sectionNumber: 2
       - questionType: checkBox
         order: 11
         question: Do you agree with the Terms and Conditions of ABC?
         mandatory: false
+        sectionNumber: 2
   phase-2:
     phaseLabel: "Test Phase 2"
     startDate: 2024-01-09

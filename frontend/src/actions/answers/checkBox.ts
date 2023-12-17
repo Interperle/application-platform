@@ -40,10 +40,10 @@ export async function saveCheckBoxAnswer(
 export async function fetchCheckBoxAnswer(answerid: string) {
   const supabase = initSupabaseActions();
   const { data: multipleChoiceData, error: multipleChoiceError } =
-    await supabase
-      .from("checkbox_answer_table")
-      .select("checked")
-      .eq("answerid", answerid)
-      .single();
-  return multipleChoiceData!.checked;
+  await supabase
+    .from("checkbox_answer_table")
+    .select("checked")
+    .eq("answerid", answerid)
+    .single();
+  return multipleChoiceData!.checked || false;
 }

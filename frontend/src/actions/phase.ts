@@ -7,7 +7,7 @@ import {
   QuestionType,
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
-import { PhaseData } from "@/store/slices/phaseSlice";
+import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import {
@@ -315,4 +315,23 @@ export async function fetch_first_phase_over(): Promise<boolean> {
   const currentDate = new Date(createCurrentTimestamp());
   const endDate = new Date(phaseData!.enddate);
   return currentDate < endDate;
+}
+
+
+export async function fetch_sections_by_phase(
+  phaseId: string,
+): Promise<SectionData[]> {
+  const supabase = initSupabaseActions();
+  const { data: sectionsData, error: sectionsError } = await supabase
+    .from("sections_table")
+    .select("*")
+    .eq("phaseid", phaseId)
+  if (sectionsError) {
+    console.log("Error: " + JSON.stringify(sectionsError) + " -> Redirect");
+  }
+  if (!sectionsData) {
+    console.log("No data " + JSON.stringify(sectionsData) + " -> Redirect");
+  }
+  console.log(JSON.stringify(sectionsData))
+  return sectionsData as SectionData[];
 }

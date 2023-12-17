@@ -18,11 +18,24 @@ CREATE TABLE
     phaselabel TEXT NOT NULL,
     phaseorder INT NOT NULL,
     startdate TIMESTAMPTZ NOT NULL,
-    enddate TIMESTAMPTZ NOT NULL
+    enddate TIMESTAMPTZ NOT NULL,
+    sectionsenabled BOOLEAN NOT NULL
   );
 
 ALTER TABLE
   PHASE_TABLE ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE
+  SECTIONS_TABLE (
+    sectionid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    sectionname TEXT NOT NULL,
+    sectiondescription TEXT NOT NULL,
+    sectionorder INT NOT NULL,
+    phaseid UUID NOT NULL REFERENCES PHASE_TABLE (phaseid)
+  );
+
+ALTER TABLE
+  SECTIONS_TABLE ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE
   QUESTION_TABLE (
@@ -32,7 +45,8 @@ CREATE TABLE
     phaseid UUID NOT NULL REFERENCES PHASE_TABLE (phaseid),
     mandatory BOOLEAN NOT NULL,
     questiontext TEXT NOT NULL,
-    questionnote TEXT
+    questionnote TEXT,
+    sectionid UUID REFERENCES SECTIONS_TABLE (sectionid)
   );
 
 ALTER TABLE
@@ -325,6 +339,9 @@ alter table PUBLIC.USER_PROFILES_TABLE enable row level security;
 
 -- RLS SELECT POLICIES
 CREATE POLICY select_policy ON PHASE_TABLE
+  FOR SELECT USING (auth.uid() IS NOT NULL);
+
+CREATE POLICY select_policy ON SECTIONS_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY select_policy ON QUESTION_TABLE

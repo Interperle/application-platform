@@ -18,10 +18,16 @@ def process_config():
 
     for phase_counter, (phase_name, phase) in enumerate(config_data['questions'].items()):
         data_phase_table = create_data_phase_table(phase_name, phase['phaseLabel'], phase_counter, phase['startDate'],
-                                                   phase['endDate'])
+                                                   phase['endDate'], 'sections' in phase)
         log.info(f'Create Phase {phase}')
 
         response_phase_table = supabase.table('phase_table').insert(data_phase_table).execute()
+        phase_sections = {}
+        if "sections" in phase:
+            for order, section in phase["sections"].enumerate():
+                data_section_table = create_data_section_table(section["name"], section["description"], order + 1, phase_id)
+                response_section_table = supabase.table('phase_table').insert(data_section_table).execute()
+                phase_sections[order + 1] = response_section_table.data["sectionid"]
         log.info(str(response_phase_table))
 
         phase_id = response_phase_table.data[0]['phaseid']
@@ -29,8 +35,10 @@ def process_config():
             question_type = QuestionType.str_to_enum(question['questionType'])
             data_question_table = create_data_questions_table(question_type, question['order'], phase_id,
                                                               question['mandatory'], question['question'],
-                                                              question.get('note', ''), question.get('preInformationBox', ''), question.get('postInformationBox', ''))
-
+                                                              question.get('note', ''),
+                                                              question.get('preInformationBox', ''),
+                                                              question.get('postInformationBox', ''),
+                                                              phase_sections)
             log.debug(f'Create Question "{question}"')
             response_question_table = supabase.table('question_table').insert(data_question_table).execute()
             log.info(str(response_question_table))
@@ -75,19 +83,30 @@ def process_config():
         log.info(f'Processed Phase {phase} successfully')
 
 
-def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, startdate: datetime,
-                            enddate: datetime) -> dict:
+def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, startdate: datetime, enddate: datetime,
+                            sectionsenabled: bool) -> dict:
     return {
         'phasename': phasename,
         'phaselabel': phaselabel,
         'phaseorder': ordernumber,
         'startdate': startdate.strftime(DATETIME_FORMAT),
         'enddate': enddate.strftime(DATETIME_FORMAT),
+        'sectionsenabled': sectionsenabled,
+    }
+    
+
+def create_data_section_table(sectionname: str, sectiondescription: str, sectionorder: int, phaseid: str) -> dict:
+    return {
+        'sectionname': sectionname,
+        'sectiondescription': sectiondescription,
+        'sectionorder': sectionorder,
+        'phaseid': phaseid
     }
 
 
 def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool,
-                                question: str, questionnote: str, preinformationbox: str = "", postinformationbox: str = "") -> dict:
+                                question: str, questionnote: str, sections: dict, preinformationbox: str = "",
+                                postinformationbox: str = "") -> dict:
     return {
         'questiontype': str(questiontype),
         'questionorder': ordernumber,
@@ -97,6 +116,7 @@ def create_data_questions_table(questiontype: QuestionType, ordernumber: int, ph
         'questionnote': questionnote,
         'preInformationBox': preinformationbox,
         'postInformationBox': postinformationbox,
+        'section': sections[question["sectionNumber"]],
     }
 
 

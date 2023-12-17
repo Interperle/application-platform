@@ -47,8 +47,8 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
   };
 
   return (
-    <AwaitingChild isLoading={isLoading}>
-      <div className="mb-4">
+    <div className="mb-4" key={questionid}>
+      <AwaitingChild isLoading={isLoading}>
       <label
         htmlFor={questionid}
         className="block font-semibold text-secondary py-3"
@@ -76,8 +76,8 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
           <p className="italic text-gray-500 text-sm">{questionnote}</p>
         )}
       </label>
+      </AwaitingChild>
     </div>
-    </AwaitingChild>
   );
 };
 

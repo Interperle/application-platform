@@ -18,6 +18,7 @@ export interface DefaultQuestion {
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
+  section: string | null;
   preInformationBox: string | null;
   postInformationBox: string | null;
 }
