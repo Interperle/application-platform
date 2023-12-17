@@ -57,6 +57,11 @@ for question_type in MANDATORY_PARAMS:
     MANDATORY_PARAMS[question_type].update(DEFAULT_PARAMS)
 
 OPTIONAL_PARAMS = {
+    "ALL": {
+        "note": str,
+        "preInformationBox": str,
+        "postInformationBox": str,
+    },
     QuestionType.SHORT_TEXT: {
         'formattingRegex': str,
     },
@@ -127,11 +132,18 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                         f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
                     )
 
+            for param, paramtype in OPTIONAL_PARAMS.get("ALL", {}).items():
+                if param in question and not isinstance(question[param], paramtype):
+                    raise ValueError(
+                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
+                    )
+
             for param, paramtype in OPTIONAL_PARAMS.get(this_question_type, {}).items():
                 if param in question and not isinstance(question[param], paramtype):
                     raise ValueError(
                         f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
                     )
+
             if this_question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
                 if not isinstance(question[param], str):
                     raise ValueError(

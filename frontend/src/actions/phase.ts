@@ -36,9 +36,6 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
     [QuestionType.CheckBox]: {},
   };
   for (const questionType of Object.values(QuestionType)) {
-    console.log(`${questionType[0].toUpperCase()}${questionType.slice(
-      1,
-    )}QuestionTable`)
     const tableName =
       QuestionTypeTable[
         `${questionType[0].toUpperCase()}${questionType.slice(
@@ -137,12 +134,10 @@ async function append_params(
 ) {
   const question_type_questions =
     question_types_questions[question.questiontype];
-  console.log(JSON.stringify(question))
   const question_type_params =
     question_type_questions!.find(
       (params: IdType) => params.questionid === question.questionid,
     ) || {};
-  console.log("Questiontext: " + question.questiontext);
   const { questionid, ...rest } = question_type_params;
   if (question.questiontype === QuestionType.MultipleChoice) {
     rest["choices"] = choicesData[question.questionid];

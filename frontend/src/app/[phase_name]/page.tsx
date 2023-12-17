@@ -39,8 +39,6 @@ export default async function Page({
     .filter((q) => q.mandatory)
     .map((q) => q.questionid);
   const already_answered = await fetch_answer_table(mandatoryQuestionIds);
-  console.log("Render Questionnaire");
-  console.log(`IsEditable: ${isEditable}`)
   return (
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">

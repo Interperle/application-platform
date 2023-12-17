@@ -20,6 +20,8 @@ questions:
         formattingRegex: PHONE_NUMBER  # optional; Other predefined values: "EMAIL", "NUMBERS", "LETTERS", any JS Regex
         #formattingDescription: Telefonnummer # if formattinRegex not set or Predefined Value => ignored; else => mandatory
         note: e.g. Max Mustermann
+        preInformationBox: We need your Email Address so we can contact you! # optional
+        postInformationBox: We won't pass this data to a 3rd party! # optional
       - questionType: longText
         order: 2
         question: What's your name and birthday?

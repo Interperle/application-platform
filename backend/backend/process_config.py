@@ -29,7 +29,7 @@ def process_config():
             question_type = QuestionType.str_to_enum(question['questionType'])
             data_question_table = create_data_questions_table(question_type, question['order'], phase_id,
                                                               question['mandatory'], question['question'],
-                                                              question.get('note', ''))
+                                                              question.get('note', ''), question.get('preInformationBox', ''), question.get('postInformationBox', ''))
 
             log.debug(f'Create Question "{question}"')
             response_question_table = supabase.table('question_table').insert(data_question_table).execute()
@@ -87,7 +87,7 @@ def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, s
 
 
 def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool,
-                                question: str, questionnote: str) -> dict:
+                                question: str, questionnote: str, preinformationbox: str = "", postinformationbox: str = "") -> dict:
     return {
         'questiontype': str(questiontype),
         'questionorder': ordernumber,
@@ -95,6 +95,8 @@ def create_data_questions_table(questiontype: QuestionType, ordernumber: int, ph
         'mandatory': 1 if mandatory else 0,
         'questiontext': question,
         'questionnote': questionnote,
+        'preInformationBox': preinformationbox,
+        'postInformationBox': postinformationbox,
     }
 
 

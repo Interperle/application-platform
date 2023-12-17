@@ -8,6 +8,7 @@ import getQuestionComponent, {
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
+import { InformationBox } from "./informationBox";
 
 export interface DefaultQuestion {
   questionid: string;
@@ -17,6 +18,8 @@ export interface DefaultQuestion {
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
+  preInformationBox: string | null;
+  postInformationBox: string | null;
 }
 
 export interface Question extends DefaultQuestion {
@@ -49,7 +52,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
     }),
   );
   return (
-    <div>
+    <div className="mt-10">
       {copyPhaseQuestions
         .sort((a, b) => a.questionorder - b.questionorder)
         .map((phaseQuestion) => {
@@ -63,6 +66,10 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             return null;
           }
           return (
+            <>
+            { phaseQuestion.preInformationBox &&
+              (<InformationBox text={phaseQuestion.preInformationBox}/>)
+            }
             <QuestionComponent
               key={phaseQuestion.questionid}
               phasename={phaseData.phasename}
@@ -79,6 +86,10 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
               }
               {...phaseQuestion.params}
             />
+            { phaseQuestion.postInformationBox &&
+              (<InformationBox text={phaseQuestion.postInformationBox}/>)
+            }
+            </>
           );
         })}
     </div>
