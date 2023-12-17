@@ -8,14 +8,13 @@ import {
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData } from "@/store/slices/phaseSlice";
-import { initSupabaseActions, supabaseServiceRole } from "@/utils/supabaseServerClients";
+import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,
 } from "./answers/answers";
 import { createCurrentTimestamp } from "@/utils/helpers";
-import { supabase } from "@supabase/auth-ui-shared";
 
 type IdType = {
   questionid: string;
@@ -34,14 +33,19 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
     [QuestionType.PDFUpload]: {},
     [QuestionType.MultipleChoice]: {},
     [QuestionType.Dropdown]: {},
+    [QuestionType.CheckBox]: {},
   };
   for (const questionType of Object.values(QuestionType)) {
+    console.log(`${questionType[0].toUpperCase()}${questionType.slice(
+      1,
+    )}QuestionTable`)
     const tableName =
       QuestionTypeTable[
         `${questionType[0].toUpperCase()}${questionType.slice(
           1,
         )}QuestionTable` as keyof typeof QuestionTypeTable
       ];
+    
     if (!tableName) {
       console.log(
         `Table for question type "${questionType}" is missing. Skipping...`,
@@ -133,6 +137,7 @@ async function append_params(
 ) {
   const question_type_questions =
     question_types_questions[question.questiontype];
+  console.log(JSON.stringify(question))
   const question_type_params =
     question_type_questions!.find(
       (params: IdType) => params.questionid === question.questionid,
