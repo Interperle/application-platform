@@ -1,8 +1,3 @@
-
-
-
-
-
 tables = [
     #"ANSWER_TABLE",
     #"APPLICATION_TABLE",
@@ -33,6 +28,7 @@ tables = [
     "VIDEO_UPLOAD_ANSWER_TABLE",
     #"VIDEO_UPLOAD_QUESTION_TABLE"
 ]
+
 
 # Function to generate the policy script for a given table
 def generate_policy_script(table_name):
@@ -65,6 +61,7 @@ USING (
 
 def kill_policy_script(table_name):
     return f"DROP POLICY IF EXISTS select_reviewer_{table_name.lower()} ON {table_name};"
+
 
 # Generate and print the scripts for all tables
 for table in tables:

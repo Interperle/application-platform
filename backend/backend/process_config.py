@@ -25,7 +25,8 @@ def process_config():
         phase_sections = {}
         if "sections" in phase:
             for order, section in phase["sections"].enumerate():
-                data_section_table = create_data_section_table(section["name"], section["description"], order + 1, phase_id)
+                data_section_table = create_data_section_table(section["name"], section["description"], order + 1,
+                                                               phase_id)
                 response_section_table = supabase.table('phase_table').insert(data_section_table).execute()
                 phase_sections[order + 1] = response_section_table.data["sectionid"]
         log.info(str(response_phase_table))
@@ -37,8 +38,7 @@ def process_config():
                                                               question['mandatory'], question['question'],
                                                               question.get('note', ''),
                                                               question.get('preInformationBox', ''),
-                                                              question.get('postInformationBox', ''),
-                                                              phase_sections)
+                                                              question.get('postInformationBox', ''), phase_sections)
             log.debug(f'Create Question "{question}"')
             response_question_table = supabase.table('question_table').insert(data_question_table).execute()
             log.info(str(response_question_table))
@@ -93,7 +93,7 @@ def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, s
         'enddate': enddate.strftime(DATETIME_FORMAT),
         'sectionsenabled': sectionsenabled,
     }
-    
+
 
 def create_data_section_table(sectionname: str, sectiondescription: str, sectionorder: int, phaseid: str) -> dict:
     return {
