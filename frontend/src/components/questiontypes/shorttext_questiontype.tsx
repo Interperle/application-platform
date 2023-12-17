@@ -24,6 +24,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   answerid,
   maxtextlength,
   formattingregex,
@@ -49,10 +50,16 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     setAnswer(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     const textinput = event.target.value;
     if (
       textinput != "" &&
@@ -74,6 +81,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <AwaitingChild isLoading={isLoading}>
         <input
@@ -81,6 +89,8 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
           name={questionid}
           id={questionid}
           value={answer}
+          disabled={!iseditable}
+          aria-disabled={!iseditable}
           className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
           required={mandatory}
           maxLength={maxtextlength}

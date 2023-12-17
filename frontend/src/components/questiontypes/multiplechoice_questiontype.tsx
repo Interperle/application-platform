@@ -27,6 +27,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   answerid,
   choices,
   minanswers,
@@ -57,6 +58,9 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   }, [questionid, answerid, maxanswers]);
 
   const handleSingleChange = (choice: ChoiceProps) => {
+    if (!iseditable){
+      return
+    }
     if (selectedChoice === choice.choiceid) {
       saveMultipleChoiceAnswer("", questionid);
       setSelectedChoice("");
@@ -67,6 +71,9 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   };
 
   const handleMultiChange = (choice: ChoiceProps) => {
+    if (!iseditable){
+      return
+    }
     if (!selectedChoices.includes(choice.choiceid)) {
       if (selectedChoices.length + 1 > maxanswers) {
         setSelectedChoices(
@@ -102,12 +109,14 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <AwaitingChild isLoading={isLoading}>
         <div role="group" aria-labelledby={questionid} className="mt-2">
           {choices.map((choice) => (
             <Choice
               key={choice.choiceid}
+              iseditable={iseditable}
               choiceid={choice.choiceid}
               choicetext={choice.choicetext}
               isSelected={
@@ -115,7 +124,6 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
                   ? selectedChoice === choice.choiceid
                   : selectedChoices.includes(choice.choiceid)
               }
-              mandatory={mandatory}
               minanswers={minanswers}
               maxanswers={maxanswers}
               onSingleChange={() => handleSingleChange(choice)}

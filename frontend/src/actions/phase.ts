@@ -213,10 +213,10 @@ export async function fetch_all_phases(): Promise<PhaseData[]> {
     .from("phase_table")
     .select("*");
   if (phasesError) {
-    console.log("Error: " + phasesError);
+    console.log("Error: " + JSON.stringify(phasesError, null, 2));
   }
   if (!phasesData) {
-    console.log("No data " + phasesData);
+    console.log("No data: " + JSON.stringify(phasesData, null, 2));
   }
   return phasesData || [];
 }

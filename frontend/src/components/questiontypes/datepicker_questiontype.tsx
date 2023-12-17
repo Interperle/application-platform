@@ -22,6 +22,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   mindate,
   maxdate,
   answerid,
@@ -44,10 +45,16 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     setAnswer(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     const selectedDate = new Date(event.target.value);
     const minDate = mindate ? new Date(mindate) : null;
     const maxDate = maxdate ? new Date(maxdate) : null;
@@ -77,11 +84,14 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <AwaitingChild isLoading={isLoading}>
         <div className="mt-1">
           <input
             type="date"
+            disabled={!iseditable}
+            aria-disabled={!iseditable}
             id={questionid}
             name={questionid}
             required={mandatory}

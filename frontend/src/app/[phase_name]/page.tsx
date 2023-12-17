@@ -40,6 +40,7 @@ export default async function Page({
     .map((q) => q.questionid);
   const already_answered = await fetch_answer_table(mandatoryQuestionIds);
   console.log("Render Questionnaire");
+  console.log(`IsEditable: ${isEditable}`)
   return (
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
@@ -48,7 +49,7 @@ export default async function Page({
         <div>
           <h2 className="p-4 rounded text-secondary">
             <b>
-              Bewerbungs-Phase {phaseData.phaseorder}: {phaseData.phaselabel}
+              Bewerbungs-Phase {phaseData.phaseorder + 1}: {phaseData.phaselabel}
             </b>
           </h2>
           {!isEditable && (
@@ -70,6 +71,7 @@ export default async function Page({
               phaseData={phaseData}
               phaseQuestions={phase_questions}
               phaseAnswers={phase_answers}
+              iseditable={isEditable}
             />
           </div>
           <ProgressBar

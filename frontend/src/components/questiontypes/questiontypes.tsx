@@ -7,6 +7,7 @@ export interface DefaultQuestionTypeProps {
   questiontext: string;
   questionnote: string;
   questionorder: number;
+  iseditable: boolean;
 }
 
 interface QuestionTypesProps extends DefaultQuestionTypeProps {

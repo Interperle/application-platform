@@ -24,6 +24,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   answerid,
   maxfilesizeinmb,
 }) => {
@@ -54,6 +55,9 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   function set_pdf_for_upload(file: File) {
+    if (!iseditable){
+      return
+    }
     const fileSizeInMB = file.size / 1024 / 1024;
     if (!validImgTypes.includes(file.type)) {
       alert(
@@ -72,6 +76,9 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   }
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     if (event.target.files) {
       const file = event.target.files[0];
       set_pdf_for_upload(file);
@@ -79,20 +86,32 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
+    if (!iseditable){
+      return
+    }
     deletePdfUploadAnswer(questionid, answerid || "");
     setUploadPdf("");
     setWasUploaded(false);
   };
 
   const handleSubmit = () => {
+    if (!iseditable){
+      return
+    }
     setWasUploaded(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    if (!iseditable){
+      return
+    }
     event.preventDefault();
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    if (!iseditable){
+      return
+    }
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       const file = event.dataTransfer.files[0];
@@ -103,6 +122,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   return (
     <QuestionTypes
       phasename={phasename}
+      iseditable={iseditable}
       questionid={questionid}
       mandatory={mandatory}
       questiontext={questiontext}
@@ -145,6 +165,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
                   type="file"
                   id={questionid}
                   name={questionid}
+                  disabled={!iseditable}
+                  aria-disabled={!iseditable}
                   accept={validImgTypes.join(", ")}
                   required={mandatory}
                   className="hidden"
@@ -154,17 +176,21 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
             </div>
           </AwaitingChild>
         ) : (
-          <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-sm">
-            <button
-              className="self-end text-red-600"
-              onClick={handleDeleteOnClick}
-            >
-              Löschen
-            </button>
+          <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96">
+             {
+              iseditable && (
+                <button
+                  className="self-end text-red-600"
+                  onClick={handleDeleteOnClick}
+                >
+                  Löschen
+                </button>
+              )
+            }
             <iframe
               src={uploadUrl}
               width="100%"
-              height="600px max-w-xs self-center"
+              height="600px max-w-xs max-h-96 self-center"
               style={{ border: "none" }}
             />
             {!wasUploaded ? (

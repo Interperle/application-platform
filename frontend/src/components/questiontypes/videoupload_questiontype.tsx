@@ -24,6 +24,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   answerid,
   maxfilesizeinmb,
 }) => {
@@ -55,6 +56,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   function set_video_for_upload(file: File) {
+    if (!iseditable){
+      return
+    }
     const fileSizeInMB = file.size / 1024 / 1024;
     if (!validImgTypes.includes(file.type)) {
       alert(
@@ -73,6 +77,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   }
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     if (event.target.files) {
       const file = event.target.files[0];
       set_video_for_upload(file);
@@ -80,6 +87,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
+    if (!iseditable){
+      return
+    }
     if (answerid) {
       deleteVideoUploadAnswer(questionid, answerid);
       setUploadVideo("");
@@ -88,14 +98,23 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   };
 
   const handleSubmit = () => {
+    if (!iseditable){
+      return
+    }
     setWasUploaded(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    if (!iseditable){
+      return
+    }
     event.preventDefault();
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    if (!iseditable){
+      return
+    }
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       const file = event.dataTransfer.files[0];
@@ -111,6 +130,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <form action={saveVideoUploadAnswerWithId} onSubmit={handleSubmit}>
         {!uploadUrl ? (
@@ -148,7 +168,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
                   type="file"
                   name={questionid}
                   id={questionid}
-                  accept="video/mp4"
+                  disabled={!iseditable}
+                  aria-disabled={!iseditable}
+                  accept={validImgTypes.join(", ")}
                   required={mandatory}
                   className="hidden"
                   onChange={(event) => handleUploadChange(event)}
@@ -157,18 +179,23 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
             </div>
           </AwaitingChild>
         ) : (
-          <div className="mt-4 flex flex-col gap-y-2 max-w-xs">
-            <button
-              className="self-end text-red-600"
-              onClick={handleDeleteOnClick}
-            >
-              Löschen
-            </button>
+          <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ">
+             {
+              iseditable && (
+                <button
+                  className="self-end text-red-600"
+                  onClick={handleDeleteOnClick}
+                >
+                  Löschen
+                </button>
+              )
+            }
             <video
               width="100%"
-              height="600px max-w-xs self-center"
+              height="100%"
               style={{ border: "none" }}
               controls
+              className="max-w-xs max-h-96"
             >
               <source src={uploadUrl} type="video/mp4" />
               Dein Browser supported diese Darstellung leider nicht

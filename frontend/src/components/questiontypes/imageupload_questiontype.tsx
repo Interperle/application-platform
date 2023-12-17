@@ -26,6 +26,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   maxfilesizeinmb,
   answerid,
 }) => {
@@ -58,6 +59,9 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   function set_image_for_upload(file: File) {
+    if (!iseditable){
+      return
+    }
     const fileSizeInMB = file.size / 1024 / 1024;
     if (!validImgTypes.includes(file.type)) {
       alert(
@@ -75,6 +79,9 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     setWasUploaded(false);
   }
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     if (event.target.files) {
       const file = event.target.files[0];
       set_image_for_upload(file);
@@ -82,20 +89,32 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
+    if (!iseditable){
+      return
+    }
     deleteImageUploadAnswer(questionid, answerid || "");
     setUploadImage("");
     setWasUploaded(false);
   };
 
   const handleSubmit = () => {
+    if (!iseditable){
+      return
+    }
     setWasUploaded(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    if (!iseditable){
+      return
+    }
     event.preventDefault();
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    if (!iseditable){
+      return
+    }
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
       const file = event.dataTransfer.files[0];
@@ -111,6 +130,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <form action={saveImageUploadAnswerWithId} onSubmit={handleSubmit}>
         {!uploadUrl ? (
@@ -149,6 +169,8 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
                   </div>
                   <input
                     type="file"
+                    disabled={!iseditable}
+                    aria-disabled={!iseditable}
                     id={questionid}
                     name={questionid}
                     accept={validImgTypes.join(", ")}
@@ -161,17 +183,21 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
             </AwaitingChild>
           </div>
         ) : (
-          <div className="mt-4 flex flex-col gap-y-2 max-w-xs">
-            <button
-              className="self-end text-red-600"
-              onClick={handleDeleteOnClick}
-            >
-              Löschen
-            </button>
+          <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96">
+            {
+              iseditable && (
+                <button
+                  className="self-end text-red-600"
+                  onClick={handleDeleteOnClick}
+                >
+                  Löschen
+                </button>
+              )
+            }
             <Image
               alt="Preview"
               src={uploadUrl}
-              className="max-w-xs self-center"
+              className="self-center max-w-xs max-h-96"
               id="imagePreview"
               width={100}
               height={100}

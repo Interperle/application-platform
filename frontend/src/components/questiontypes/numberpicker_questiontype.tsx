@@ -23,6 +23,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   answerid,
   minnumber,
   maxnumber,
@@ -46,6 +47,9 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     let inputNumber: number = +event.target.value;
     if (
       isNaN(inputNumber) &&
@@ -80,6 +84,9 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   };
 
   function decrementNumber() {
+    if (!iseditable){
+      return
+    }
     const inputAnswer = +answer;
     if (inputAnswer > minnumber) {
       setAnswer((inputAnswer - 1).toString());
@@ -87,6 +94,9 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   }
 
   function incrementNumber() {
+    if (!iseditable){
+      return
+    }
     const inputAnswer = +answer;
     if (inputAnswer < maxnumber) {
       setAnswer((inputAnswer + 1).toString());
@@ -101,6 +111,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <AwaitingChild isLoading={isLoading}>
         <div className="relative flex items-center max-w-[8rem]">
@@ -131,6 +142,8 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
             type="text"
             id={questionid}
             name={questionid}
+            disabled={!iseditable}
+            aria-disabled={!iseditable}
             required={mandatory}
             data-input-counter
             className="bg-secondary border-x-0 border-primary h-11 text-center text-primary text-sm focus:ring-secondary focus:border-secondary block w-full py-2.5"

@@ -27,12 +27,14 @@ interface QuestionnaireProps {
   phaseData: PhaseData;
   phaseQuestions: Question[];
   phaseAnswers: Answer[];
+  iseditable: boolean;
 }
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({
   phaseData,
   phaseQuestions,
   phaseAnswers,
+  iseditable,
 }) => {
   const dispatch = useAppDispatch();
   // need a copy, so I can modify it beneath
@@ -69,6 +71,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
               questiontext={phaseQuestion.questiontext}
               questionnote={phaseQuestion.questionnote}
               questionorder={phaseQuestion.questionorder}
+              iseditable={iseditable}
               answerid={
                 phaseAnswers.find(
                   (answer) => answer.questionid == phaseQuestion.questionid,

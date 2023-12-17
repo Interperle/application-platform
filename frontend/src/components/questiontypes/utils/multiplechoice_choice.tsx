@@ -4,7 +4,7 @@ export interface ChoiceProps {
   choiceid: string;
   choicetext: string;
   isSelected: boolean;
-  mandatory: boolean;
+  iseditable: boolean;
   minanswers: number;
   maxanswers: number;
   onSingleChange: () => void;
@@ -15,7 +15,7 @@ export const Choice: React.FC<ChoiceProps> = ({
   choiceid,
   choicetext,
   isSelected,
-  mandatory,
+  iseditable,
   minanswers,
   maxanswers,
   onSingleChange,
@@ -27,6 +27,8 @@ export const Choice: React.FC<ChoiceProps> = ({
         <input
           id={choiceid}
           name={choiceid}
+          disabled={!iseditable}
+          aria-disabled={!iseditable}
           type="radio"
           className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 focus:secondary focus:ring-2"
           checked={isSelected}
@@ -37,6 +39,8 @@ export const Choice: React.FC<ChoiceProps> = ({
         <input
           id={choiceid}
           name={choiceid}
+          disabled={!iseditable}
+          aria-disabled={!iseditable}
           type="checkbox"
           checked={isSelected}
           onChange={onMultiChange}

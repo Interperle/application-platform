@@ -25,6 +25,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   minanswers,
   maxanswers,
   userinput,
@@ -55,6 +56,9 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   }, [questionid, answerid, maxanswers]);
 
   const handleSingleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!iseditable){
+      return
+    }
     const selectedOption =
       event.target.options[event.target.selectedIndex].text;
     saveDropdownAnswer(selectedOption, questionid);
@@ -62,6 +66,9 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   };
 
   const handleMultiChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!iseditable){
+      return
+    }
     const selectedOptions = Array.from(
       event.target.selectedOptions,
       (option) => option.value,
@@ -92,6 +99,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <AwaitingChild isLoading={isLoading}>
         {maxanswers == 1 ? (
@@ -99,12 +107,14 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
             id={questionid}
             name={questionid}
             required={mandatory}
+            disabled={!iseditable}
+            aria-disabled={!iseditable}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             onChange={handleSingleChange}
             value={singleAnswer}
           >
             {singleAnswer === "" && (
-              <option key="invalid" value="" disabled hidden>
+              <option key="invalid" value="" disabled aria-disabled={true} hidden>
                 Bitte wähle eine Option
               </option>
             )}
@@ -114,6 +124,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
                 key={option.optionid}
                 optionid={option.optionid}
                 optiontext={option.optiontext}
+                iseditable={iseditable}
               />
             ))}
           </select>
@@ -140,6 +151,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
                   key={option.optionid}
                   optionid={option.optionid}
                   optiontext={option.optiontext}
+                  iseditable={iseditable}
                 />
               ))}
             </select>

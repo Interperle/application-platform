@@ -24,6 +24,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  iseditable,
   mindatetime,
   maxdatetime,
   answerid,
@@ -47,10 +48,16 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     setAnswer(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!iseditable){
+      return
+    }
     const selectedDate = new Date(event.target.value);
     const minDateTime = mindatetime ? new Date(mindatetime) : null;
     const maxDateTime = maxdatetime ? new Date(maxdatetime) : null;
@@ -83,10 +90,13 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      iseditable={iseditable}
     >
       <AwaitingChild isLoading={isLoading}>
         <input
           type="datetime-local"
+          disabled={!iseditable}
+          aria-disabled={!iseditable}
           id={questionid}
           name={questionid}
           required={mandatory}
