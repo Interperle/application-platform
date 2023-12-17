@@ -6,13 +6,13 @@ import Apl_Header from "@/components/header";
 import OverviewButton from "@/components/overviewButton";
 import { ProgressBar } from "@/components/progressbar";
 import Questionnaire from "@/components/questions";
+import { SectionQuestionsMap, SectionView } from "@/components/sectionViewer";
+import { SectionData } from "@/store/slices/phaseSlice";
 import {
   cached_fetch_phase_by_name,
   cached_fetch_phase_questions,
 } from "@/utils/cached";
 import { createCurrentTimestamp } from "@/utils/helpers";
-import { SectionQuestionsMap, SectionView } from "@/components/sectionViewer";
-import { SectionData } from "@/store/slices/phaseSlice";
 
 export default async function Page({
   params,
@@ -34,16 +34,16 @@ export default async function Page({
   }
 
   const isEditable = currentDate >= startDate && currentDate <= endDate;
-  
+
   const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
 
-  let phase_sections = [] as SectionData[]
-  let mapQuestions = {} as SectionQuestionsMap
-  if (phaseData.sectionsenabled){
+  let phase_sections = [] as SectionData[];
+  let mapQuestions = {} as SectionQuestionsMap;
+  if (phaseData.sectionsenabled) {
     phase_sections = await fetch_sections_by_phase(phaseData.phaseid);
     mapQuestions = phase_sections.reduce((acc, section) => {
       acc[section.sectionid] = phase_questions.filter(
-          question => question.section === section.sectionid
+        (question) => question.section === section.sectionid,
       );
       return acc;
     }, {} as SectionQuestionsMap);
@@ -62,7 +62,8 @@ export default async function Page({
         <div>
           <h2 className="p-4 rounded text-secondary">
             <b>
-              Bewerbungs-Phase {phaseData.phaseorder + 1}: {phaseData.phaselabel}
+              Bewerbungs-Phase {phaseData.phaseorder + 1}:{" "}
+              {phaseData.phaselabel}
             </b>
           </h2>
           {!isEditable && (
@@ -80,24 +81,22 @@ export default async function Page({
             endDate={phaseData.enddate}
           />
           <div className="space-y-4 max-w-screen-xl">
-            {
-              phaseData.sectionsenabled ? (
-                <SectionView
-                  phaseData={phaseData}
-                  mapQuestions={mapQuestions}
-                  phaseAnswers={phase_answers}
-                  phaseSections={phase_sections}
-                  iseditable={isEditable}
-                />
-              ):(
-                <Questionnaire
-                  phaseData={phaseData}
-                  phaseQuestions={phase_questions}
-                  phaseAnswers={phase_answers}
-                  iseditable={isEditable}
-                />
-              )
-            }
+            {phaseData.sectionsenabled ? (
+              <SectionView
+                phaseData={phaseData}
+                mapQuestions={mapQuestions}
+                phaseAnswers={phase_answers}
+                phaseSections={phase_sections}
+                iseditable={isEditable}
+              />
+            ) : (
+              <Questionnaire
+                phaseData={phaseData}
+                phaseQuestions={phase_questions}
+                phaseAnswers={phase_answers}
+                iseditable={isEditable}
+              />
+            )}
           </div>
           <ProgressBar
             progressbarId={`${phaseData.phaseid}-bottom`}

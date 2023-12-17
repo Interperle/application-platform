@@ -4,10 +4,7 @@ import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
 
-export async function saveCheckBoxAnswer(
-  checked: boolean,
-  questionid: string,
-) {
+export async function saveCheckBoxAnswer(checked: boolean, questionid: string) {
   if (!checked) {
     await deleteAnswer(questionid, "checkbox_answer_table");
     return;
@@ -40,10 +37,10 @@ export async function saveCheckBoxAnswer(
 export async function fetchCheckBoxAnswer(answerid: string) {
   const supabase = initSupabaseActions();
   const { data: multipleChoiceData, error: multipleChoiceError } =
-  await supabase
-    .from("checkbox_answer_table")
-    .select("checked")
-    .eq("answerid", answerid)
-    .single();
+    await supabase
+      .from("checkbox_answer_table")
+      .select("checked")
+      .eq("answerid", answerid)
+      .single();
   return multipleChoiceData!.checked || false;
 }

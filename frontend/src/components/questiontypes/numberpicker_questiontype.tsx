@@ -47,8 +47,8 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     let inputNumber: number = +event.target.value;
     if (
@@ -84,8 +84,8 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   };
 
   function decrementNumber() {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const inputAnswer = +answer;
     if (inputAnswer > minnumber) {
@@ -94,8 +94,8 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   }
 
   function incrementNumber() {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const inputAnswer = +answer;
     if (inputAnswer < maxnumber) {

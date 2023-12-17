@@ -12,7 +12,12 @@ export const DropdownOption: React.FC<DropdownOptionProps> = ({
   iseditable,
 }) => {
   return (
-    <option key={optionid} value={optionid} disabled={!iseditable} aria-disabled={!iseditable}>
+    <option
+      key={optionid}
+      value={optionid}
+      disabled={!iseditable}
+      aria-disabled={!iseditable}
+    >
       {optiontext}
     </option>
   );

@@ -45,15 +45,15 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     setAnswer(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const selectedDate = new Date(event.target.value);
     const minDate = mindate ? new Date(mindate) : null;

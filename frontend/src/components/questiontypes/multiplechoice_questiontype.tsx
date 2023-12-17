@@ -58,8 +58,8 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   }, [questionid, answerid, maxanswers]);
 
   const handleSingleChange = (choice: ChoiceProps) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     if (selectedChoice === choice.choiceid) {
       saveMultipleChoiceAnswer("", questionid);
@@ -71,8 +71,8 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   };
 
   const handleMultiChange = (choice: ChoiceProps) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     if (!selectedChoices.includes(choice.choiceid)) {
       if (selectedChoices.length + 1 > maxanswers) {

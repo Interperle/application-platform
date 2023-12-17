@@ -8,6 +8,7 @@ import getQuestionComponent, {
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
+
 import { InformationBox } from "./informationBox";
 
 export interface DefaultQuestion {
@@ -18,7 +19,7 @@ export interface DefaultQuestion {
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
-  section: string | null;
+  section: string | null;
   preInformationBox: string | null;
   postInformationBox: string | null;
 }
@@ -68,28 +69,28 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
           }
           return (
             <>
-            { phaseQuestion.preInformationBox &&
-              (<InformationBox text={phaseQuestion.preInformationBox}/>)
-            }
-            <QuestionComponent
-              key={phaseQuestion.questionid}
-              phasename={phaseData.phasename}
-              questionid={phaseQuestion.questionid}
-              mandatory={phaseQuestion.mandatory}
-              questiontext={phaseQuestion.questiontext}
-              questionnote={phaseQuestion.questionnote}
-              questionorder={phaseQuestion.questionorder}
-              iseditable={iseditable}
-              answerid={
-                phaseAnswers.find(
-                  (answer) => answer.questionid == phaseQuestion.questionid,
-                )?.answerid
-              }
-              {...phaseQuestion.params}
-            />
-            { phaseQuestion.postInformationBox &&
-              (<InformationBox text={phaseQuestion.postInformationBox}/>)
-            }
+              {phaseQuestion.preInformationBox && (
+                <InformationBox text={phaseQuestion.preInformationBox} />
+              )}
+              <QuestionComponent
+                key={phaseQuestion.questionid}
+                phasename={phaseData.phasename}
+                questionid={phaseQuestion.questionid}
+                mandatory={phaseQuestion.mandatory}
+                questiontext={phaseQuestion.questiontext}
+                questionnote={phaseQuestion.questionnote}
+                questionorder={phaseQuestion.questionorder}
+                iseditable={iseditable}
+                answerid={
+                  phaseAnswers.find(
+                    (answer) => answer.questionid == phaseQuestion.questionid,
+                  )?.answerid
+                }
+                {...phaseQuestion.params}
+              />
+              {phaseQuestion.postInformationBox && (
+                <InformationBox text={phaseQuestion.postInformationBox} />
+              )}
             </>
           );
         })}

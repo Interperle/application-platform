@@ -56,8 +56,8 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   }, [questionid, answerid, maxanswers]);
 
   const handleSingleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const selectedOption =
       event.target.options[event.target.selectedIndex].text;
@@ -66,8 +66,8 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   };
 
   const handleMultiChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const selectedOptions = Array.from(
       event.target.selectedOptions,
@@ -114,7 +114,13 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
             value={singleAnswer}
           >
             {singleAnswer === "" && (
-              <option key="invalid" value="" disabled aria-disabled={true} hidden>
+              <option
+                key="invalid"
+                value=""
+                disabled
+                aria-disabled={true}
+                hidden
+              >
                 Bitte wähle eine Option
               </option>
             )}

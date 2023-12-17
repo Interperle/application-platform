@@ -50,15 +50,15 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     setAnswer(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const textinput = event.target.value;
     if (

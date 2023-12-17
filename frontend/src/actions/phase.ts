@@ -8,13 +8,13 @@ import {
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
+import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,
 } from "./answers/answers";
-import { createCurrentTimestamp } from "@/utils/helpers";
 
 type IdType = {
   questionid: string;
@@ -42,7 +42,7 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
           1,
         )}QuestionTable` as keyof typeof QuestionTypeTable
       ];
-    
+
     if (!tableName) {
       console.log(
         `Table for question type "${questionType}" is missing. Skipping...`,
@@ -294,29 +294,31 @@ export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
   return questionData as DefaultQuestion[];
 }
 
-
 export async function fetch_first_phase_over(): Promise<boolean> {
-  const supabase = initSupabaseActions()
+  const supabase = initSupabaseActions();
   const { data: phaseData, error: phaseError } = await supabase
     .from("phase_table")
     .select("enddate")
     .eq("phaseorder", 0)
     .single();
 
-    if (phaseError) {
-    console.log("Error: " + JSON.stringify(phaseError, null, 2) + " -> Redirect");
+  if (phaseError) {
+    console.log(
+      "Error: " + JSON.stringify(phaseError, null, 2) + " -> Redirect",
+    );
     return true;
   }
-  
+
   if (!phaseData) {
-    console.log("No Data: " + JSON.stringify(phaseData, null, 2) + " -> Redirect");
+    console.log(
+      "No Data: " + JSON.stringify(phaseData, null, 2) + " -> Redirect",
+    );
     return true;
   }
   const currentDate = new Date(createCurrentTimestamp());
   const endDate = new Date(phaseData!.enddate);
   return currentDate < endDate;
 }
-
 
 export async function fetch_sections_by_phase(
   phaseId: string,
@@ -325,13 +327,13 @@ export async function fetch_sections_by_phase(
   const { data: sectionsData, error: sectionsError } = await supabase
     .from("sections_table")
     .select("*")
-    .eq("phaseid", phaseId)
+    .eq("phaseid", phaseId);
   if (sectionsError) {
     console.log("Error: " + JSON.stringify(sectionsError) + " -> Redirect");
   }
   if (!sectionsData) {
     console.log("No data " + JSON.stringify(sectionsData) + " -> Redirect");
   }
-  console.log(JSON.stringify(sectionsData))
+  console.log(JSON.stringify(sectionsData));
   return sectionsData as SectionData[];
 }

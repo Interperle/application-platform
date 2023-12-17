@@ -56,8 +56,8 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   function set_video_for_upload(file: File) {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const fileSizeInMB = file.size / 1024 / 1024;
     if (!validImgTypes.includes(file.type)) {
@@ -77,8 +77,8 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   }
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     if (event.target.files) {
       const file = event.target.files[0];
@@ -87,8 +87,8 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     if (answerid) {
       deleteVideoUploadAnswer(questionid, answerid);
@@ -98,22 +98,22 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     setWasUploaded(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     event.preventDefault();
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -180,16 +180,14 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
           </AwaitingChild>
         ) : (
           <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ">
-             {
-              iseditable && (
-                <button
-                  className="self-end text-red-600"
-                  onClick={handleDeleteOnClick}
-                >
-                  Löschen
-                </button>
-              )
-            }
+            {iseditable && (
+              <button
+                className="self-end text-red-600"
+                onClick={handleDeleteOnClick}
+              >
+                Löschen
+              </button>
+            )}
             <video
               width="100%"
               height="100%"

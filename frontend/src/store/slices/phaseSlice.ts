@@ -20,7 +20,6 @@ export interface SectionData {
   phaseid: string;
 }
 
-
 export interface PhasesDataQuestions {
   data: PhaseData;
   questions: Question[] | null;

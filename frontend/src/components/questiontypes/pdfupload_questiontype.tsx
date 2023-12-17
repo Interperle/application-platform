@@ -55,8 +55,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   function set_pdf_for_upload(file: File) {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const fileSizeInMB = file.size / 1024 / 1024;
     if (!validImgTypes.includes(file.type)) {
@@ -76,8 +76,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   }
 
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     if (event.target.files) {
       const file = event.target.files[0];
@@ -86,8 +86,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     deletePdfUploadAnswer(questionid, answerid || "");
     setUploadPdf("");
@@ -95,22 +95,22 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     setWasUploaded(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     event.preventDefault();
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -177,16 +177,14 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
           </AwaitingChild>
         ) : (
           <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96">
-             {
-              iseditable && (
-                <button
-                  className="self-end text-red-600"
-                  onClick={handleDeleteOnClick}
-                >
-                  Löschen
-                </button>
-              )
-            }
+            {iseditable && (
+              <button
+                className="self-end text-red-600"
+                onClick={handleDeleteOnClick}
+              >
+                Löschen
+              </button>
+            )}
             <iframe
               src={uploadUrl}
               width="100%"

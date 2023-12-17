@@ -59,8 +59,8 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   function set_image_for_upload(file: File) {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     const fileSizeInMB = file.size / 1024 / 1024;
     if (!validImgTypes.includes(file.type)) {
@@ -79,8 +79,8 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     setWasUploaded(false);
   }
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     if (event.target.files) {
       const file = event.target.files[0];
@@ -89,8 +89,8 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   };
 
   const handleDeleteOnClick = () => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     deleteImageUploadAnswer(questionid, answerid || "");
     setUploadImage("");
@@ -98,22 +98,22 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     setWasUploaded(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     event.preventDefault();
   };
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     event.preventDefault();
     if (event.dataTransfer.files && event.dataTransfer.files[0]) {
@@ -184,16 +184,14 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
           </div>
         ) : (
           <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96">
-            {
-              iseditable && (
-                <button
-                  className="self-end text-red-600"
-                  onClick={handleDeleteOnClick}
-                >
-                  Löschen
-                </button>
-              )
-            }
+            {iseditable && (
+              <button
+                className="self-end text-red-600"
+                onClick={handleDeleteOnClick}
+              >
+                Löschen
+              </button>
+            )}
             <Image
               alt="Preview"
               src={uploadUrl}

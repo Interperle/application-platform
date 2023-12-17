@@ -45,8 +45,8 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   }, [questionid, answerid]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!iseditable){
-      return
+    if (!iseditable) {
+      return;
     }
     setAnswer(event.target.value);
   };

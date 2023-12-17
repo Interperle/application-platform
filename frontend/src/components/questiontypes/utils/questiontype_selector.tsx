@@ -25,13 +25,15 @@ import VideoUploadQuestionType, {
   VideoUploadQuestionTypeProps,
 } from "@/components/questiontypes/videoupload_questiontype";
 
+import CheckBoxQuestionType, {
+  CheckBoxQuestionTypeProps,
+} from "../checkbox_questiontype";
 import DropdownQuestionType, {
   DropdownQuestionTypeProps,
 } from "../dropdown_questiontype";
 import MultipleChoiceQuestionType, {
   MultipleChoiceQuestionTypeProps,
 } from "../multiplechoice_questiontype";
-import CheckBoxQuestionType, { CheckBoxQuestionTypeProps } from "../checkbox_questiontype";
 
 export enum QuestionType {
   ShortText = "shortText",
@@ -44,7 +46,7 @@ export enum QuestionType {
   PDFUpload = "pdfUpload",
   MultipleChoice = "multipleChoice",
   Dropdown = "dropdown",
-  CheckBox = "checkBox"
+  CheckBox = "checkBox",
 }
 
 export enum QuestionTypeTable {
