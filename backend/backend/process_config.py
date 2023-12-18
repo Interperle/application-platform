@@ -23,7 +23,8 @@ def process_question(question, phase_id, phase_sections, supabase, depends_on=No
     data_question_table = create_data_questions_table(question_type, question['order'], phase_id, question['mandatory'],
                                                       question['question'], question.get('note', ''),
                                                       question.get('preInformationBox', ''),
-                                                      question.get('postInformationBox', ''), phase_sections, section_number, depends_on)
+                                                      question.get('postInformationBox',
+                                                                   ''), phase_sections, section_number, depends_on)
 
     log.debug(f'Create Question "{question}"')
     response_question_table = supabase.table('question_table').insert(data_question_table).execute()
@@ -69,7 +70,7 @@ def process_question(question, phase_id, phase_sections, supabase, depends_on=No
             data_conditional_choice_table = create_data_conditional_choice_table(question_id, answer["value"])
             supabase.table("conditional_question_choice_table").insert(data_conditional_choice_table).execute()
             process_nested_questions(answer['questions'], phase_id, phase_sections, supabase,
-                                         response_question_table.data[0]['questionid'])
+                                     response_question_table.data[0]['questionid'])
 
 
 def process_config():
@@ -94,7 +95,6 @@ def process_config():
                 phase_sections[order + 1] = response_section_table.data[0]["sectionid"]
         log.info(str(response_phase_table))
 
-        
         for question in phase['questions']:
             process_question(question, phase_id, phase_sections, supabase)
     log.info(f'Processed Phase {phase} successfully')
