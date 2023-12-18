@@ -359,7 +359,6 @@ export async function sendResetPasswordLinkFromSettings(
     if (error) {
       return { message: error.message, status: "ERROR" };
     }
-
     revalidatePath("/login");
     return {
       message: `Dir wurde ein Passwort Zurücksetzen Link gesendet!`,

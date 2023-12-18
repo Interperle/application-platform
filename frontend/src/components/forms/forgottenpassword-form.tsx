@@ -34,8 +34,7 @@ export default function SignUpForm() {
     return () => clearTimeout(countdown);
   }, [timer]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     setButtonVisible(false);
     setTimer(30);
   };
