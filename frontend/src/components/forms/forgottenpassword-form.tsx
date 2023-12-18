@@ -18,6 +18,7 @@ const initialState: messageType = {
 };
 
 export default function SignUpForm() {
+
   const [state, formAction] = useFormState(sendResetPasswordLink, initialState);
   const [timer, setTimer] = useState(0);
   const [buttonVisible, setButtonVisible] = useState(true);
@@ -34,7 +35,8 @@ export default function SignUpForm() {
     return () => clearTimeout(countdown);
   }, [timer]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setButtonVisible(false);
     setTimer(30);
   };

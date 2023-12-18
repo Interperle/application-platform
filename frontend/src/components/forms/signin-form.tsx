@@ -28,12 +28,12 @@ export default function SignInForm() {
 
   return (
     <div>
-      <form action={formAction} className="space-y-4">
-        {isPopupOpen && (
+      {isPopupOpen && (
           <Popup onClose={togglePopup}>
             <ForgottenPasswordForm />
           </Popup>
         )}
+      <form action={formAction} className="space-y-4">
         <div>
           <label
             htmlFor="email"
