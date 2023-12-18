@@ -68,9 +68,9 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             return null;
           }
           return (
-            <>
+            <React.Fragment key={phaseQuestion.questionid}>
               {phaseQuestion.preInformationBox && (
-                <InformationBox text={phaseQuestion.preInformationBox} />
+                <InformationBox key={`${phaseQuestion.questionid}_pre_infobox`} text={phaseQuestion.preInformationBox} />
               )}
               <QuestionComponent
                 key={phaseQuestion.questionid}
@@ -89,9 +89,9 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
                 {...phaseQuestion.params}
               />
               {phaseQuestion.postInformationBox && (
-                <InformationBox text={phaseQuestion.postInformationBox} />
+                <InformationBox key={`${phaseQuestion.questionid}_post_infobox`} text={phaseQuestion.postInformationBox} />
               )}
-            </>
+            </React.Fragment>
           );
         })}
     </div>

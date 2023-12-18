@@ -334,6 +334,5 @@ export async function fetch_sections_by_phase(
   if (!sectionsData) {
     console.log("No data " + JSON.stringify(sectionsData) + " -> Redirect");
   }
-  console.log(JSON.stringify(sectionsData));
   return sectionsData as SectionData[];
 }
