@@ -103,6 +103,39 @@ questions:
         question: Do you agree with the Terms and Conditions of ABC?
         mandatory: false
         sectionNumber: 2
+      - questionType: conditional
+        order: 12
+        question: Do you have previous experience in XYZ?
+        Answers:
+          - value: "Yes"
+            questions:
+              - questionType: shortText
+                question: Describe your experience in XYZ.
+                mandatory: true
+                maxTextLength: 100
+              - questionType: numberPicker
+                question: How many years of experience do you have in XYZ?
+                minNumber: 1
+                maxNumber: 30
+                mandatory: false
+          - value: "No"
+            questions:
+              - questionType: longText
+                question: What are your areas of interest?
+                mandatory: false
+                maxTextLength: 300
+              - questionType: multipleChoice
+                question: Which of these fields are you interested in learning more about?
+                Answers:
+                  - Field 1
+                  - Field 2
+                  - Field 3
+                mandatory: false
+                minAnswers: 0
+                maxAnswers: 3
+                userInput: false
+        mandatory: false
+        sectionNumber: 2
   phase-2:
     phaseLabel: "Test Phase 2"
     startDate: 2024-01-09

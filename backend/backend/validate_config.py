@@ -41,6 +41,7 @@ QUESTION_TYPE_PARAMS = {
     QuestionType.IMAGE_UPLOAD: ['maxFileSizeInMB'],
     QuestionType.DROPDOWN: ['minAnswers', 'maxAnswers', 'Answers', 'userInput'],
     QuestionType.CHECKBOX: [],
+    QuestionType.CONDITIONAL: ['Answers'],
 }
 
 # Construct the mandatory parameters dictionary
@@ -59,8 +60,8 @@ for question_type in MANDATORY_PARAMS:
 OPTIONAL_PARAMS = {
     "ALL": {
         "note": str,
-        "preInformationBox": str,
-        "postInformationBox": str,
+        "preinformationbox": str,
+        "postinformationbox": str,
     },
     QuestionType.SHORT_TEXT: {
         'formattingRegex': str,
@@ -79,7 +80,85 @@ QUESTION_TYPES_DB_TABLE = {
     QuestionType.IMAGE_UPLOAD: "image_upload_question_table",
     QuestionType.DROPDOWN: "dropdown_question_table",
     QuestionType.CHECKBOX: "checkbox_question_table",
+    QuestionType.CONDITIONAL: "conditional_question_table",
 }
+
+
+def validate_nested_questions(nested_questions, phase_name):
+    """ Validate the structure of nested questions in a conditionalQuestion. """
+    if not isinstance(nested_questions, list):
+        raise ValueError(f"In phase {phase_name}, nested questions should be a list.")
+
+    for question in nested_questions:
+        validate_question_structure(question, phase_name, None, None)
+
+
+def validate_question_structure(question, phase_name, seen_orders: set, phase_sections):
+    if 'questionType' not in question:
+        raise ValueError("A question is missing the 'questionType' field.")
+
+    this_question_type = QuestionType.str_to_enum(question['questionType'])
+    if not this_question_type:
+        raise ValueError(
+            f"Invalid 'questionType': {question['questionType']}. Has to be one of the followings: {QuestionType.list_enums()}"
+        )
+
+    order = question.get('order')
+    if seen_orders:
+        if order in seen_orders:
+            raise ValueError(f"The order number {order} in phase '{phase_name}' is NOT Unique!")
+        seen_orders.add(order)
+
+    for param, paramtype in MANDATORY_PARAMS.get(this_question_type, {}).items():
+        if not seen_orders and param == "order":
+            continue
+        if param not in question:
+            raise ValueError(f"The {this_question_type} question {question} is missing the parameter '{param}' field!")
+        if not isinstance(question[param], paramtype):
+            raise ValueError(
+                f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}.")
+
+    for param, paramtype in OPTIONAL_PARAMS.get("ALL", {}).items():
+        if param in question and not isinstance(question[param], paramtype):
+            raise ValueError(
+                f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}.")
+
+    for param, paramtype in OPTIONAL_PARAMS.get(this_question_type, {}).items():
+        if param in question and not isinstance(question[param], paramtype):
+            raise ValueError(
+                f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}.")
+
+    if this_question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
+        if not isinstance(question[param], str):
+            raise ValueError(
+                f"The optional parameter field '{param}' is type of {type(question[param])} instead of str.")
+        if "formattingRegex" not in question:
+            raise ValueError(f"The optional parameter field '{param}' can't be set if formattingRegex is not Set.")
+        if question["formattingRegex"] in REGEX_JS.keys():
+            raise ValueError(
+                f"The optional parameter field '{param}' can't be set if formattingRegex is one of the Predefined Values."
+            )
+
+    if phase_sections:
+        if "sectionNumber" not in question:
+            raise ValueError(
+                f"In phase {phase_name} the Sections are enabled but ne question '{question['question']}' is missing the sectionNumber!"
+            )
+        if not isinstance(question["sectionNumber"], int):
+            raise ValueError(f"The field 'sectionNumber' is type of {type(question[param])} instead of int.")
+        if len(phase_sections) + 1 < question["sectionNumber"]:
+            raise ValueError(
+                f"The sectionNumber {question['sectionNumber']} in question '{question['question']}' is bigger than the number of sections in this phase!"
+            )
+    if this_question_type == QuestionType.CONDITIONAL:
+        for option in question['Answers']:
+            if 'value' not in option or not isinstance(option['value'], str):
+                raise ValueError(
+                    f"In phase {phase_name}, 'value' field is missing or not a string in a conditional question option."
+                )
+
+            if 'questions' in option:
+                validate_nested_questions(option['questions'], phase_name)
 
 
 def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
@@ -107,76 +186,17 @@ def run_structure_checks(yaml_data: Dict[str, Any]) -> None:
                 f"The phase {phase_name} is missing the 'endDate' field or 'endDate' is not in ISO8601 standard: {DATETIME_FORMAT}."
             )
 
-        sections_enabled = False
         if 'sections' in phase:
             if not isinstance(phase['sections'], list):
                 raise ValueError(f"The phase {phase_name} has the 'sections' field but it's is not a list.")
             for section in phase['sections']:
-                if not isinstance(section, str):
+                if not isinstance(section, dict):
                     raise ValueError(
                         f"The phase {phase_name} has the 'sections' field but the section {section} is not a string.")
-            sections_enabled = True
 
-        seen_orders_in_phase = set()
+        seen_orders = set()
         for question in phase["questions"]:
-            if 'questionType' not in question:
-                raise ValueError("A question is missing the 'questionType' field.")
-
-            this_question_type = QuestionType.str_to_enum(question['questionType'])
-            if not this_question_type:
-                raise ValueError(
-                    f"Invalid 'questionType': {question['questionType']}. Has to be one of the followings: {QuestionType.list_enums()}"
-                )
-
-            order = question.get('order')
-            if order in seen_orders_in_phase:
-                raise ValueError(f"The order number {order} in phase '{phase}' is NOT Unique!")
-            seen_orders_in_phase.add(order)
-
-            for param, paramtype in MANDATORY_PARAMS.get(this_question_type, {}).items():
-                if param not in question:
-                    raise ValueError(
-                        f"The {this_question_type} question {question} is missing the parameter '{param}' field!")
-                if not isinstance(question[param], paramtype):
-                    raise ValueError(
-                        f"The additional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
-                    )
-
-            for param, paramtype in OPTIONAL_PARAMS.get("ALL", {}).items():
-                if param in question and not isinstance(question[param], paramtype):
-                    raise ValueError(
-                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
-                    )
-
-            for param, paramtype in OPTIONAL_PARAMS.get(this_question_type, {}).items():
-                if param in question and not isinstance(question[param], paramtype):
-                    raise ValueError(
-                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of {paramtype}."
-                    )
-
-            if this_question_type == QuestionType.SHORT_TEXT and "formattingDescription" in question:
-                if not isinstance(question[param], str):
-                    raise ValueError(
-                        f"The optional parameter field '{param}' is type of {type(question[param])} instead of str.")
-                if "formattingRegex" not in question:
-                    raise ValueError(
-                        f"The optional parameter field '{param}' can't be set if formattingRegex is not Set.")
-                if question["formattingRegex"] in REGEX_JS.keys():
-                    raise ValueError(
-                        f"The optional parameter field '{param}' can't be set if formattingRegex is one of the Predefined Values."
-                    )
-
-            if sections_enabled:
-                if "sectionNumber" not in question:
-                    raise ValueError(
-                        f"In phase {phase_name} the Sections are enabled but ne question '{question['question']}' is missing the sectionNumber!"
-                    )
-                if isinstance(question["sectionNumber"], int):
-                    raise ValueError(f"The field 'sectionNumber' is type of {type(question[param])} instead of int.")
-                if len(phase["sections"]) + 1 < question["sectionNumber"]:
-                    raise ValueError(
-                        f"The sectionNumber {question['sectionNumber']} in question '{question['question']}' is bigger than the number of sections in this phase!"
-                    )
+            validate_question_structure(question, phase_name, seen_orders, phase.get('sections', None))
 
 
 def validate_config_structure():

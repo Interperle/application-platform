@@ -46,6 +46,8 @@ CREATE TABLE
     mandatory BOOLEAN NOT NULL,
     questiontext TEXT NOT NULL,
     questionnote TEXT,
+    preinformationbox TEXT,
+    postinformationbox TEXT,
     depends_on UUID,
     sectionid UUID REFERENCES SECTIONS_TABLE (sectionid)
   );

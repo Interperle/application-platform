@@ -10,6 +10,68 @@ from backend.utils.consts import REGEX_JS
 log = Logger(__name__)
 
 
+def process_nested_questions(nested_questions, phase_id, phase_sections, supabase, depends_on):
+    for order, nested_question in enumerate(nested_questions):
+        nested_question["order"] = order + 1
+        process_question(nested_question, phase_id, phase_sections, supabase, depends_on)
+
+
+def process_question(question, phase_id, phase_sections, supabase, depends_on=None):
+    question_type = QuestionType.str_to_enum(question['questionType'])
+
+    section_number = question.get('sectionNumber')
+    data_question_table = create_data_questions_table(question_type, question['order'], phase_id, question['mandatory'],
+                                                      question['question'], question.get('note', ''),
+                                                      question.get('preInformationBox', ''),
+                                                      question.get('postInformationBox', ''), phase_sections, section_number, depends_on)
+
+    log.debug(f'Create Question "{question}"')
+    response_question_table = supabase.table('question_table').insert(data_question_table).execute()
+
+    log.debug(f'Create QuestionType {question_type}')
+    question_id = response_question_table.data[0]['questionid']
+    data_question_type_table = create_data_question_type_table(question_id, question_type, question)
+
+    response_question_type_table = supabase.table(QUESTION_TYPES_DB_TABLE[question_type]) \
+                                                                .insert(data_question_type_table).execute()
+    log.info(str(response_question_type_table))
+    if question_type in [QuestionType.PDF_UPLOAD, QuestionType.IMAGE_UPLOAD, QuestionType.VIDEO_UPLOAD]:
+        file_type = ""
+        if question_type == QuestionType.PDF_UPLOAD:
+            file_type = "pdf"
+            allowed_mime_types = ["application/pdf"]
+        elif question_type == QuestionType.VIDEO_UPLOAD:
+            file_type = "video"
+            allowed_mime_types = ["video/mp4"]
+        elif question_type == QuestionType.IMAGE_UPLOAD:
+            file_type = "image"
+            allowed_mime_types = ["image/png", "image/jpeg"]
+        create_file_storage(file_type, question_id, question["maxFileSizeInMB"], allowed_mime_types)
+    elif question_type == QuestionType.MULTIPLE_CHOICE:
+        for answer in question['Answers']:
+            data_list_table = create_data_choice_table(question_id, answer)
+            try:
+                response_list_table = supabase.table('multiple_choice_question_choice_table').insert(
+                    data_list_table).execute()
+                log.info(str(response_list_table))
+            except Exception:
+                log.info('Failed to insert data into multiple_choice_question_choice_table')
+    elif question_type == QuestionType.DROPDOWN:
+        for answer in question['Answers']:
+            data_list_table = create_data_option_table(question_id, answer)
+            try:
+                response_list_table = supabase.table('dropdown_question_option_table').insert(data_list_table).execute()
+                log.info(str(response_list_table))
+            except Exception:
+                log.info('Failed to insert data into dropdown_question_option_table')
+    elif question_type == QuestionType.CONDITIONAL:
+        for answer in question['Answers']:
+            data_conditional_choice_table = create_data_conditional_choice_table(question_id, answer["value"])
+            supabase.table("conditional_question_choice_table").insert(data_conditional_choice_table).execute()
+            process_nested_questions(answer['questions'], phase_id, phase_sections, supabase,
+                                         response_question_table.data[0]['questionid'])
+
+
 def process_config():
     config_data = read_yaml_file('apl_config.yml')
     run_structure_checks(config_data)
@@ -23,64 +85,19 @@ def process_config():
 
         response_phase_table = supabase.table('phase_table').insert(data_phase_table).execute()
         phase_sections = {}
+        phase_id = response_phase_table.data[0]['phaseid']
         if "sections" in phase:
-            for order, section in phase["sections"].enumerate():
+            for order, section in enumerate(phase["sections"]):
                 data_section_table = create_data_section_table(section["name"], section["description"], order + 1,
                                                                phase_id)
-                response_section_table = supabase.table('phase_table').insert(data_section_table).execute()
-                phase_sections[order + 1] = response_section_table.data["sectionid"]
+                response_section_table = supabase.table('sections_table').insert(data_section_table).execute()
+                phase_sections[order + 1] = response_section_table.data[0]["sectionid"]
         log.info(str(response_phase_table))
 
-        phase_id = response_phase_table.data[0]['phaseid']
+        
         for question in phase['questions']:
-            question_type = QuestionType.str_to_enum(question['questionType'])
-            data_question_table = create_data_questions_table(question_type, question['order'], phase_id,
-                                                              question['mandatory'], question['question'],
-                                                              question.get('note', ''),
-                                                              question.get('preInformationBox', ''),
-                                                              question.get('postInformationBox', ''), phase_sections)
-            log.debug(f'Create Question "{question}"')
-            response_question_table = supabase.table('question_table').insert(data_question_table).execute()
-            log.info(str(response_question_table))
-
-            log.debug(f'Create QuestionType {question_type}')
-            question_id = response_question_table.data[0]['questionid']
-            data_question_type_table = create_data_question_type_table(question_id, question_type, question)
-
-            response_question_type_table = supabase.table(QUESTION_TYPES_DB_TABLE[question_type]) \
-                                                                        .insert(data_question_type_table).execute()
-            log.info(str(response_question_type_table))
-            if question_type in [QuestionType.PDF_UPLOAD, QuestionType.IMAGE_UPLOAD, QuestionType.VIDEO_UPLOAD]:
-                file_type = ""
-                if question_type == QuestionType.PDF_UPLOAD:
-                    file_type = "pdf"
-                    allowed_mime_types = ["application/pdf"]
-                elif question_type == QuestionType.VIDEO_UPLOAD:
-                    file_type = "video"
-                    allowed_mime_types = ["video/mp4"]
-                elif question_type == QuestionType.IMAGE_UPLOAD:
-                    file_type = "image"
-                    allowed_mime_types = ["image/png", "image/jpeg"]
-                create_file_storage(file_type, question_id, question["maxFileSizeInMB"], allowed_mime_types)
-            elif question_type == QuestionType.MULTIPLE_CHOICE:
-                for answer in question['Answers']:
-                    data_list_table = create_data_choice_table(question_id, answer)
-                    try:
-                        response_list_table = supabase.table('multiple_choice_question_choice_table').insert(
-                            data_list_table).execute()
-                        log.info(str(response_list_table))
-                    except Exception:
-                        log.info('Failed to insert data into multiple_choice_question_choice_table')
-            elif question_type == QuestionType.DROPDOWN:
-                for answer in question['Answers']:
-                    data_list_table = create_data_option_table(question_id, answer)
-                    try:
-                        response_list_table = supabase.table('dropdown_question_option_table').insert(
-                            data_list_table).execute()
-                        log.info(str(response_list_table))
-                    except Exception:
-                        log.info('Failed to insert data into dropdown_question_option_table')
-        log.info(f'Processed Phase {phase} successfully')
+            process_question(question, phase_id, phase_sections, supabase)
+    log.info(f'Processed Phase {phase} successfully')
 
 
 def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, startdate: datetime, enddate: datetime,
@@ -105,8 +122,8 @@ def create_data_section_table(sectionname: str, sectiondescription: str, section
 
 
 def create_data_questions_table(questiontype: QuestionType, ordernumber: int, phaseid: str, mandatory: bool,
-                                question: str, questionnote: str, sections: dict, preinformationbox: str = "",
-                                postinformationbox: str = "") -> dict:
+                                question: str, questionnote: str, preinformationbox: str, postinformationbox: str,
+                                sections: dict, section_number, depends_on: str = None) -> dict:
     return {
         'questiontype': str(questiontype),
         'questionorder': ordernumber,
@@ -114,9 +131,10 @@ def create_data_questions_table(questiontype: QuestionType, ordernumber: int, ph
         'mandatory': 1 if mandatory else 0,
         'questiontext': question,
         'questionnote': questionnote,
-        'preInformationBox': preinformationbox,
-        'postInformationBox': postinformationbox,
-        'section': sections[question["sectionNumber"]],
+        'preinformationbox': preinformationbox,
+        'postinformationbox': postinformationbox,
+        'sectionid': sections.get(section_number),
+        'depends_on': depends_on
     }
 
 
@@ -146,6 +164,13 @@ def create_data_option_table(questionId: str, optionText: str) -> dict:
     return {
         'questionid': questionId,
         'optiontext': optionText,
+    }
+
+
+def create_data_conditional_choice_table(questionId: str, choiceValue: str) -> dict:
+    return {
+        'questionid': questionId,
+        'choicevalue': choiceValue,
     }
 
 
