@@ -337,6 +337,29 @@ create table PUBLIC.USER_PROFILES_TABLE (
 
 alter table PUBLIC.USER_PROFILES_TABLE enable row level security;
 
+
+CREATE TABLE PHASE_OUTCOME_TABLE (
+    outcome_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    phase_id UUID NOT NULL REFERENCES PHASE_TABLE (phaseid),
+    user_id UUID NOT NULL REFERENCES USER_PROFILES_TABLE (userid),
+    outcome BOOLEAN NOT NULL, -- TRUE for pass, FALSE for fail
+    reviewed_by UUID NOT NULL REFERENCES USER_PROFILES_TABLE (userid), -- Admin who reviewed
+    review_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE PHASE_OUTCOME_TABLE ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE PHASE_ASSIGNMENT_TABLE (
+    assignment_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    phase_id UUID NOT NULL REFERENCES PHASE_TABLE (phaseid),
+    user_role_1_id UUID NOT NULL, --applicant
+    user_role_2_id UUID NOT NULL, --reviewer
+    FOREIGN KEY (user_role_1_id) REFERENCES USER_PROFILES_TABLE (userid),
+    FOREIGN KEY (user_role_2_id) REFERENCES USER_PROFILES_TABLE (userid),
+    CHECK (user_role_1_id != user_role_2_id)
+);
+
+ALTER TABLE PHASE_ASSIGNMENT_TABLE ENABLE ROW LEVEL SECURITY;
 -- RLS SELECT POLICIES
 CREATE POLICY select_policy ON PHASE_TABLE
   FOR SELECT USING (auth.uid() IS NOT NULL);
@@ -897,4 +920,946 @@ USING (
   )
 );
 
+-- Policy for APPLICATION_TABLE
+CREATE POLICY select_reviewer_application_table
+ON APPLICATION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
 
+
+
+-- Policy for DATETIME_PICKER_QUESTION_TABLE
+CREATE POLICY select_reviewer_datetime_picker_question_table
+ON DATETIME_PICKER_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for DATE_PICKER_QUESTION_TABLE
+CREATE POLICY select_reviewer_date_picker_question_table
+ON DATE_PICKER_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for DROPDOWN_QUESTION_OPTION_TABLE
+CREATE POLICY select_reviewer_dropdown_question_option_table
+ON DROPDOWN_QUESTION_OPTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for DROPDOWN_QUESTION_TABLE
+CREATE POLICY select_reviewer_dropdown_question_table
+ON DROPDOWN_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for IMAGE_UPLOAD_QUESTION_TABLE
+CREATE POLICY select_reviewer_image_upload_question_table
+ON IMAGE_UPLOAD_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for LONG_TEXT_QUESTION_TABLE
+CREATE POLICY select_reviewer_long_text_question_table
+ON LONG_TEXT_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for MULTIPLE_CHOICE_QUESTION_CHOICE_TABLE
+CREATE POLICY select_reviewer_multiple_choice_question_choice_table
+ON MULTIPLE_CHOICE_QUESTION_CHOICE_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for MULTIPLE_CHOICE_QUESTION_TABLE
+CREATE POLICY select_reviewer_multiple_choice_question_table
+ON MULTIPLE_CHOICE_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for NUMBER_PICKER_QUESTION_TABLE
+CREATE POLICY select_reviewer_number_picker_question_table
+ON NUMBER_PICKER_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for PDF_UPLOAD_QUESTION_TABLE
+CREATE POLICY select_reviewer_pdf_upload_question_table
+ON PDF_UPLOAD_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for PHASE_TABLE
+CREATE POLICY select_reviewer_phase_table
+ON PHASE_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for QUESTION_TABLE
+CREATE POLICY select_reviewer_question_table
+ON QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for SHORT_TEXT_QUESTION_TABLE
+CREATE POLICY select_reviewer_short_text_question_table
+ON SHORT_TEXT_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+-- Policy for USER_ROLES_TABLE
+CREATE POLICY select_reviewer_user_roles_table
+ON USER_ROLES_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+
+
+-- Policy for VIDEO_UPLOAD_QUESTION_TABLE
+CREATE POLICY select_reviewer_video_upload_question_table
+ON VIDEO_UPLOAD_QUESTION_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+CREATE POLICY select_reviewer_answer_table
+ON ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN QUESTION_TABLE as qt ON ANSWER_TABLE.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        JOIN APPLICATION_TABLE as at ON ANSWER_TABLE.applicationid = at.applicationid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.userid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+CREATE POLICY select_reviewer_DATETIME_PICKER_ANSWER_TABLE
+ON DATETIME_PICKER_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON DATETIME_PICKER_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_DATE_PICKER_ANSWER_TABLE
+ON DATE_PICKER_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON DATE_PICKER_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_DROPDOWN_ANSWER_TABLE
+ON DROPDOWN_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON DROPDOWN_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_IMAGE_UPLOAD_ANSWER_TABLE
+ON IMAGE_UPLOAD_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON IMAGE_UPLOAD_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_LONG_TEXT_ANSWER_TABLE
+ON LONG_TEXT_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON LONG_TEXT_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_MULTIPLE_CHOICE_ANSWER_TABLE
+ON MULTIPLE_CHOICE_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON MULTIPLE_CHOICE_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_NUMBER_PICKER_ANSWER_TABLE
+ON NUMBER_PICKER_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON NUMBER_PICKER_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_PDF_UPLOAD_ANSWER_TABLE
+ON PDF_UPLOAD_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON PDF_UPLOAD_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_SHORT_TEXT_ANSWER_TABLE
+ON SHORT_TEXT_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON SHORT_TEXT_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+
+CREATE POLICY select_reviewer_VIDEO_UPLOAD_ANSWER_TABLE
+ON VIDEO_UPLOAD_ANSWER_TABLE
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE as up
+        JOIN PHASE_ASSIGNMENT_TABLE as pat ON up.userid = pat.user_role_2_id
+        JOIN ANSWER_TABLE as at ON VIDEO_UPLOAD_ANSWER_TABLE.answerid = at.answerid
+        JOIN QUESTION_TABLE as qt ON at.questionid = qt.questionid
+        JOIN PHASE_TABLE as pt ON qt.phaseid = pt.phaseid
+        WHERE up.userid = auth.uid() 
+          AND up.userrole = 2 
+          AND pt.phaseid = pat.phase_id 
+          AND EXISTS (
+              SELECT 1
+              FROM PUBLIC.USER_PROFILES_TABLE as up1
+              WHERE up1.userid = at.applicationid 
+                AND up1.userrole = 1
+                AND pat.user_role_1_id = up1.userid
+          )
+    )
+);
+
+
+-- Policy for ANSWER_TABLE
+CREATE POLICY admin_cmd_answer_table
+ON ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for APPLICATION_TABLE
+CREATE POLICY admin_cmd_application_table
+ON APPLICATION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DATETIME_PICKER_ANSWER_TABLE
+CREATE POLICY admin_cmd_datetime_picker_answer_table
+ON DATETIME_PICKER_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DATETIME_PICKER_QUESTION_TABLE
+CREATE POLICY admin_cmd_datetime_picker_question_table
+ON DATETIME_PICKER_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DATE_PICKER_ANSWER_TABLE
+CREATE POLICY admin_cmd_date_picker_answer_table
+ON DATE_PICKER_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DATE_PICKER_QUESTION_TABLE
+CREATE POLICY admin_cmd_date_picker_question_table
+ON DATE_PICKER_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DROPDOWN_ANSWER_TABLE
+CREATE POLICY admin_cmd_dropdown_answer_table
+ON DROPDOWN_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DROPDOWN_QUESTION_OPTION_TABLE
+CREATE POLICY admin_cmd_dropdown_question_option_table
+ON DROPDOWN_QUESTION_OPTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for DROPDOWN_QUESTION_TABLE
+CREATE POLICY admin_cmd_dropdown_question_table
+ON DROPDOWN_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for IMAGE_UPLOAD_ANSWER_TABLE
+CREATE POLICY admin_cmd_image_upload_answer_table
+ON IMAGE_UPLOAD_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for IMAGE_UPLOAD_QUESTION_TABLE
+CREATE POLICY admin_cmd_image_upload_question_table
+ON IMAGE_UPLOAD_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for LONG_TEXT_ANSWER_TABLE
+CREATE POLICY admin_cmd_long_text_answer_table
+ON LONG_TEXT_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for LONG_TEXT_QUESTION_TABLE
+CREATE POLICY admin_cmd_long_text_question_table
+ON LONG_TEXT_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for MULTIPLE_CHOICE_ANSWER_TABLE
+CREATE POLICY admin_cmd_multiple_choice_answer_table
+ON MULTIPLE_CHOICE_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for MULTIPLE_CHOICE_QUESTION_CHOICE_TABLE
+CREATE POLICY admin_cmd_multiple_choice_question_choice_table
+ON MULTIPLE_CHOICE_QUESTION_CHOICE_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for MULTIPLE_CHOICE_QUESTION_TABLE
+CREATE POLICY admin_cmd_multiple_choice_question_table
+ON MULTIPLE_CHOICE_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for NUMBER_PICKER_ANSWER_TABLE
+CREATE POLICY admin_cmd_number_picker_answer_table
+ON NUMBER_PICKER_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for NUMBER_PICKER_QUESTION_TABLE
+CREATE POLICY admin_cmd_number_picker_question_table
+ON NUMBER_PICKER_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for PDF_UPLOAD_ANSWER_TABLE
+CREATE POLICY admin_cmd_pdf_upload_answer_table
+ON PDF_UPLOAD_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for PDF_UPLOAD_QUESTION_TABLE
+CREATE POLICY admin_cmd_pdf_upload_question_table
+ON PDF_UPLOAD_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for PHASE_TABLE
+CREATE POLICY admin_cmd_phase_table
+ON PHASE_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for QUESTION_TABLE
+CREATE POLICY admin_cmd_question_table
+ON QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for SHORT_TEXT_ANSWER_TABLE
+CREATE POLICY admin_cmd_short_text_answer_table
+ON SHORT_TEXT_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for SHORT_TEXT_QUESTION_TABLE
+CREATE POLICY admin_cmd_short_text_question_table
+ON SHORT_TEXT_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for USER_PROFILES_TABLE
+CREATE POLICY admin_cmd_user_profiles_table
+ON USER_PROFILES_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for USER_ROLES_TABLE
+CREATE POLICY admin_cmd_user_roles_table
+ON USER_ROLES_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for VIDEO_UPLOAD_ANSWER_TABLE
+CREATE POLICY admin_cmd_video_upload_answer_table
+ON VIDEO_UPLOAD_ANSWER_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+
+-- Policy for VIDEO_UPLOAD_QUESTION_TABLE
+CREATE POLICY admin_cmd_video_upload_question_table
+ON VIDEO_UPLOAD_QUESTION_TABLE
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);
+
+
+CREATE POLICY insert_checkbox_answer ON checkbox_answer_table
+FOR INSERT TO authenticated
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = checkbox_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+
+CREATE POLICY select_checkbox_answer ON checkbox_answer_table
+FOR SELECT TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = checkbox_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY update_checkbox_answer ON checkbox_answer_table
+FOR UPDATE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = checkbox_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY delete_checkbox_answer ON checkbox_answer_table
+FOR DELETE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = checkbox_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY select_policy ON CHECKBOX_QUESTION_TABLE
+  FOR SELECT USING (auth.uid() IS NOT NULL);
