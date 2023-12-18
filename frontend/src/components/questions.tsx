@@ -20,8 +20,8 @@ export interface DefaultQuestion {
   questiontext: string;
   questionnote: string;
   sectionid: string | null;
-  preInformationBox: string | null;
-  postInformationBox: string | null;
+  preinformationbox: string | null;
+  postinformationbox: string | null;
 }
 
 export interface Question extends DefaultQuestion {
@@ -69,8 +69,8 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
           }
           return (
             <React.Fragment key={phaseQuestion.questionid}>
-              {phaseQuestion.preInformationBox && (
-                <InformationBox key={`${phaseQuestion.questionid}_pre_infobox`} text={phaseQuestion.preInformationBox} />
+              {phaseQuestion.preinformationbox && (
+                <InformationBox key={`${phaseQuestion.questionid}_pre_infobox`} text={phaseQuestion.preinformationbox} />
               )}
               <QuestionComponent
                 key={phaseQuestion.questionid}
@@ -88,8 +88,8 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
                 }
                 {...phaseQuestion.params}
               />
-              {phaseQuestion.postInformationBox && (
-                <InformationBox key={`${phaseQuestion.questionid}_post_infobox`} text={phaseQuestion.postInformationBox} />
+              {phaseQuestion.postinformationbox && (
+                <InformationBox key={`${phaseQuestion.questionid}_post_infobox`} text={phaseQuestion.postinformationbox} />
               )}
             </React.Fragment>
           );

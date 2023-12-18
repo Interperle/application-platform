@@ -44,9 +44,6 @@ export async function fetchImageUploadAnswer(
     .select("imagename")
     .eq("answerid", answerid)
     .single();
-  if (imageUploadError) {
-    alert(imageUploadError.message);
-  }
   const { data: imageUploadBucketData, error: imageUploadBucketError } =
     await supabase.storage
       .from(bucket_name)
@@ -71,9 +68,6 @@ export async function fetchPdfUploadAnswer(
     .select("pdfname")
     .eq("answerid", answerid)
     .single();
-  if (pdfUploadError) {
-    alert(pdfUploadError.message);
-  }
   const { data: pdfUploadBucketData, error: pdfUploadBucketError } =
     await supabase.storage
       .from(bucket_name)
@@ -118,9 +112,6 @@ export async function fetchVideoUploadAnswer(questionid: string) {
       .select("videoname")
       .eq("answerid", answerid)
       .single();
-    if (videoUploadError) {
-      alert(videoUploadError.message);
-    }
     const { data: videoUploadBucketData, error: videoUploadBucketError } =
       await supabase.storage
         .from(bucket_name)
