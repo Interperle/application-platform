@@ -167,7 +167,6 @@ export async function fetch_question_table(
     console.log("No Data");
     redirect("/404", RedirectType.replace);
   }
-
   const questionTypesData = await fetch_question_type_table(questionData);
   const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice);
   const optionsData = await fetchAdditionalParams(QuestionType.Dropdown);
@@ -304,7 +303,7 @@ export async function fetch_first_phase_over(): Promise<boolean> {
 
   if (phaseError) {
     console.log(
-      "Error: " + JSON.stringify(phaseError, null, 2) + " -> Redirect",
+      "Error Fetch First Phase: " + JSON.stringify(phaseError, null, 2) + " -> Redirect",
     );
     return true;
   }

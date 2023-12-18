@@ -25,7 +25,6 @@ export async function signUpUser(prevState: any, formData: FormData) {
     passwordConfirmation: formData.get("confirm-password"),
     legalConfirmation: formData.get("confirm-legal"),
   });
-
   if (!signUpFormData.success) {
     return { message: "User Registrierung fehlgeschlagen", status: "ERROR" };
   }
@@ -50,17 +49,19 @@ export async function signUpUser(prevState: any, formData: FormData) {
     return { message: `Passwörter stimmen nicht überein!`, status: "ERROR" };
   }
   try {
+    console.log("TEST0")
     const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.data.password,
       options: {
-        data: {},
         emailRedirectTo: `${getURL()}`,
       },
     });
     revalidatePath("/login");
+    console.log("TEST0")
     if (userError) {
+      console.log(JSON.stringify(userError))
       return { message: userError.message, status: "ERROR" };
     }
 
@@ -76,7 +77,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
       await supabaseServiceRole
         .from("user_profiles_table")
         .insert({ userid: userData.user!.id, userrole: 1, isactive: true });
-
+    console.log("TEST")
     if (userProfileError) {
       if (userProfileError.code == "23505") {
         return {
@@ -85,6 +86,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
           status: "SUCCESS",
         };
       }
+      console.log("Userprofile Error")
       return { message: userProfileError.message, status: "ERROR" };
     }
     const sendData = { userid: userData!.user!.id };

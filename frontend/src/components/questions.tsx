@@ -19,7 +19,7 @@ export interface DefaultQuestion {
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
-  section: string | null;
+  sectionid: string | null;
   preInformationBox: string | null;
   postInformationBox: string | null;
 }

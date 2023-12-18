@@ -36,14 +36,13 @@ export default async function Page({
   const isEditable = currentDate >= startDate && currentDate <= endDate;
 
   const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
-
   let phase_sections = [] as SectionData[];
   let mapQuestions = {} as SectionQuestionsMap;
   if (phaseData.sectionsenabled) {
     phase_sections = await fetch_sections_by_phase(phaseData.phaseid);
     mapQuestions = phase_sections.reduce((acc, section) => {
       acc[section.sectionid] = phase_questions.filter(
-        (question) => question.section === section.sectionid,
+        (question) => question.sectionid === section.sectionid,
       );
       return acc;
     }, {} as SectionQuestionsMap);
