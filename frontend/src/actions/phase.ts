@@ -303,7 +303,9 @@ export async function fetch_first_phase_over(): Promise<boolean> {
 
   if (phaseError) {
     console.log(
-      "Error Fetch First Phase: " + JSON.stringify(phaseError, null, 2) + " -> Redirect",
+      "Error Fetch First Phase: " +
+        JSON.stringify(phaseError, null, 2) +
+        " -> Redirect",
     );
     return true;
   }

@@ -29,10 +29,10 @@ export default function SignInForm() {
   return (
     <div>
       {isPopupOpen && (
-          <Popup onClose={togglePopup}>
-            <ForgottenPasswordForm />
-          </Popup>
-        )}
+        <Popup onClose={togglePopup}>
+          <ForgottenPasswordForm />
+        </Popup>
+      )}
       <form action={formAction} className="space-y-4">
         <div>
           <label

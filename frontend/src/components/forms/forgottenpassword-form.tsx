@@ -18,7 +18,6 @@ const initialState: messageType = {
 };
 
 export default function SignUpForm() {
-
   const [state, formAction] = useFormState(sendResetPasswordLink, initialState);
   const [timer, setTimer] = useState(0);
   const [buttonVisible, setButtonVisible] = useState(true);

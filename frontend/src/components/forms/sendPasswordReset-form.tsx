@@ -8,7 +8,6 @@ import { sendResetPasswordLinkFromSettings } from "@/actions/auth";
 
 import { SubmitButton } from "../submitButton";
 
-
 export default function SendPasswordResetForm({ email }: { email: string }) {
   const initialState = {
     email: email,

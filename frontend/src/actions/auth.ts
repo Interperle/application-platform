@@ -49,7 +49,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
     return { message: `Passwörter stimmen nicht überein!`, status: "ERROR" };
   }
   try {
-    console.log("TEST0")
+    console.log("TEST0");
     const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
@@ -59,9 +59,9 @@ export async function signUpUser(prevState: any, formData: FormData) {
       },
     });
     revalidatePath("/login");
-    console.log("TEST0")
+    console.log("TEST0");
     if (userError) {
-      console.log(JSON.stringify(userError))
+      console.log(JSON.stringify(userError));
       return { message: userError.message, status: "ERROR" };
     }
 
@@ -77,7 +77,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
       await supabaseServiceRole
         .from("user_profiles_table")
         .insert({ userid: userData.user!.id, userrole: 1, isactive: true });
-    console.log("TEST")
+    console.log("TEST");
     if (userProfileError) {
       if (userProfileError.code == "23505") {
         return {
@@ -86,7 +86,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
           status: "SUCCESS",
         };
       }
-      console.log("Userprofile Error")
+      console.log("Userprofile Error");
       return { message: userProfileError.message, status: "ERROR" };
     }
     const sendData = { userid: userData!.user!.id };
@@ -197,11 +197,9 @@ export async function sendResetPasswordLink(
         redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
       },
     );
-    console.log(error);
     if (error) {
       return { message: error.message, status: "ERROR" };
     }
-
     revalidatePath("/login");
     return {
       message: `Wenn du einen Account bei uns besitzt wurde dir ein Passwort Zurücksetzen Link gesendet!`,
