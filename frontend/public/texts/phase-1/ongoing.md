@@ -29,4 +29,4 @@ Seid euch bewusst, dass Generation-D eure Bewerbung nicht akzeptieren kann, fall
 
 ### Noch Fragen?
 
-Weitere Details zum Ablauf und der Bewertung könnt ihr auch nochmal in unserem [FAQ](https://generation-d.org/faq/) nachlesen. Sollten danach noch Fragen offen bleiben, meldet euch einfach per Mail an [startup-liaison-office@generation-d.org](mailto:startup-liaison-office@generation-d.org).
+Weitere Details zum Ablauf und der Bewertung könnt ihr auch nochmal in unserem [FAQ](https://generation-d.org/faq/) nachlesen. Sollten danach noch Fragen offen bleiben, meldet euch einfach per Mail an [startups@generation-d.org](mailto:startups@generation-d.org).

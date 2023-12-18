@@ -46,6 +46,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
             await fetchVideoUploadAnswer(questionid);
           const url = URL.createObjectURL(VideoUploadBucketData!);
           setUploadVideo(url);
+          setWasUploaded(true);
         }
         setIsLoading(false);
       } catch (error) {
@@ -133,7 +134,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       iseditable={iseditable}
     >
       <form action={saveVideoUploadAnswerWithId} onSubmit={handleSubmit}>
-        {!uploadUrl ? (
+        <div className={`mt-1 ${uploadUrl && "hidden"}`}>
           <AwaitingChild isLoading={isLoading}>
             <div className="flex items-center justify-center w-full">
               <label
@@ -178,41 +179,44 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
               </label>
             </div>
           </AwaitingChild>
-        ) : (
-          <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ">
-            {iseditable && (
-              <button
-                className="self-end text-red-600"
-                onClick={handleDeleteOnClick}
-              >
-                Löschen
-              </button>
-            )}
-            <video
-              width="100%"
-              height="100%"
-              style={{ border: "none" }}
-              controls
-              className="max-w-xs max-h-96"
+        </div>
+        <div
+          className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
+            !uploadUrl && "hidden"
+          }`}
+        >
+          {iseditable && (
+            <button
+              className="self-end text-red-600"
+              onClick={handleDeleteOnClick}
             >
-              <source src={uploadUrl} type="video/mp4" />
-              Dein Browser supported diese Darstellung leider nicht
-            </video>
-            {!wasUploaded ? (
-              <>
-                <div className="italic">
-                  Hinweis: Der Upload des ausgewählten Videos muss noch
-                  bestätigt werden!
-                </div>
-                <SubmitButton text={"Video hochladen"} expanded={false} />
-              </>
-            ) : (
-              <div className="text-green-600">
-                Der Upload des Videos war erfolgreich!
+              Löschen
+            </button>
+          )}
+          <video
+            width="100%"
+            height="100%"
+            style={{ border: "none" }}
+            controls
+            className="max-w-xs max-h-96"
+          >
+            <source src={uploadUrl} type="video/mp4" />
+            Dein Browser supported diese Darstellung leider nicht
+          </video>
+          {!wasUploaded ? (
+            <>
+              <div className="italic">
+                Hinweis: Der Upload des ausgewählten Videos muss noch bestätigt
+                werden!
               </div>
-            )}
-          </div>
-        )}
+              <SubmitButton text={"Video hochladen"} expanded={false} />
+            </>
+          ) : (
+            <div className="text-green-600">
+              Der Upload des Videos war erfolgreich!
+            </div>
+          )}
+        </div>
       </form>
     </QuestionTypes>
   );

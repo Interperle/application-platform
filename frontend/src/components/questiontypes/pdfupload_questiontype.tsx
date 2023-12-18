@@ -45,6 +45,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
           );
           const url = URL.createObjectURL(pdfUploadBucketData!);
           setUploadPdf(url);
+          setWasUploaded(true);
         }
         setIsLoading(false);
       } catch (error) {
@@ -130,7 +131,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       questionorder={questionorder}
     >
       <form action={savePdfUploadAnswerWithId} onSubmit={handleSubmit}>
-        {!uploadUrl ? (
+        <div className={`mt-1 ${uploadUrl && "hidden"}`}>
           <AwaitingChild isLoading={isLoading}>
             <div className="flex items-center justify-center w-full">
               <label
@@ -175,37 +176,40 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
               </label>
             </div>
           </AwaitingChild>
-        ) : (
-          <div className="mt-4 flex flex-col gap-y-2 max-w-xs max-h-96">
-            {iseditable && (
-              <button
-                className="self-end text-red-600"
-                onClick={handleDeleteOnClick}
-              >
-                Löschen
-              </button>
-            )}
-            <iframe
-              src={uploadUrl}
-              width="100%"
-              height="600px max-w-xs max-h-96 self-center"
-              style={{ border: "none" }}
-            />
-            {!wasUploaded ? (
-              <>
-                <div className="italic">
-                  Hinweis: Der Upload der ausgewählten PDF muss noch bestätigt
-                  werden!
-                </div>
-                <SubmitButton text={"Bild hochladen"} expanded={false} />
-              </>
-            ) : (
-              <div className="text-green-600">
-                Der Upload der PDF war erfolgreich!
+        </div>
+        <div
+          className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
+            !uploadUrl && "hidden"
+          }`}
+        >
+          {iseditable && (
+            <button
+              className="self-end text-red-600"
+              onClick={handleDeleteOnClick}
+            >
+              Löschen
+            </button>
+          )}
+          <iframe
+            src={uploadUrl}
+            width="100%"
+            height="600px max-w-xs max-h-96 self-center"
+            style={{ border: "none" }}
+          />
+          {!wasUploaded ? (
+            <>
+              <div className="italic">
+                Hinweis: Der Upload der ausgewählten PDF muss noch bestätigt
+                werden!
               </div>
-            )}
-          </div>
-        )}
+              <SubmitButton text={"Bild hochladen"} expanded={false} />
+            </>
+          ) : (
+            <div className="text-green-600">
+              Der Upload der PDF war erfolgreich!
+            </div>
+          )}
+        </div>
       </form>
     </QuestionTypes>
   );
