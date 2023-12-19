@@ -33,7 +33,7 @@ export function SectionView({
 
   // Helper function to safely get the URL parameter
   const getUrlIndex = (): string | null => {
-    return searchParams.get('selectedSection');
+    return searchParams.get('sec');
   };
 
   // Initial state setup with URL parameter
@@ -48,7 +48,7 @@ export function SectionView({
     const index = sortedSections.findIndex(section => section.sectionid === sectionId);
     if (index !== -1) {
       setSelectedSection(sectionId);
-      const newUrl = `${window.location.pathname}?selectedSection=${index + 1}`;
+      const newUrl = `${window.location.pathname}?sec=${index + 1}`;
       history.pushState(null, '', newUrl);
     }
   };
