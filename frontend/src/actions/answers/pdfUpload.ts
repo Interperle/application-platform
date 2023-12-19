@@ -3,21 +3,26 @@
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
+import { storageSaveName } from "@/utils/helpers";
 
 export async function savePdfUploadAnswer(
   questionid: string,
   formData: FormData,
 ) {
   const file = formData.get(questionid) as File;
+  const uploadFile = new File([file], storageSaveName(file.name), {
+    type: file.type,
+    lastModified: file.lastModified,
+  });
   const bucket_name = "pdf-" + questionid;
-  if (file) {
+  if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
       const insertPdfUploadAnswerResponse = await supabase
         .from("pdf_upload_answer_table")
         .insert({
           answerid: answerid,
-          pdfname: file.name,
+          pdfname: uploadFile.name,
         });
       if (insertPdfUploadAnswerResponse) {
         console.log("Inserted Pdf");
@@ -26,8 +31,8 @@ export async function savePdfUploadAnswer(
       const createBucketEntry = await supabase.storage
         .from(bucket_name)
         .upload(
-          `${(await supabase.auth.getUser()).data.user!.id}_${file.name}`,
-          file,
+          `${(await supabase.auth.getUser()).data.user!.id}_${uploadFile.name}`,
+          uploadFile,
         );
       console.log(createBucketEntry);
     } else if (reqtype == "updated") {
@@ -38,7 +43,7 @@ export async function savePdfUploadAnswer(
         .single();
       const updatePdfUploadAnswerResponse = await supabase
         .from("pdf_upload_answer_table")
-        .update({ pdfname: file.name })
+        .update({ pdfname: uploadFile.name })
         .eq("answerid", answerid);
       if (updatePdfUploadAnswerResponse) {
         console.log("Updated Pdf");
@@ -50,7 +55,7 @@ export async function savePdfUploadAnswer(
           `${
             (await supabase.auth.getUser()).data.user!.id
           }_${getOldPdfUploadAnswerResponse.data?.pdfname}`,
-          file,
+          uploadFile,
         );
       console.log(createBucketEntry);
     }

@@ -3,21 +3,27 @@
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
+import { storageSaveName } from "@/utils/helpers";
 
 export async function saveVideoUploadAnswer(
   questionid: string,
   formData: FormData,
 ) {
+  
   const file = formData.get(questionid) as File;
+  const uploadFile = new File([file], storageSaveName(file.name), {
+    type: file.type,
+    lastModified: file.lastModified,
+  });
   const bucket_name = "video-" + questionid;
-  if (file) {
+  if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
       const insertVideoUploadAnswerResponse = await supabase
         .from("video_upload_answer_table")
         .insert({
           answerid: answerid,
-          videoname: file.name,
+          videoname: uploadFile.name,
         });
       if (insertVideoUploadAnswerResponse) {
         console.log("Inserted Video");
@@ -26,8 +32,8 @@ export async function saveVideoUploadAnswer(
       const createBucketEntry = await supabase.storage
         .from(bucket_name)
         .upload(
-          `${(await supabase.auth.getUser()).data.user!.id}_${file.name}`,
-          file,
+          `${(await supabase.auth.getUser()).data.user!.id}_${uploadFile.name}`,
+          uploadFile,
         );
       console.log(createBucketEntry);
     } else if (reqtype == "updated") {
@@ -38,10 +44,10 @@ export async function saveVideoUploadAnswer(
         .single();
       const updateVideoUploadAnswerResponse = await supabase
         .from("video_upload_answer_table")
-        .update({ videoname: file.name })
+        .update({ videoname: uploadFile.name })
         .eq("answerid", answerid);
       if (updateVideoUploadAnswerResponse) {
-        console.log("Updated Video: " + file.name);
+        console.log("Updated Video: " + uploadFile.name);
         console.log(updateVideoUploadAnswerResponse);
       }
       const createBucketEntry = await supabase.storage
@@ -50,7 +56,7 @@ export async function saveVideoUploadAnswer(
           `${
             (await supabase.auth.getUser()).data.user!.id
           }_${getOldVideoUploadAnswerResponse.data?.videoname}`,
-          file,
+          uploadFile,
         );
       console.log(createBucketEntry);
     }

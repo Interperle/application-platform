@@ -3,6 +3,7 @@
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
+import { storageSaveName } from "@/utils/helpers";
 
 export async function saveImageUploadAnswer(
   questionid: string,
@@ -10,15 +11,19 @@ export async function saveImageUploadAnswer(
 ) {
   console.log("UPLOADING...")
   const file = formData.get(questionid) as File;
+  const uploadFile = new File([file], storageSaveName(file.name), {
+    type: file.type,
+    lastModified: file.lastModified,
+  });
   const bucket_name = "image-" + questionid;
-  if (file) {
+  if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
       const insertImageUploadAnswerResponse = await supabase
         .from("image_upload_answer_table")
         .insert({
           answerid: answerid,
-          imagename: file.name,
+          imagename: uploadFile.name,
         });
       if (insertImageUploadAnswerResponse) {
         console.log("Inserted Image");
@@ -27,8 +32,8 @@ export async function saveImageUploadAnswer(
       const createBucketEntry = await supabase.storage
         .from(bucket_name)
         .upload(
-          `${(await supabase.auth.getUser()).data.user!.id}_${file.name}`,
-          file,
+          `${(await supabase.auth.getUser()).data.user!.id}_${uploadFile.name}`,
+          uploadFile,
         );
       console.log(createBucketEntry);
     } else if (reqtype == "updated") {
@@ -39,7 +44,7 @@ export async function saveImageUploadAnswer(
         .single();
       const updateImageUploadAnswerResponse = await supabase
         .from("image_upload_answer_table")
-        .update({ imagename: file.name })
+        .update({ imagename: uploadFile.name })
         .eq("answerid", answerid);
       if (updateImageUploadAnswerResponse) {
         console.log("Updated Image");
@@ -51,7 +56,7 @@ export async function saveImageUploadAnswer(
           `${
             (await supabase.auth.getUser()).data.user!.id
           }_${getOldImageUploadAnswerResponse.data?.imagename}`,
-          file,
+          uploadFile,
         );
       console.log(createBucketEntry);
     }
