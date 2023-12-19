@@ -58,7 +58,7 @@ export default async function Page({
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
         <OverviewButton />
-        <div>
+        <div className="w-full">
           <h2 className="p-4 rounded text-secondary">
             <b>
               Bewerbungs-Phase {phaseData.phaseorder + 1}:{" "}
