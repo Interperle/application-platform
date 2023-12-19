@@ -23,17 +23,18 @@ type IdType = {
 
 export async function fetch_question_type_table(questions: DefaultQuestion[]) {
   const result: Record<QuestionType, any> = {
-    [QuestionType.ShortText]: {},
-    [QuestionType.LongText]: {},
-    [QuestionType.NumberPicker]: {},
-    [QuestionType.DatetimePicker]: {},
-    [QuestionType.DatePicker]: {},
-    [QuestionType.ImageUpload]: {},
-    [QuestionType.VideoUpload]: {},
-    [QuestionType.PDFUpload]: {},
-    [QuestionType.MultipleChoice]: {},
-    [QuestionType.Dropdown]: {},
-    [QuestionType.CheckBox]: {},
+    [QuestionType.ShortText]: [{}],
+    [QuestionType.LongText]: [{}],
+    [QuestionType.NumberPicker]: [{}],
+    [QuestionType.DatetimePicker]: [{}],
+    [QuestionType.DatePicker]: [{}],
+    [QuestionType.ImageUpload]: [{}],
+    [QuestionType.VideoUpload]: [{}],
+    [QuestionType.PDFUpload]: [{}],
+    [QuestionType.MultipleChoice]: [{}],
+    [QuestionType.Dropdown]: [{}],
+    [QuestionType.CheckBox]: [{}],
+    [QuestionType.Conditional]: [{}],
   };
   for (const questionType of Object.values(QuestionType)) {
     const tableName =
