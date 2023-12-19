@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Answer } from "@/actions/answers/answers";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
 
 import Questionnaire, { Question } from "./questions";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export type SectionQuestionsMap = {
   [key: string]: Question[];
@@ -23,15 +24,50 @@ export function SectionView({
   phaseSections: SectionData[];
   iseditable: boolean;
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const sortedSections = phaseSections.sort(
     (a, b) => a.sectionorder - b.sectionorder,
   );
-  const [selectedSection, setSelectedSection] = useState(() => {
-    return sortedSections.length > 0 ? sortedSections[0].sectionid : "";
+
+  // Helper function to safely get the URL parameter
+  const getUrlIndex = (): string | null => {
+    return searchParams.get('selectedSection');
+  };
+
+  // Initial state setup with URL parameter
+  const [selectedSection, setSelectedSection] = useState<string>(() => {
+    const urlIndex = parseInt(getUrlIndex() ?? '0', 10) - 1;
+    const validIndex = urlIndex >= 0 && urlIndex < sortedSections.length;
+    return validIndex ? sortedSections[urlIndex].sectionid : sortedSections[0]?.sectionid ?? '';
   });
-  const selectedSectionDescription =
-    sortedSections.find((section) => section.sectionid === selectedSection)
-      ?.sectiondescription || "";
+
+  // Update URL when the section changes
+  const setSelectedSectionWithUrl = (sectionId: string) => {
+    const index = sortedSections.findIndex(section => section.sectionid === sectionId);
+    if (index !== -1) {
+      setSelectedSection(sectionId);
+      const newUrl = `${window.location.pathname}?selectedSection=${index + 1}`;
+      history.pushState(null, '', newUrl);
+    }
+  };
+
+  // Handle URL changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const urlIndex = parseInt(getUrlIndex() ?? '0', 10) - 1;
+      if (urlIndex >= 0 && urlIndex < sortedSections.length) {
+        setSelectedSectionWithUrl(sortedSections[urlIndex].sectionid);
+      }
+    };
+
+    window.addEventListener('popstate', handleRouteChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
 
   const moveToNextSection = () => {
     const currentIndex = sortedSections.findIndex(
@@ -39,7 +75,7 @@ export function SectionView({
     );
     const nextIndex = currentIndex + 1;
     if (nextIndex < sortedSections.length) {
-      setSelectedSection(sortedSections[nextIndex].sectionid);
+      setSelectedSectionWithUrl(sortedSections[nextIndex].sectionid);
     }
   };
 
@@ -49,7 +85,7 @@ export function SectionView({
     );
     const prevIndex = currentIndex - 1;
     if (prevIndex >= 0) {
-      setSelectedSection(sortedSections[prevIndex].sectionid);
+      setSelectedSectionWithUrl(sortedSections[prevIndex].sectionid);
     }
   };
 
@@ -76,7 +112,7 @@ export function SectionView({
                   ? "text-secondary border-b-2 border-secondary"
                   : "text-gray-500"
               }`}
-              onClick={() => setSelectedSection(phaseSection.sectionid)}
+              onClick={() => setSelectedSectionWithUrl(phaseSection.sectionid)}
             >
               {phaseSection.sectionname}
             </button>
