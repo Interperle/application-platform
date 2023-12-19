@@ -166,4 +166,13 @@ export function storageSaveName(
   // see Documentation: https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
   return name.replace(/[^0-9a-zA-Z!\-_.\*'()]/g, '_');
 }
-  
+
+export function numberToLetter(num: number): string {
+  let result = "";
+  while (num > 0) {
+      num--; // Adjusting for 0-indexing
+      result = String.fromCharCode(97 + num % 26) + result;
+      num = Math.floor(num / 26);
+  }
+  return result;
+}

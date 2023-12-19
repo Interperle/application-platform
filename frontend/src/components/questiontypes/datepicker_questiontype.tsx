@@ -27,6 +27,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   maxdate,
   answerid,
   selectedSection,
+  questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -88,6 +89,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
         <div className="mt-1">

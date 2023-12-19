@@ -28,6 +28,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   minnumber,
   maxnumber,
   selectedSection,
+  questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -114,6 +115,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
         <div className="relative flex items-center max-w-[8rem]">

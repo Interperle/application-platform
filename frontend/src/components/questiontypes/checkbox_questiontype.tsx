@@ -23,6 +23,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
   iseditable,
   answerid,
   selectedSection,
+  questionsuborder,
 }) => {
   const [answer, setAnswer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,7 +61,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
           className="block font-semibold text-secondary py-3"
         >
           <h4 className="py-1 text-base">
-            {questionorder}.{" "}
+            {questionsuborder ? `${questionorder}${questionsuborder})` : `${questionorder}. `}
             <input
               id={questionid}
               name={questionid}

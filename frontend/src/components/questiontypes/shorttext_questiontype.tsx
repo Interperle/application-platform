@@ -30,6 +30,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   formattingregex,
   formattingdescription,
   selectedSection,
+  questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +86,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
         <input

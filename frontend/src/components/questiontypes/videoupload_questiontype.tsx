@@ -28,6 +28,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   answerid,
   maxfilesizeinmb,
   selectedSection,
+  questionsuborder,
 }) => {
   const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(
     null,
@@ -135,6 +136,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <form action={saveVideoUploadAnswerWithId} onSubmit={handleSubmit}>
         <div className={`mt-1 ${uploadUrl && "hidden"}`}>

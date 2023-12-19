@@ -1894,3 +1894,29 @@ CREATE POLICY update_buckets_for_owner ON storage.buckets
 
 CREATE POLICY delete_buckets_for_owner ON storage.buckets
     FOR DELETE USING (auth.uid() = owner);
+
+CREATE POLICY select_policy ON conditional_question_choice_table
+  FOR SELECT USING (auth.uid() IS NOT NULL);
+
+-- Policy for MULTIPLE_CHOICE_QUESTION_CHOICE_TABLE
+CREATE POLICY select_reviewer_conditional_question_choice_table
+ON conditional_question_choice_table
+FOR SELECT
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 2
+    )
+);
+
+CREATE POLICY conditional_question_choice_table
+ON conditional_question_choice_table
+FOR ALL
+USING (
+    EXISTS (
+        SELECT 1
+        FROM PUBLIC.USER_PROFILES_TABLE
+        WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
+    )
+);

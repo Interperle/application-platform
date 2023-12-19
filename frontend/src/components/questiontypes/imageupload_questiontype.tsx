@@ -30,6 +30,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   maxfilesizeinmb,
   answerid,
   selectedSection,
+  questionsuborder,
 }) => {
   const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
     null,
@@ -136,6 +137,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <form action={saveImageUploadAnswerWithId} onSubmit={handleSubmit}>
         <div className={`mt-1 ${uploadUrl && "hidden"}`}>

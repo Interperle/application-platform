@@ -32,6 +32,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   answerid,
   options,
   selectedSection,
+  questionsuborder,
 }) => {
   const [singleAnswer, setSingleAnswer] = useState("");
   const [multiAnswer, setMultiAnswer] = useState<string[]>([]);
@@ -102,6 +103,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
         {maxanswers == 1 ? (

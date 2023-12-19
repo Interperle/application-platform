@@ -34,6 +34,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   maxanswers,
   userinput,
   selectedSection,
+  questionsuborder,
 }) => {
   const [selectedChoice, setSelectedChoice] = useState("");
   const [selectedChoices, setSelectedChoices] = useState<string[]>([]);
@@ -112,6 +113,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
         <div role="group" aria-labelledby={questionid} className="mt-2">

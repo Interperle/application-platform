@@ -26,6 +26,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   answerid,
   maxtextlength,
   selectedSection,
+  questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -62,6 +63,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
       questionnote={questionnote}
       questionorder={questionorder}
       iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
         <textarea

@@ -70,7 +70,7 @@ def process_question(question, phase_id, phase_sections, supabase, depends_on=No
             data_conditional_choice_table = create_data_conditional_choice_table(question_id, answer["value"])
             supabase.table("conditional_question_choice_table").insert(data_conditional_choice_table).execute()
             process_nested_questions(answer['questions'], phase_id, phase_sections, supabase,
-                                     response_question_table.data[0]['questionid'])
+                                     response_question_table.data[0]['choiceid'])
 
 
 def process_config():

@@ -9,6 +9,7 @@ export interface DefaultQuestionTypeProps {
   questionorder: number;
   iseditable: boolean;
   selectedSection?: string | null;
+  questionsuborder?: string;
 }
 
 interface QuestionTypesProps extends DefaultQuestionTypeProps {
@@ -21,10 +22,10 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
   questiontext,
   questionnote,
   questionorder,
+  questionsuborder,
   children,
 }) => {
   console.log("Render Question"); // Keep to ensure it's rerendered
-
   return (
     <div className="mb-4">
       <label
@@ -32,7 +33,7 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
         className="block font-semibold text-secondary py-3"
       >
         <h4 className="py-1 text-base">
-          {questionorder}.{" "}
+          {questionsuborder ? `${questionorder} ${questionsuborder}) ` : `${questionorder}. `}
           <span
             className="break-after-avoid"
             dangerouslySetInnerHTML={{ __html: questiontext }}

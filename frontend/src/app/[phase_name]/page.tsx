@@ -40,11 +40,11 @@ export default async function Page({
   let mapQuestions = {} as SectionQuestionsMap;
   if (phaseData.sectionsenabled) {
     phase_sections = await fetch_sections_by_phase(phaseData.phaseid);
-    mapQuestions = phase_sections.reduce((acc, section) => {
-      acc[section.sectionid] = phase_questions.filter(
+    mapQuestions = phase_sections.reduce((map, section) => {
+      map[section.sectionid] = phase_questions.filter(
         (question) => question.sectionid === section.sectionid,
       );
-      return acc;
+      return map;
     }, {} as SectionQuestionsMap);
   }
 

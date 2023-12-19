@@ -85,6 +85,8 @@ export async function fetchAdditionalParams(
     table_name = "multiple_choice_question_choice_table";
   } else if (questiontype == QuestionType.Dropdown) {
     table_name = "dropdown_question_option_table";
+  } else if (questiontype == QuestionType.Conditional) {
+    table_name = "conditional_question_choice_table";
   } else {
     console.error("Not possible for others");
   }
@@ -105,6 +107,7 @@ export async function fetchAdditionalParams(
       choicetext?: string;
       optionid?: string;
       optiontext?: string;
+      choicevalue?: string;
     }>
   > = {};
 
@@ -122,7 +125,12 @@ export async function fetchAdditionalParams(
         optionid: param.optionid,
         optiontext: param.optiontext,
       });
-    }
+    } else if (questiontype == QuestionType.Conditional) {
+      paramsDict[param.questionid].push({
+        choiceid: param.choiceid,
+        choicevalue: param.choicevalue,
+      });
+    } 
   });
   return paramsDict;
 }
@@ -132,6 +140,7 @@ async function append_params(
   question: DefaultQuestion,
   choicesData: Record<string, string[]>,
   optionsData: Record<string, string[]>,
+  conditionalChoicesData: Record<string, string[]>,
 ) {
   const question_type_questions =
     question_types_questions[question.questiontype];
@@ -144,6 +153,8 @@ async function append_params(
     rest["choices"] = choicesData[question.questionid];
   } else if (question.questiontype === QuestionType.Dropdown) {
     rest["options"] = optionsData[question.questionid];
+  } else if (question.questiontype === QuestionType.Conditional) {
+    rest["choices"] = conditionalChoicesData[question.questionid];
   }
   return {
     ...question,
@@ -171,6 +182,8 @@ export async function fetch_question_table(
   const questionTypesData = await fetch_question_type_table(questionData);
   const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice);
   const optionsData = await fetchAdditionalParams(QuestionType.Dropdown);
+
+  const conditionalChoicesData = await fetchAdditionalParams(QuestionType.Conditional)
   const combinedQuestions = await questionData.map(
     async (question: DefaultQuestion) => {
       return await append_params(
@@ -178,11 +191,28 @@ export async function fetch_question_table(
         question,
         choicesData,
         optionsData,
+        conditionalChoicesData,
       );
     },
   );
-
-  return await Promise.all(combinedQuestions);
+  const awaitedQuestions = await Promise.all(combinedQuestions)
+  const standaloneQuestions = awaitedQuestions.filter((q: DefaultQuestion) => q.depends_on == null)
+  const dependingQuestions = awaitedQuestions.filter((q: DefaultQuestion) => q.depends_on != null)
+  const finishedQuestions = standaloneQuestions.map(
+    (question: Question) => {
+      if (question.questiontype != QuestionType.Conditional){
+        return question
+      }
+      question.params.choices.map(
+        (choice: Record<string, any>) => {
+          choice["questions"] = dependingQuestions.filter((q: Question) => q.depends_on == choice.choiceid)
+          return choice
+        }
+      )
+      return question
+    },
+  );
+  return finishedQuestions;
 }
 
 export async function fetch_phase_by_name(

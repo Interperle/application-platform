@@ -15,6 +15,7 @@ export interface DefaultQuestion {
   questionid: string;
   questiontype: QuestionType;
   questionorder: number;
+  questionsuborder?: string;
   phaseid: string;
   mandatory: boolean;
   questiontext: string;
@@ -23,6 +24,7 @@ export interface DefaultQuestion {
   preinformationbox: string | null;
   postinformationbox: string | null;
   selectedSection: string | null;
+  depends_on: string | null;
 }
 
 export interface Question extends DefaultQuestion {
@@ -93,6 +95,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
                     (answer) => answer.questionid == phaseQuestion.questionid,
                   )?.answerid
                 }
+                phaseAnswers={phaseAnswers}
                 {...phaseQuestion.params}
               />
               {phaseQuestion.postinformationbox && (

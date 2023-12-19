@@ -28,6 +28,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   answerid,
   maxfilesizeinmb,
   selectedSection,
+  questionsuborder,
 }) => {
   const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid);
   const [uploadUrl, setUploadPdf] = useState("");
@@ -131,6 +132,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       questiontext={questiontext}
       questionnote={questionnote}
       questionorder={questionorder}
+      questionsuborder={questionsuborder}
     >
       <form action={savePdfUploadAnswerWithId} onSubmit={handleSubmit}>
         <div className={`mt-1 ${uploadUrl && "hidden"}`}>
