@@ -158,3 +158,12 @@ export function checkRegex(
 ): boolean {
   return new RegExp(formattingregex).test(texttocheck);
 }
+
+
+export function storageSaveName(
+  name: string
+): string {
+  // see Documentation: https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
+  return name.replace(/[^0-9a-zA-Z!\-_.\*'()]/g, '_');
+}
+  
