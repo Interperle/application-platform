@@ -8,6 +8,7 @@ export async function saveImageUploadAnswer(
   questionid: string,
   formData: FormData,
 ) {
+  console.log("UPLOADING...")
   const file = formData.get(questionid) as File;
   const bucket_name = "image-" + questionid;
   if (file) {

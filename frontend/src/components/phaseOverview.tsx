@@ -87,11 +87,12 @@ const PhaseOverview: React.FC<{
           )}
         </div>
         {phaseStatus == "UPCOMING" ? (
-          <button className="rounded px-1 py-2 text-[#B8B8B8] max-h-14 bg-[#4D4D4D] cursor-default">
+          <button type="button" className="rounded px-1 py-2 text-[#B8B8B8] max-h-14 bg-[#4D4D4D] cursor-default">
             Phase bevorstehend
           </button>
         ) : phaseStatus == "ENDED" ? (
           <button
+            type="button"
             aria-disabled={true}
             className="apl-button-fixed-short"
             onClick={() => handleRedirect()}
@@ -100,6 +101,7 @@ const PhaseOverview: React.FC<{
           </button>
         ) : (
           <button
+            type="button"
             aria-disabled={true}
             className="apl-button-fixed-short"
             onClick={() => handleRedirect()}

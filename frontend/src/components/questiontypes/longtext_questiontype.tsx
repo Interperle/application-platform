@@ -25,9 +25,11 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   iseditable,
   answerid,
   maxtextlength,
+  selectedSection,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render Longtext"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
@@ -42,7 +44,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!iseditable) {

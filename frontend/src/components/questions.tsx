@@ -22,6 +22,7 @@ export interface DefaultQuestion {
   sectionid: string | null;
   preinformationbox: string | null;
   postinformationbox: string | null;
+  selectedSection: string | null;
 }
 
 export interface Question extends DefaultQuestion {
@@ -33,6 +34,7 @@ interface QuestionnaireProps {
   phaseQuestions: Question[];
   phaseAnswers: Answer[];
   iseditable: boolean;
+  selectedSection: string | null;
 }
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({
@@ -40,6 +42,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
   phaseQuestions,
   phaseAnswers,
   iseditable,
+  selectedSection,
 }) => {
   const dispatch = useAppDispatch();
   // need a copy, so I can modify it beneath
@@ -84,6 +87,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
                 questionnote={phaseQuestion.questionnote}
                 questionorder={phaseQuestion.questionorder}
                 iseditable={iseditable}
+                selectedSection={selectedSection}
                 answerid={
                   phaseAnswers.find(
                     (answer) => answer.questionid == phaseQuestion.questionid,

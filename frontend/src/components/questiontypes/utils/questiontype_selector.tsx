@@ -34,6 +34,7 @@ import DropdownQuestionType, {
 import MultipleChoiceQuestionType, {
   MultipleChoiceQuestionTypeProps,
 } from "../multiplechoice_questiontype";
+import ConditionalQuestionType, { ConditionalQuestionTypeProps } from "../conditional_questiontype";
 
 export enum QuestionType {
   ShortText = "shortText",
@@ -47,6 +48,7 @@ export enum QuestionType {
   MultipleChoice = "multipleChoice",
   Dropdown = "dropdown",
   CheckBox = "checkBox",
+  Conditional = "conditional",
 }
 
 export enum QuestionTypeTable {
@@ -61,6 +63,7 @@ export enum QuestionTypeTable {
   MultipleChoiceQuestionTable = "multiple_choice_question_table",
   DropdownQuestionTable = "dropdown_question_table",
   CheckBoxQuestionTable = "checkbox_question_table",
+  ConditionalQuestionTable = "conditional_question_table"
 }
 
 type QuestionTypeSelectorProps = {
@@ -75,6 +78,7 @@ type QuestionTypeSelectorProps = {
   multipleChoice: FC<MultipleChoiceQuestionTypeProps>;
   dropdown: FC<DropdownQuestionTypeProps>;
   checkBox: FC<CheckBoxQuestionTypeProps>;
+  conditional: FC<ConditionalQuestionTypeProps>;
 };
 
 const QuestionTypeSelector: QuestionTypeSelectorProps = {
@@ -89,6 +93,7 @@ const QuestionTypeSelector: QuestionTypeSelectorProps = {
   multipleChoice: MultipleChoiceQuestionType,
   dropdown: DropdownQuestionType,
   checkBox: CheckBoxQuestionType,
+  conditional: ConditionalQuestionType,
 };
 
 const getQuestionComponent = (

@@ -38,6 +38,7 @@ const Apl_Header: React.FC = () => {
       </div>
       <div className="md:hidden">
         <button
+          type="button"
           onClick={() => dispatch(toggle())}
           className="p-2 focus:outline-none focus:shadow-outline"
         >

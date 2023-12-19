@@ -27,11 +27,13 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   iseditable,
   answerid,
   maxfilesizeinmb,
+  selectedSection,
 }) => {
   const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid);
   const [uploadUrl, setUploadPdf] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
+  console.log("Render PDF Upload"); // Keep to ensure it's rerendered
 
   const validImgTypes = ["application/pdf"];
 
@@ -53,7 +55,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   function set_pdf_for_upload(file: File) {
     if (!iseditable) {
@@ -184,7 +186,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
         >
           {iseditable && (
             <button
-              className="self-end text-red-600"
+              type="button"
+              className="self-end text-red-600 mb-1"
               onClick={handleDeleteOnClick}
             >
               Löschen

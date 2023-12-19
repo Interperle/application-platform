@@ -94,6 +94,7 @@ export default async function Page({
                 phaseQuestions={phase_questions}
                 phaseAnswers={phase_answers}
                 iseditable={isEditable}
+                selectedSection={null}
               />
             )}
           </div>

@@ -8,6 +8,7 @@ export interface DefaultQuestionTypeProps {
   questionnote: string;
   questionorder: number;
   iseditable: boolean;
+  selectedSection?: string | null;
 }
 
 interface QuestionTypesProps extends DefaultQuestionTypeProps {
@@ -22,6 +23,8 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
   questionorder,
   children,
 }) => {
+  console.log("Render Question"); // Keep to ensure it's rerendered
+
   return (
     <div className="mb-4">
       <label

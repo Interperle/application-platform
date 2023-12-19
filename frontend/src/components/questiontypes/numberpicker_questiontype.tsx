@@ -27,9 +27,11 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   answerid,
   minnumber,
   maxnumber,
+  selectedSection,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render Numberpicker"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
@@ -44,7 +46,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {

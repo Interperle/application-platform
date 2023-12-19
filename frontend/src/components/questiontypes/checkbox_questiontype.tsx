@@ -22,9 +22,11 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
   questionorder,
   iseditable,
   answerid,
+  selectedSection,
 }) => {
   const [answer, setAnswer] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render CheckBox"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
@@ -40,7 +42,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
     }
 
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   const handleChange = () => {
     if (!iseditable) {

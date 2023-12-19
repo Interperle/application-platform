@@ -29,9 +29,11 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   maxtextlength,
   formattingregex,
   formattingdescription,
+  selectedSection,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render ShortText"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
@@ -47,7 +49,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
     }
 
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
@@ -75,6 +77,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
 
   return (
     <QuestionTypes
+      key={selectedSection}
       phasename={phasename}
       questionid={questionid}
       mandatory={mandatory}

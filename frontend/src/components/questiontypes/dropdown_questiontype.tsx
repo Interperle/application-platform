@@ -31,10 +31,12 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   userinput,
   answerid,
   options,
+  selectedSection,
 }) => {
   const [singleAnswer, setSingleAnswer] = useState("");
   const [multiAnswer, setMultiAnswer] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render Dropdown"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
@@ -53,7 +55,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, maxanswers]);
+  }, [questionid, answerid, maxanswers, selectedSection]);
 
   const handleSingleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (!iseditable) {

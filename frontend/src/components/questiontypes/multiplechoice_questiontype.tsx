@@ -33,10 +33,12 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   minanswers,
   maxanswers,
   userinput,
+  selectedSection,
 }) => {
   const [selectedChoice, setSelectedChoice] = useState("");
   const [selectedChoices, setSelectedChoices] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render MultipleChoice"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
@@ -55,7 +57,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, maxanswers]);
+  }, [questionid, answerid, maxanswers, selectedSection]);
 
   const handleSingleChange = (choice: ChoiceProps) => {
     if (!iseditable) {

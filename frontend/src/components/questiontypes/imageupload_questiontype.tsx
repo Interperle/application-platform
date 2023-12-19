@@ -29,6 +29,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   iseditable,
   maxfilesizeinmb,
   answerid,
+  selectedSection,
 }) => {
   const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
     null,
@@ -37,6 +38,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   const [uploadUrl, setUploadImage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
+  console.log("Render Image Upload"); // Keep to ensure it's rerendered
 
   const validImgTypes = ["image/png", "image/jpeg"];
   useEffect(() => {
@@ -57,7 +59,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   function set_image_for_upload(file: File) {
     if (!iseditable) {
@@ -93,7 +95,9 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
+    alert("Delete...")
     deleteImageUploadAnswer(questionid, answerid || "");
+    alert("Deleted")
     setUploadImage("");
     setWasUploaded(false);
   };
@@ -189,6 +193,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
         >
           {iseditable && (
             <button
+              type="button"
               className="self-end text-red-600"
               onClick={handleDeleteOnClick}
             >

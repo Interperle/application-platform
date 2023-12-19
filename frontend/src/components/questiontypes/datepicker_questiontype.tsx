@@ -26,9 +26,12 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   mindate,
   maxdate,
   answerid,
+  selectedSection,
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  console.log("Render Datepicker"); // Keep to ensure it's rerendered
+
   useEffect(() => {
     async function loadAnswer() {
       try {
@@ -42,7 +45,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {

@@ -27,6 +27,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   iseditable,
   answerid,
   maxfilesizeinmb,
+  selectedSection,
 }) => {
   const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(
     null,
@@ -35,6 +36,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   const [uploadUrl, setUploadVideo] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
+  console.log("Render Video Upload"); // Keep to ensure it's rerendered
 
   const validImgTypes = ["video/mp4"];
 
@@ -54,7 +56,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, answerid, selectedSection]);
 
   function set_video_for_upload(file: File) {
     if (!iseditable) {
@@ -187,6 +189,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
         >
           {iseditable && (
             <button
+              type="button"
               className="self-end text-red-600"
               onClick={handleDeleteOnClick}
             >

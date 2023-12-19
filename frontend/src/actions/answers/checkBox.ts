@@ -21,14 +21,14 @@ export async function saveCheckBoxAnswer(checked: boolean, questionid: string) {
         console.log(insertCheckBoxAnswerResponse);
       }
     } else if (reqtype == "updated") {
-      const updateMultipleChoiceAnswerResponse = await supabase
+      const updateCheckboxAnswerResponse = await supabase
         .from("checkbox_answer_table")
         .update({
           checked: checked,
         })
         .eq("answerid", answerid);
-      if (updateMultipleChoiceAnswerResponse) {
-        console.log(updateMultipleChoiceAnswerResponse);
+      if (updateCheckboxAnswerResponse) {
+        console.log(updateCheckboxAnswerResponse);
       }
     }
   }
@@ -36,11 +36,11 @@ export async function saveCheckBoxAnswer(checked: boolean, questionid: string) {
 
 export async function fetchCheckBoxAnswer(answerid: string) {
   const supabase = initSupabaseActions();
-  const { data: multipleChoiceData, error: multipleChoiceError } =
+  const { data: multipleCheckBoxData, error: multipleCheckBoxError } =
     await supabase
       .from("checkbox_answer_table")
       .select("checked")
       .eq("answerid", answerid)
       .single();
-  return multipleChoiceData!.checked || false;
+  return multipleCheckBoxData!.checked || false;
 }

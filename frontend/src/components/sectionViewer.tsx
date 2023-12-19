@@ -69,6 +69,7 @@ export function SectionView({
         {sortedSections.map((phaseSection) => {
           return (
             <button
+              type="button"
               key={phaseSection.sectionid}
               className={`flex-1 py-2 px-4 ${
                 selectedSection === phaseSection.sectionid
@@ -82,37 +83,52 @@ export function SectionView({
           );
         })}
       </ul>
-      <div className="p-4 mt-4">
-        <div>{selectedSectionDescription}</div>
-        <Questionnaire
-          phaseData={phaseData}
-          phaseQuestions={mapQuestions[selectedSection]}
-          phaseAnswers={phaseAnswers}
-          iseditable={iseditable}
-        />
-        <div className="flex justify-between mt-4">
-          {isNotFirstSection ? (
-            <button
-              onClick={moveToPreviousSection}
-              className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
-            >
-              Zurück
-            </button>
-          ) : (
-            <div className="py-2 px-4"></div>
-          )}
-          {isNotLastSection ? (
-            <button
-              onClick={moveToNextSection}
-              className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
-            >
-              Weiter
-            </button>
-          ) : (
-            <div className="py-2 px-4"></div>
-          )}
-        </div>
-      </div>
+      {sortedSections.map((phaseSection) => {
+        const isVisible = selectedSection === phaseSection.sectionid;
+        return (
+          <div
+            key={phaseSection.sectionid}
+            className={`p-4 mt-4 ${isVisible ? 'visible' : 'hidden'}`}
+          >
+            {isVisible ? (
+              <>
+                <div>{phaseSection.sectiondescription}</div>
+                <Questionnaire
+                  phaseData={phaseData}
+                  phaseQuestions={mapQuestions[phaseSection.sectionid]}
+                  phaseAnswers={phaseAnswers}
+                  iseditable={iseditable}
+                  selectedSection={selectedSection}
+                />
+                <div className="flex justify-between mt-4">
+                  {isNotFirstSection ? (
+                    <button
+                      type="button"
+                      onClick={moveToPreviousSection}
+                      className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
+                    >
+                      Zurück
+                    </button>
+                  ) : (
+                    <div className="py-2 px-4"></div>
+                  )}
+                  {isNotLastSection ? (
+                    <button
+                      type="button"
+                      onClick={moveToNextSection}
+                      className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
+                    >
+                      Weiter
+                    </button>
+                  ) : (
+                    <div className="py-2 px-4"></div>
+                  )}
+                </div>
+              </>
+            ) : null}
+          </div>
+        );
+      })}
     </div>
   );
 }
