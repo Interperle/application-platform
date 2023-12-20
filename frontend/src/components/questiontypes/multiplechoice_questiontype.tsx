@@ -34,6 +34,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   maxanswers,
   userinput,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const [selectedChoice, setSelectedChoice] = useState("");
@@ -58,7 +59,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, maxanswers, selectedSection]);
+  }, [questionid, answerid, maxanswers, selectedSection, selectedCondChoice]);
 
   const handleSingleChange = (choice: ChoiceProps) => {
     if (!iseditable) {

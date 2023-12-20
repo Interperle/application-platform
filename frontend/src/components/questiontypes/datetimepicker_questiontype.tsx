@@ -29,6 +29,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   maxdatetime,
   answerid,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -48,7 +49,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {

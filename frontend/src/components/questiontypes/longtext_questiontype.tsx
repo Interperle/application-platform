@@ -26,6 +26,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   answerid,
   maxtextlength,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -45,7 +46,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!iseditable) {

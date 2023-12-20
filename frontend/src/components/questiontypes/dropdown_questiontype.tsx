@@ -32,6 +32,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   answerid,
   options,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const [singleAnswer, setSingleAnswer] = useState("");
@@ -56,7 +57,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, maxanswers, selectedSection]);
+  }, [questionid, answerid, maxanswers, selectedSection, selectedCondChoice]);
 
   const handleSingleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (!iseditable) {

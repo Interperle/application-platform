@@ -28,6 +28,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   answerid,
   maxfilesizeinmb,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(
@@ -57,7 +58,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   function set_video_for_upload(file: File) {
     if (!iseditable) {

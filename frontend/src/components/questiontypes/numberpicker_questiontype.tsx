@@ -28,6 +28,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   minnumber,
   maxnumber,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const [answer, setAnswer] = useState("");
@@ -47,7 +48,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {

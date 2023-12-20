@@ -23,6 +23,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
   iseditable,
   answerid,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const [answer, setAnswer] = useState(false);
@@ -34,7 +35,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
       try {
         if (answerid) {
           const savedAnswer = await fetchCheckBoxAnswer(answerid);
-          setAnswer(savedAnswer || "");
+          setAnswer(savedAnswer || false);
         }
         setIsLoading(false);
       } catch (error) {
@@ -43,7 +44,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
     }
 
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   const handleChange = () => {
     if (!iseditable) {

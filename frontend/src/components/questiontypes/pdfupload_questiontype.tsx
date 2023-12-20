@@ -28,6 +28,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   answerid,
   maxfilesizeinmb,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid);
@@ -56,7 +57,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   function set_pdf_for_upload(file: File) {
     if (!iseditable) {

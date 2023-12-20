@@ -9,6 +9,7 @@ export interface DefaultQuestionTypeProps {
   questionorder: number;
   iseditable: boolean;
   selectedSection?: string | null;
+  selectedCondChoice?: string | null;
   questionsuborder?: string;
 }
 

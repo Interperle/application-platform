@@ -30,6 +30,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   maxfilesizeinmb,
   answerid,
   selectedSection,
+  selectedCondChoice,
   questionsuborder,
 }) => {
   const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
@@ -60,7 +61,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection]);
+  }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
   function set_image_for_upload(file: File) {
     if (!iseditable) {
