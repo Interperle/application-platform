@@ -37,12 +37,24 @@ export async function saveNumberPickerAnswer(
   }
 }
 
-export async function fetchNumberPickerAnswer(answerid: string) {
+
+interface NumberPickerAnswerResponse {
+  answerid: string;
+  pickednumber: number | null;
+}
+
+const initialstate: NumberPickerAnswerResponse = {
+  answerid: "",
+  pickednumber: null,
+};
+
+export async function fetchNumberPickerAnswer(questionid: string): Promise<NumberPickerAnswerResponse> {
   const supabase = initSupabaseActions();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data: numberPickerData, error: numberPickerError } = await supabase
-    .from("number_picker_answer_table")
-    .select("pickednumber")
-    .eq("answerid", answerid)
-    .single();
-  return numberPickerData!.pickednumber;
+    .rpc("fetch_number_picker_answer_table", { question_id: questionid, user_id: user?.id })
+    .single<NumberPickerAnswerResponse>();
+  return numberPickerData || initialstate;
 }

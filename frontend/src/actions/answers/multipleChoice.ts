@@ -37,13 +37,23 @@ export async function saveMultipleChoiceAnswer(
   }
 }
 
-export async function fetchMultipleChoiceAnswer(answerid: string) {
+interface MultipleChoiceAnswerResponse {
+  answerid: string;
+  selectedchoice: string;
+}
+
+const initialstate: MultipleChoiceAnswerResponse = {
+  answerid: "",
+  selectedchoice: "",
+};
+
+export async function fetchMultipleChoiceAnswer(questionid: string): Promise<MultipleChoiceAnswerResponse> {
   const supabase = initSupabaseActions();
-  const { data: multipleChoiceData, error: multipleChoiceError } =
-    await supabase
-      .from("multiple_choice_answer_table")
-      .select("selectedchoice")
-      .eq("answerid", answerid)
-      .single();
-  return multipleChoiceData!.selectedchoice;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: multipleChoiceData, error: multipleChoiceError } = await supabase
+    .rpc("fetch_multiple_choice_answer_table", { question_id: questionid, user_id: user?.id })
+    .single<MultipleChoiceAnswerResponse>();
+  return multipleChoiceData || initialstate;
 }

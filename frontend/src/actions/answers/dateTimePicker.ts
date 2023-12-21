@@ -36,13 +36,23 @@ export async function saveDateTimePickerAnswer(
   }
 }
 
-export async function fetchDateTimePickerAnswer(answerid: string) {
+interface DateTimeAnswerResponse {
+  answerid: string;
+  pickeddatetime: string;
+}
+
+const initialstate: DateTimeAnswerResponse = {
+  answerid: "",
+  pickeddatetime: "",
+};
+
+export async function fetchDateTimePickerAnswer(questionid: string) {
   const supabase = initSupabaseActions();
-  const { data: datetimePickerData, error: datetimePickerError } =
-    await supabase
-      .from("datetime_picker_answer_table")
-      .select("pickeddatetime")
-      .eq("answerid", answerid)
-      .single();
-  return datetimePickerData!.pickeddatetime;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: datePickerData, error: datePickerError } = await supabase
+    .rpc("fetch_datetime_picker_answer_table", { question_id: questionid, user_id: user?.id })
+    .single<DateTimeAnswerResponse>();
+  return datePickerData || initialstate;
 }
