@@ -40,11 +40,8 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const selectedChoice = useAppSelector<string>(
-    (state) => state.answerReducer[`${questionid}_single`]?.answervalue as string || "",
-  );
-  const selectedChoices = useAppSelector<string[]>(
-    (state) => state.answerReducer[`${questionid}_multi`]?.answervalue as string[] || [],
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,11 +49,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         const savedAnswer = await fetchMultipleChoiceAnswer(questionid);
-        if (maxanswers == 1) {
-          updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);
-        } else {
-          updateAnswerState(savedAnswer.selectedchoice.split(",") || [], savedAnswer.answerid)
-        }
+        updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -67,37 +60,38 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
 
 
-  const updateAnswerState = (answervalue: string | string[], answerid?: string) => {
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
     dispatch(
       UpdateAnswer({
-        questionid: maxanswers == 1 ? `${questionid}_single` : `${questionid}_multi`,
+        questionid: questionid,
         answervalue: answervalue,
         answerid: answerid || "",
       }),
     );
   };
 
-  const handleSingleChange = (choice: ChoiceProps) => {
+  const handleSingleChange = async (choice: ChoiceProps) => {
     if (!iseditable) {
       return;
     }
-    if (selectedChoice === choice.choiceid) {
-      saveMultipleChoiceAnswer("", questionid);
+    if (answer === choice.choiceid) {
+      await saveMultipleChoiceAnswer("", questionid);
       updateAnswerState("");
     } else {
-      saveMultipleChoiceAnswer(choice.choiceid, questionid);
+      await saveMultipleChoiceAnswer(choice.choiceid, questionid);
       updateAnswerState(choice.choiceid);
     }
   };
 
-  const handleMultiChange = (choice: ChoiceProps) => {
+  const handleMultiChange = async (choice: ChoiceProps) => {
     if (!iseditable) {
       return;
     }
+    const selectedChoices = answer.split(", ")
     if (!selectedChoices.includes(choice.choiceid)) {
       if (selectedChoices.length + 1 > maxanswers) {
         updateAnswerState(
-          selectedChoices.filter((selected) => selected !== choice.choiceid),
+          selectedChoices.filter((selected) => selected !== choice.choiceid).join(", "),
         );
         alert("Du kannst maximal " + maxanswers + " auswählen!");
         return;
@@ -115,12 +109,11 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
         (selected) => selected !== choice.choiceid,
       );
     } else {
-      newChoices = [...selectedChoices, choice.choiceid];
+      newChoices = [...selectedChoices, choice.choiceid].filter(choice => choice);
     }
-    saveMultipleChoiceAnswer(newChoices.toString(), questionid);
-    updateAnswerState(newChoices);
+    await saveMultipleChoiceAnswer(newChoices.join(", "), questionid);
+    updateAnswerState(newChoices.join(", "));
   };
-
   return (
     <QuestionTypes
       phasename={phasename}
@@ -142,8 +135,8 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
               choicetext={choice.choicetext}
               isSelected={
                 maxanswers == 1
-                  ? selectedChoice === choice.choiceid
-                  : selectedChoices.includes(choice.choiceid)
+                  ? answer === choice.choiceid
+                  : answer.split(", ").includes(choice.choiceid)
               }
               minanswers={minanswers}
               maxanswers={maxanswers}

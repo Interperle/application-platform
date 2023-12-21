@@ -38,11 +38,8 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const singleAnswer = useAppSelector<string>(
-    (state) => state.answerReducer[`${questionid}_single`]?.answervalue as string || "",
-  );
-  const multiAnswer = useAppSelector<string[]>(
-    (state) => state.answerReducer[`${questionid}_multi`]?.answervalue as string[] || [],
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -51,13 +48,9 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       setIsLoading(true);
       try {
         const savedAnswer = await fetchDropdownAnswer(questionid);
-        if (maxanswers == 1) {
-          updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid);
-        } else {
-          updateAnswerState(savedAnswer.selectedoptions.split(",") || [], savedAnswer.answerid)
-        }
+        updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid);
       } catch (error) {
-        console.error("Failed to fetch singleAnswer", error);
+        console.error("Failed to fetch answer", error);
       } finally {
         setIsLoading(false);
       }
@@ -65,10 +58,10 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
     loadAnswer();
   }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
 
-  const updateAnswerState = (answervalue: string | string[], answerid?: string) => {
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
     dispatch(
       UpdateAnswer({
-        questionid: maxanswers == 1 ? `${questionid}_single` : `${questionid}_multi`,
+        questionid: questionid,
         answervalue: answervalue,
         answerid: answerid || "",
       }),
@@ -97,10 +90,10 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       (!mandatory || (selectedOptions.length >= minanswers && mandatory)) &&
       selectedOptions.length <= maxanswers
     ) {
-      saveDropdownAnswer(selectedOptions.toString(), questionid);
-      updateAnswerState(selectedOptions);
+      saveDropdownAnswer(selectedOptions.join(", "), questionid);
+      updateAnswerState(selectedOptions.join(", "));
     } else {
-      updateAnswerState(selectedOptions);
+      updateAnswerState(selectedOptions.join(", "));
       alert(
         "Du musst mindestens " +
           minanswers +
@@ -132,9 +125,9 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
             aria-disabled={!iseditable}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             onChange={handleSingleChange}
-            value={singleAnswer}
+            value={answer}
           >
-            {singleAnswer === "" && (
+            {answer === "" && (
               <option
                 key="invalid"
                 value=""
@@ -170,7 +163,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
               required={mandatory}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={handleMultiChange}
-              value={multiAnswer}
+              value={answer.split(", ")}
             >
               {!mandatory && <option key="empty" value="empty"></option>}
               {options.map((option) => (

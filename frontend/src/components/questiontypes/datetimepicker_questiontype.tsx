@@ -44,7 +44,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         const savedAnswer = await fetchDateTimePickerAnswer(questionid);
-        updateAnswerState(savedAnswer.pickeddatetime, savedAnswer.answerid);
+        updateAnswerState(setToPrefferedTimeZone(savedAnswer.pickeddatetime), savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -71,13 +71,13 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
     updateAnswerState(event.target.value);
   };
 
-  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBlur = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
       return;
     }
     if (event.target.value == ""){
       updateAnswerState("");
-      saveDateTimePickerAnswer("", questionid);
+      await saveDateTimePickerAnswer("", questionid);
       return
     }
     const selectedDate = new Date(event.target.value);
@@ -93,7 +93,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       );
     } else {
       updateAnswerState("");
-      saveDateTimePickerAnswer("", questionid);
+      await saveDateTimePickerAnswer("", questionid);
       alert(
         "Dein ausgewählter Zeitpunkt " +
           selectedDate.toDateString() +
