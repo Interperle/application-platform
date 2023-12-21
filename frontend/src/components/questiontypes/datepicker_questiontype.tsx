@@ -8,6 +8,8 @@ import {
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -30,34 +32,55 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
         if (answerid) {
-          const savedAnswer = await fetchDatePickerAnswer(answerid);
-          setAnswer(savedAnswer.pickeddate || "");
+          const savedAnswer = await fetchDatePickerAnswer(questionid);
+          updateAnswerState(savedAnswer.pickeddate, savedAnswer.answerid);
         }
-        setIsLoading(false);
       } catch (error) {
         alert("Failed to fetch answer");
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
       return;
     }
-    setAnswer(event.target.value);
+    updateAnswerState(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
       return;
+    }
+    if (event.target.value == ""){
+      updateAnswerState("");
+      saveDatePickerAnswer("", questionid);
+      return
     }
     const selectedDate = new Date(event.target.value);
     const minDate = mindate ? new Date(mindate) : null;
@@ -68,7 +91,8 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
     ) {
       saveDatePickerAnswer(event.target.value, questionid);
     } else {
-      setAnswer("");
+      updateAnswerState("");
+      saveDatePickerAnswer("", questionid);
       alert(
         "Dein ausgewähltes Datum " +
           selectedDate.toDateString() +
