@@ -5,6 +5,8 @@ import {
   fetchDropdownAnswer,
   saveDropdownAnswer,
 } from "@/actions/answers/dropdown";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { DropdownOption, DropdownOptionProps } from "./utils/dropdown_option";
@@ -29,35 +31,51 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   minanswers,
   maxanswers,
   userinput,
-  answerid,
   options,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [singleAnswer, setSingleAnswer] = useState("");
-  const [multiAnswer, setMultiAnswer] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+
+  const singleAnswer = useAppSelector<string>(
+    (state) => state.answerReducer[`${questionid}_single`]?.answervalue as string || "",
+  );
+  const multiAnswer = useAppSelector<string[]>(
+    (state) => state.answerReducer[`${questionid}_multi`]?.answervalue as string[] || [],
+  );
   const [isLoading, setIsLoading] = useState(true);
   console.log("Render Dropdown"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
-        if (answerid) {
-          const savedAnswer = await fetchDropdownAnswer(answerid);
-          if (maxanswers == 1) {
-            setSingleAnswer(savedAnswer || "");
-          } else {
-            setMultiAnswer(savedAnswer.split(",") || []);
-          }
+        const savedAnswer = await fetchDropdownAnswer(questionid);
+        updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid)
+        if (maxanswers == 1) {
+          updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid);
+        } else {
+          updateAnswerState(savedAnswer.selectedoptions.split(",") || [], savedAnswer.answerid)
         }
-        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch singleAnswer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, maxanswers, selectedSection, selectedCondChoice]);
+  }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string | string[], answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: maxanswers == 1 ? `${questionid}_single` : `${questionid}_multi`,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleSingleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (!iseditable) {
@@ -66,7 +84,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
     const selectedOption =
       event.target.options[event.target.selectedIndex].text;
     saveDropdownAnswer(selectedOption, questionid);
-    setSingleAnswer(event.target.value);
+    updateAnswerState(event.target.value);
   };
 
   const handleMultiChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -82,9 +100,9 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       selectedOptions.length <= maxanswers
     ) {
       saveDropdownAnswer(selectedOptions.toString(), questionid);
-      setMultiAnswer(selectedOptions);
+      updateAnswerState(selectedOptions);
     } else {
-      setMultiAnswer(selectedOptions);
+      updateAnswerState(selectedOptions);
       alert(
         "Du musst mindestens " +
           minanswers +
