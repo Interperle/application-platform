@@ -25,7 +25,7 @@ $$ LANGUAGE plpgsql STABLE;
 
 
 CREATE OR REPLACE FUNCTION FETCH_DATETIME_PICKER_ANSWER_TABLE(question_id uuid, user_id uuid)
-RETURNS TABLE(answerid uuid, pickeddatetime date) AS $$
+RETURNS TABLE(answerid uuid, pickeddatetime timestamptz) AS $$
 BEGIN
     RETURN QUERY
     SELECT t.answerid, t.pickeddatetime
@@ -38,7 +38,7 @@ $$ LANGUAGE plpgsql STABLE;
 
 
 CREATE OR REPLACE FUNCTION FETCH_DATE_PICKER_ANSWER_TABLE(question_id uuid, user_id uuid)
-RETURNS TABLE(answerid uuid, pickeddate timestamptz) AS $$
+RETURNS TABLE(answerid uuid, pickeddate date) AS $$
 BEGIN
     RETURN QUERY
     SELECT t.answerid, t.pickeddate

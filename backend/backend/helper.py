@@ -32,8 +32,8 @@ tables = [
 answer_dict = {
     "CHECKBOX_ANSWER_TABLE": ["checked", "bool"],
     "CONDITIONAL_ANSWER_TABLE": ["selectedchoice", "text"],
-    "DATETIME_PICKER_ANSWER_TABLE": ["pickeddatetime", "date"],
-    "DATE_PICKER_ANSWER_TABLE": ["pickeddate", "timestamptz"],
+    "DATETIME_PICKER_ANSWER_TABLE": ["pickeddatetime", "timestamptz"],
+    "DATE_PICKER_ANSWER_TABLE": ["pickeddate", "date"],
     "DROPDOWN_ANSWER_TABLE": ["selectedoptions", "text"],
     "IMAGE_UPLOAD_ANSWER_TABLE": ["imagename", "text"],
     "LONG_TEXT_ANSWER_TABLE": ["answertext", "text"],
