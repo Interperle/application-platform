@@ -42,7 +42,7 @@ export default function SubmitDeletionForm({
     }
 
     return () => clearTimeout(timer);
-  }, [countdown]);
+  }, [countdown, router]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
