@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useEffect, useRef } from "react";
 
 import { Answer } from "@/actions/answers/answers";
 import getQuestionComponent, {
@@ -23,8 +24,9 @@ export interface DefaultQuestion {
   sectionid: string | null;
   preinformationbox: string | null;
   postinformationbox: string | null;
-  selectedSection: string | null;
-  depends_on: string | null;
+  selectedSection: string | null;
+  selectedCondChoice: string | null;
+  depends_on: string | null;
 }
 
 export interface Question extends DefaultQuestion {
@@ -36,7 +38,8 @@ interface QuestionnaireProps {
   phaseQuestions: Question[];
   phaseAnswers: Answer[];
   iseditable: boolean;
-  selectedSection: string | null;
+  selectedSection: string | null;
+  selectedCondChoice: string | null;
 }
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({
@@ -45,6 +48,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
   phaseAnswers,
   iseditable,
   selectedSection,
+  selectedCondChoice,
 }) => {
   const dispatch = useAppDispatch();
   // need a copy, so I can modify it beneath
@@ -90,6 +94,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
                 questionorder={phaseQuestion.questionorder}
                 iseditable={iseditable}
                 selectedSection={selectedSection}
+                selectedCondChoice={selectedCondChoice}
                 answerid={
                   phaseAnswers.find(
                     (answer) => answer.questionid == phaseQuestion.questionid,
