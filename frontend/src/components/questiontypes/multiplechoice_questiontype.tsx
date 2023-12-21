@@ -10,6 +10,8 @@ import {
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { Choice, ChoiceProps } from "./utils/multiplechoice_choice";
 import { AwaitingChild } from "../awaiting";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {
@@ -28,7 +30,6 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   questionnote,
   questionorder,
   iseditable,
-  answerid,
   choices,
   minanswers,
   maxanswers,
@@ -37,29 +38,44 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [selectedChoice, setSelectedChoice] = useState("");
-  const [selectedChoices, setSelectedChoices] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+
+  const selectedChoice = useAppSelector<string>(
+    (state) => state.answerReducer[`${questionid}_single`]?.answervalue as string || "",
+  );
+  const selectedChoices = useAppSelector<string[]>(
+    (state) => state.answerReducer[`${questionid}_multi`]?.answervalue as string[] || [],
+  );
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render MultipleChoice"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if (answerid) {
-          const savedAnswer = await fetchMultipleChoiceAnswer(answerid);
-          if (maxanswers == 1) {
-            setSelectedChoice(savedAnswer || "");
-          } else {
-            setSelectedChoices(savedAnswer.split(",") || []);
-          }
+        const savedAnswer = await fetchMultipleChoiceAnswer(questionid);
+        if (maxanswers == 1) {
+          updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);
+        } else {
+          updateAnswerState(savedAnswer.selectedchoice.split(",") || [], savedAnswer.answerid)
         }
-        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, maxanswers, selectedSection, selectedCondChoice]);
+  }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
+
+
+  const updateAnswerState = (answervalue: string | string[], answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: maxanswers == 1 ? `${questionid}_single` : `${questionid}_multi`,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleSingleChange = (choice: ChoiceProps) => {
     if (!iseditable) {
@@ -67,10 +83,10 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     }
     if (selectedChoice === choice.choiceid) {
       saveMultipleChoiceAnswer("", questionid);
-      setSelectedChoice("");
+      updateAnswerState("");
     } else {
       saveMultipleChoiceAnswer(choice.choiceid, questionid);
-      setSelectedChoice(choice.choiceid);
+      updateAnswerState(choice.choiceid);
     }
   };
 
@@ -80,7 +96,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     }
     if (!selectedChoices.includes(choice.choiceid)) {
       if (selectedChoices.length + 1 > maxanswers) {
-        setSelectedChoices(
+        updateAnswerState(
           selectedChoices.filter((selected) => selected !== choice.choiceid),
         );
         alert("Du kannst maximal " + maxanswers + " auswählen!");
@@ -102,7 +118,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       newChoices = [...selectedChoices, choice.choiceid];
     }
     saveMultipleChoiceAnswer(newChoices.toString(), questionid);
-    setSelectedChoices(newChoices);
+    updateAnswerState(newChoices);
   };
 
   return (

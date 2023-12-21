@@ -45,14 +45,12 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
     (state) => state.answerReducer[`${questionid}_multi`]?.answervalue as string[] || [],
   );
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render Dropdown"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
       setIsLoading(true);
       try {
         const savedAnswer = await fetchDropdownAnswer(questionid);
-        updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid)
         if (maxanswers == 1) {
           updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid);
         } else {
