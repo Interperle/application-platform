@@ -13,15 +13,15 @@
       }
     ],
     "import/no-unresolved": "warn",
-    "import/named": "warn",
+    "import/named": 0,
     "import/default": "warn",
     "import/namespace": "warn",
     "import/no-absolute-path": "warn",
     "import/no-dynamic-require": "warn",
     "import/no-webpack-loader-syntax": "warn",
     "import/no-self-import": "warn",
-    "import/no-cycle": "warn",
-    "import/no-unused-modules": ["warn", { "unusedExports": true }],
+    "import/no-cycle": 0,
+    "import/no-unused-modules": ["warn"],
     "import/no-useless-path-segments": "warn",
     "import/order": [
       "warn",
@@ -43,7 +43,7 @@
       }
     ],
     "import/newline-after-import": "warn",
-    "import/prefer-default-export": "warn",
+    "import/prefer-default-export": 0,
     "import/no-named-as-default": "warn",
     "import/no-deprecated": "warn",
     "import/no-extraneous-dependencies": "warn",
