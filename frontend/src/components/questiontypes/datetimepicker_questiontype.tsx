@@ -9,6 +9,8 @@ import { setToPrefferedTimeZone } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
 
 export interface DatetimePickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
@@ -27,40 +29,56 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   iseditable,
   mindatetime,
   maxdatetime,
-  answerid,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render Datetimepicker"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if (answerid) {
-          const savedAnswer = await fetchDateTimePickerAnswer(answerid);
-          setAnswer(savedAnswer || "");
-        }
-        setIsLoading(false);
+        const savedAnswer = await fetchDateTimePickerAnswer(questionid);
+        updateAnswerState(savedAnswer.pickeddatetime, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
       return;
     }
-    setAnswer(event.target.value);
+    updateAnswerState(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
       return;
+    }
+    if (event.target.value == ""){
+      updateAnswerState("");
+      saveDateTimePickerAnswer("", questionid);
+      return
     }
     const selectedDate = new Date(event.target.value);
     const minDateTime = mindatetime ? new Date(mindatetime) : null;
@@ -74,7 +92,8 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
         questionid,
       );
     } else {
-      setAnswer("");
+      updateAnswerState("");
+      saveDateTimePickerAnswer("", questionid);
       alert(
         "Dein ausgewählter Zeitpunkt " +
           selectedDate.toDateString() +

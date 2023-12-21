@@ -27,7 +27,6 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   iseditable,
   mindate,
   maxdate,
-  answerid,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
@@ -43,10 +42,8 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
     async function loadAnswer() {
       setIsLoading(true);
       try {
-        if (answerid) {
-          const savedAnswer = await fetchDatePickerAnswer(questionid);
-          updateAnswerState(savedAnswer.pickeddate, savedAnswer.answerid);
-        }
+        const savedAnswer = await fetchDatePickerAnswer(questionid);
+        updateAnswerState(savedAnswer.pickeddate, savedAnswer.answerid);
       } catch (error) {
         alert("Failed to fetch answer");
       } finally {
