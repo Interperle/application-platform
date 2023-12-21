@@ -8,6 +8,8 @@ import {
 
 import { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
 
 export interface CheckBoxQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -21,37 +23,49 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
   questionnote,
   questionorder,
   iseditable,
-  answerid,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector(
+    (state) => state.answerReducer[questionid]?.answervalue || false,
+  );
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render CheckBox"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
-        if (answerid) {
-          const savedAnswer = await fetchCheckBoxAnswer(answerid);
-          setAnswer(savedAnswer || false);
-        }
-        setIsLoading(false);
+        const savedAnswer = await fetchCheckBoxAnswer(questionid);
+        updateAnswerState(savedAnswer.checked, savedAnswer.answerid)
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answer: boolean, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answer,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleChange = () => {
     if (!iseditable) {
       return;
     }
     saveCheckBoxAnswer(!answer, questionid);
-    setAnswer(!answer);
+    updateAnswerState(!answer);
   };
 
   return (
@@ -69,7 +83,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
               disabled={!iseditable}
               aria-disabled={!iseditable}
               type="checkbox"
-              checked={answer}
+              checked={answer as boolean}
               onChange={handleChange}
               onClick={handleChange}
               className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"

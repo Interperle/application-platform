@@ -34,13 +34,23 @@ export async function saveCheckBoxAnswer(checked: boolean, questionid: string) {
   }
 }
 
-export async function fetchCheckBoxAnswer(answerid: string) {
+interface LongTextAnswerResponse {
+  answerid: string;
+  checked: boolean;
+}
+
+const initialstate: LongTextAnswerResponse = {
+  answerid: "",
+  checked: false,
+};
+
+export async function fetchCheckBoxAnswer(questionid: string): Promise<LongTextAnswerResponse> {
   const supabase = initSupabaseActions();
-  const { data: multipleCheckBoxData, error: multipleCheckBoxError } =
-    await supabase
-      .from("checkbox_answer_table")
-      .select("checked")
-      .eq("answerid", answerid)
-      .single();
-  return multipleCheckBoxData!.checked || false;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: multipleCheckBoxData, error: multipleCheckBoxError } = await supabase
+    .rpc("fetch_checkbox_answer_table", { question_id: questionid, user_id: user?.id })
+    .single<LongTextAnswerResponse>();
+  return multipleCheckBoxData || initialstate;
 }
