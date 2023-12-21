@@ -6,6 +6,7 @@ import {
   useStore,
 } from "react-redux";
 
+import answerReducer from "./slices/answerSlice";
 import authReducer from "./slices/authSlice";
 import menuReducer from "./slices/menuSlice";
 import phaseReducer from "./slices/phaseSlice";
@@ -18,13 +19,14 @@ export const makeStore = () => {
       userReducer,
       menuReducer,
       phaseReducer,
+      answerReducer,
     },
   });
 };
 
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
+type RootState = ReturnType<AppStore["getState"]>;
+type AppDispatch = AppStore["dispatch"];
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
