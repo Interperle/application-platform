@@ -5,6 +5,8 @@ import {
   fetchNumberPickerAnswer,
   saveNumberPickerAnswer,
 } from "@/actions/answers/numberPicker";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
@@ -24,31 +26,42 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   questionnote,
   questionorder,
   iseditable,
-  answerid,
   minnumber,
   maxnumber,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render Numberpicker"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if (answerid) {
-          const savedAnswer = await fetchNumberPickerAnswer(answerid);
-          setAnswer(savedAnswer);
-        }
-        setIsLoading(false);
+        const savedAnswer = await fetchNumberPickerAnswer(questionid);
+        updateAnswerState(savedAnswer.pickednumber, savedAnswer.answerid)
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
@@ -65,7 +78,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       );
       return;
     } else if (event.target.value == "+" || event.target.value == "-") {
-      setAnswer(event.target.value);
+      updateAnswerState(event.target.value);
       return;
     }
 
@@ -73,7 +86,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       (!minnumber || minnumber <= inputNumber) &&
       (!maxnumber || maxnumber >= inputNumber)
     ) {
-      setAnswer(event.target.value);
+      updateAnswerState(event.target.value);
     } else {
       alert(
         "Deine Zahl " +
@@ -93,7 +106,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
     }
     const inputAnswer = +answer;
     if (inputAnswer > minnumber) {
-      setAnswer((inputAnswer - 1).toString());
+      updateAnswerState((inputAnswer - 1).toString());
     }
   }
 
@@ -103,7 +116,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
     }
     const inputAnswer = +answer;
     if (inputAnswer < maxnumber) {
-      setAnswer((inputAnswer + 1).toString());
+      updateAnswerState((inputAnswer + 1).toString());
     }
   }
 

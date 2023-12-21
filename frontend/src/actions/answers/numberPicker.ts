@@ -40,12 +40,12 @@ export async function saveNumberPickerAnswer(
 
 interface NumberPickerAnswerResponse {
   answerid: string;
-  pickednumber: number | null;
+  pickednumber: string;
 }
 
 const initialstate: NumberPickerAnswerResponse = {
   answerid: "",
-  pickednumber: null,
+  pickednumber: "",
 };
 
 export async function fetchNumberPickerAnswer(questionid: string): Promise<NumberPickerAnswerResponse> {

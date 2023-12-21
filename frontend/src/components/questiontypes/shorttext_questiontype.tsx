@@ -6,6 +6,8 @@ import {
   saveShortTextAnswer,
 } from "@/actions/answers/shortText";
 import { checkRegex } from "@/utils/helpers";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
@@ -33,30 +35,43 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if (answerid) {
-          const savedAnswer = await fetchShortTextAnswer(answerid);
-          setAnswer(savedAnswer || "");
-        }
-        setIsLoading(false);
+        const savedAnswer = await fetchShortTextAnswer(questionid);
+        updateAnswerState(savedAnswer.answertext, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     loadAnswer();
   }, [questionid, answerid, selectedSection, selectedCondChoice]);
 
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!iseditable) {
       return;
     }
-    setAnswer(event.target.value);
+    updateAnswerState(event.target.value);
   };
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +84,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
       formattingregex &&
       !checkRegex(formattingregex, textinput)
     ) {
-      setAnswer("");
+      updateAnswerState("");
       alert(`Dieses ${formattingdescription} Format wird nicht unterstützt!`);
       return;
     }
