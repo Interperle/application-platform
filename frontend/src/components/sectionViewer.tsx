@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
+import { useSearchParams } from "next/navigation";
+
 import { Answer } from "@/actions/answers/answers";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
 
 import Questionnaire, { Question } from "./questions";
-import { useRouter, useSearchParams } from "next/navigation";
 
 export type SectionQuestionsMap = {
   [key: string]: Question[];
@@ -24,7 +25,6 @@ export function SectionView({
   phaseSections: SectionData[];
   iseditable: boolean;
 }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const sortedSections = phaseSections.sort(
@@ -33,41 +33,45 @@ export function SectionView({
 
   // Helper function to safely get the URL parameter
   const getUrlIndex = (): string | null => {
-    return searchParams.get('sec');
+    return searchParams.get("sec");
   };
 
   // Initial state setup with URL parameter
   const [selectedSection, setSelectedSection] = useState<string>(() => {
-    const urlIndex = parseInt(getUrlIndex() ?? '0', 10) - 1;
+    const urlIndex = parseInt(getUrlIndex() ?? "0", 10) - 1;
     const validIndex = urlIndex >= 0 && urlIndex < sortedSections.length;
-    return validIndex ? sortedSections[urlIndex].sectionid : sortedSections[0]?.sectionid ?? '';
+    return validIndex
+      ? sortedSections[urlIndex].sectionid
+      : sortedSections[0]?.sectionid ?? "";
   });
 
   // Update URL when the section changes
   const setSelectedSectionWithUrl = (sectionId: string) => {
-    const index = sortedSections.findIndex(section => section.sectionid === sectionId);
+    const index = sortedSections.findIndex(
+      (section) => section.sectionid === sectionId,
+    );
     if (index !== -1) {
       setSelectedSection(sectionId);
       const newUrl = `${window.location.pathname}?sec=${index + 1}`;
-      history.pushState(null, '', newUrl);
+      history.pushState(null, "", newUrl);
     }
   };
 
   // Handle URL changes
   useEffect(() => {
     const handleRouteChange = () => {
-      const urlIndex = parseInt(getUrlIndex() ?? '0', 10) - 1;
+      const urlIndex = parseInt(getUrlIndex() ?? "0", 10) - 1;
       if (urlIndex >= 0 && urlIndex < sortedSections.length) {
         setSelectedSectionWithUrl(sortedSections[urlIndex].sectionid);
       }
     };
 
-    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener("popstate", handleRouteChange);
 
     return () => {
-      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener("popstate", handleRouteChange);
     };
-  }, []);
+  }, [sortedSections]);
 
   const moveToNextSection = () => {
     const currentIndex = sortedSections.findIndex(
@@ -124,7 +128,7 @@ export function SectionView({
         return (
           <div
             key={phaseSection.sectionid}
-            className={`p-4 mt-4 ${isVisible ? 'visible' : 'hidden'}`}
+            className={`p-4 mt-4 ${isVisible ? "visible" : "hidden"}`}
           >
             {isVisible ? (
               <>
@@ -135,6 +139,7 @@ export function SectionView({
                   phaseAnswers={phaseAnswers}
                   iseditable={iseditable}
                   selectedSection={selectedSection}
+                  selectedCondChoice={null}
                 />
                 <div className="flex justify-between mt-4">
                   {isNotFirstSection ? (
