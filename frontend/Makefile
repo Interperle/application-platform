@@ -6,5 +6,6 @@ lint:
 
 pretty:
 	@echo "Fixing lint errors..."
-	@npx eslint --ext .js,.jsx,.ts,.tsx --fix .
 	@npx prettier --write .
+	@npx eslint --ext .js,.jsx,.ts,.tsx --fix .
+	
