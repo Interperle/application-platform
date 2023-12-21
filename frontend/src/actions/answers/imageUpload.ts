@@ -1,15 +1,14 @@
 "use server";
 
+import { storageSaveName } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
-import { storageSaveName } from "@/utils/helpers";
 
 export async function saveImageUploadAnswer(
   questionid: string,
   formData: FormData,
 ) {
-  console.log("UPLOADING...")
   const file = formData.get(questionid) as File;
   const uploadFile = new File([file], storageSaveName(file.name), {
     type: file.type,
