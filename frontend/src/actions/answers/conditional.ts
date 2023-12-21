@@ -37,13 +37,23 @@ export async function saveConditionalAnswer(
   }
 }
 
-export async function fetchConditionalAnswer(answerid: string) {
+interface ConditionalAnswerResponse {
+  answerid: string;
+  selectedchoice: string;
+}
+
+const initialstate: ConditionalAnswerResponse = {
+  answerid: "",
+  selectedchoice: "",
+};
+
+export async function fetchConditionalAnswer(questionid: string) {
   const supabase = initSupabaseActions();
-  const { data: conditionalData, error: conditionalError } =
-    await supabase
-      .from("conditional_answer_table")
-      .select("selectedchoice")
-      .eq("answerid", answerid)
-      .single();
-  return conditionalData!.selectedchoice;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: conditionalTextData, error: conditionalTextError } = await supabase
+    .rpc("fetch_conditional_answer_table", { question_id: questionid, user_id: user?.id })
+    .single<ConditionalAnswerResponse>();
+  return conditionalTextData || initialstate;
 }
