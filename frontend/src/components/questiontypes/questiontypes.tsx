@@ -8,8 +8,8 @@ export interface DefaultQuestionTypeProps {
   questionnote: string;
   questionorder: number;
   iseditable: boolean;
-  selectedSection?: string | null;
-  selectedCondChoice?: string | null;
+  selectedSection?: string | null;
+  selectedCondChoice?: string | null;
   questionsuborder?: string;
 }
 
@@ -34,7 +34,9 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
         className="block font-semibold text-secondary py-3"
       >
         <h4 className="py-1 text-base">
-          {questionsuborder ? `${questionorder} ${questionsuborder}) ` : `${questionorder}. `}
+          {questionsuborder
+            ? `${questionorder} ${questionsuborder}) `
+            : `${questionorder}. `}
           <span
             className="break-after-avoid"
             dangerouslySetInnerHTML={{ __html: questiontext }}

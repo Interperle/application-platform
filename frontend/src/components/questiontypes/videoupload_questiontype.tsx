@@ -6,7 +6,7 @@ import {
   deleteVideoUploadAnswer,
   saveVideoUploadAnswer,
 } from "@/actions/answers/videoUpload";
-import { fetchVideoUploadAnswer, storageSaveName } from "@/utils/helpers";
+import { fetchVideoUploadAnswer } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
@@ -65,7 +65,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       return;
     }
     const fileSizeInMB = file.size / 1024 / 1024;
-    
+
     if (!validImgTypes.includes(file.type)) {
       alert(
         `Es sind nur die folgenden Dateitypen erlaubt: ${validImgTypes.join(

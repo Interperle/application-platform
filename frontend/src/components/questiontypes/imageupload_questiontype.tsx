@@ -97,9 +97,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    alert("Delete...")
     deleteImageUploadAnswer(questionid, answerid || "");
-    alert("Deleted")
     setUploadImage("");
     setWasUploaded(false);
   };

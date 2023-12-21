@@ -28,13 +28,15 @@ import VideoUploadQuestionType, {
 import CheckBoxQuestionType, {
   CheckBoxQuestionTypeProps,
 } from "../checkbox_questiontype";
+import ConditionalQuestionType, {
+  ConditionalQuestionTypeProps,
+} from "../conditional_questiontype";
 import DropdownQuestionType, {
   DropdownQuestionTypeProps,
 } from "../dropdown_questiontype";
 import MultipleChoiceQuestionType, {
   MultipleChoiceQuestionTypeProps,
 } from "../multiplechoice_questiontype";
-import ConditionalQuestionType, { ConditionalQuestionTypeProps } from "../conditional_questiontype";
 
 export enum QuestionType {
   ShortText = "shortText",
@@ -63,7 +65,22 @@ export enum QuestionTypeTable {
   MultipleChoiceQuestionTable = "multiple_choice_question_table",
   DropdownQuestionTable = "dropdown_question_table",
   CheckBoxQuestionTable = "checkbox_question_table",
-  ConditionalQuestionTable = "conditional_question_table"
+  ConditionalQuestionTable = "conditional_question_table",
+}
+
+export enum AnswerTypeTable {
+  ShortTextAnswerTable = "short_text_answer_table",
+  LongTextAnswerTable = "long_text_answer_table",
+  NumberPickerAnswerTable = "number_picker_answer_table",
+  DatetimePickerAnswerTable = "datetime_picker_answer_table",
+  DatePickerAnswerTable = "date_picker_answer_table",
+  ImageUploadAnswerTable = "image_upload_answer_table",
+  VideoUploadAnswerTable = "image_upload_answer_table",
+  PdfUploadAnswerTable = "pdf_upload_answer_table",
+  MultipleChoiceAnswerTable = "multiple_choice_answer_table",
+  DropdownAnswerTable = "dropdown_answer_table",
+  CheckBoxAnswerTable = "checkbox_answer_table",
+  ConditionalAnswerTable = "conditional_answer_table",
 }
 
 type QuestionTypeSelectorProps = {

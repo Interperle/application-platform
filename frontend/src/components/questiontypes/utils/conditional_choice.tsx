@@ -1,8 +1,4 @@
-import { Question } from "@/components/questions";
 import React from "react";
-import getQuestionComponent from "./questiontype_selector";
-import { InformationBox } from "@/components/informationBox";
-import { Answer } from "@/actions/answers/answers";
 
 export interface ChoiceProps {
   choiceid: string;
@@ -19,7 +15,6 @@ export const ConditionalChoice: React.FC<ChoiceProps> = ({
   iseditable,
   onChange,
 }) => {
-  
   return (
     <div key={choiceid} className="flex items-center mb-4">
       <input
