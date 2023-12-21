@@ -29,6 +29,20 @@ tables = [
     #"VIDEO_UPLOAD_QUESTION_TABLE"
 ]
 
+answer_dict = {
+    "CHECKBOX_ANSWER_TABLE": ["checked", "bool"],
+    "CONDITIONAL_ANSWER_TABLE": ["selectedchoice", "text"],
+    "DATETIME_PICKER_ANSWER_TABLE": ["pickeddatetime", "date"],
+    "DATE_PICKER_ANSWER_TABLE": ["pickeddate", "timestamptz"],
+    "DROPDOWN_ANSWER_TABLE": ["selectedoptions", "text"],
+    "IMAGE_UPLOAD_ANSWER_TABLE": ["imagename", "text"],
+    "LONG_TEXT_ANSWER_TABLE": ["answertext", "text"],
+    "MULTIPLE_CHOICE_ANSWER_TABLE": ["selectedchoice", "text"],
+    "NUMBER_PICKER_ANSWER_TABLE": ["pickednumber", "int4"],
+    "PDF_UPLOAD_ANSWER_TABLE": ["pdfname", "text"],
+    "SHORT_TEXT_ANSWER_TABLE": ["answertext", "text"],
+    "VIDEO_UPLOAD_ANSWER_TABLE": ["videoname", "text"],
+}
 
 # Function to generate the policy script for a given table
 def generate_policy_script(table_name):
@@ -62,8 +76,22 @@ USING (
 def kill_policy_script(table_name):
     return f"DROP POLICY IF EXISTS select_reviewer_{table_name.lower()} ON {table_name};"
 
+def generate_sql_function(table_name, answer, answer_type):
+    return f"""CREATE OR REPLACE FUNCTION FETCH_{table_name}(question_id uuid, user_id uuid)
+RETURNS TABLE(answerid uuid, {answer} {answer_type}) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT t.answerid, t.{answer}
+    FROM {table_name} t
+    INNER JOIN answer_table a ON t.answerid = a.answerid
+    INNER JOIN application_table app ON a.applicationid = app.applicationid
+    WHERE a.questionid = question_id AND app.userid = user_id;
+END;
+$$ LANGUAGE plpgsql STABLE;
+"""
+
 
 # Generate and print the scripts for all tables
-for table in tables:
-    print(generate_policy_script(table))
+for table, answer in answer_dict.items():
+    print(generate_sql_function(table, answer[0], answer[1]))
     print()
