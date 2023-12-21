@@ -130,7 +130,7 @@ export async function fetchAdditionalParams(
         choiceid: param.choiceid,
         choicevalue: param.choicevalue,
       });
-    } 
+    }
   });
   return paramsDict;
 }
@@ -162,9 +162,15 @@ async function append_params(
   };
 }
 
+interface questionTableProps {
+  result: Question[];
+  depending: Question[];
+  cond: Record<string, number>;
+}
+
 export async function fetch_question_table(
   phaseId: string,
-): Promise<Question[]> {
+): Promise<questionTableProps> {
   const { data: questionData, error: errorData } = await initSupabaseActions()
     .from("question_table")
     .select("*")
@@ -183,7 +189,9 @@ export async function fetch_question_table(
   const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice);
   const optionsData = await fetchAdditionalParams(QuestionType.Dropdown);
 
-  const conditionalChoicesData = await fetchAdditionalParams(QuestionType.Conditional)
+  const conditionalChoicesData = await fetchAdditionalParams(
+    QuestionType.Conditional,
+  );
   const combinedQuestions = await questionData.map(
     async (question: DefaultQuestion) => {
       return await append_params(
@@ -195,24 +203,59 @@ export async function fetch_question_table(
       );
     },
   );
-  const awaitedQuestions = await Promise.all(combinedQuestions)
-  const standaloneQuestions = awaitedQuestions.filter((q: DefaultQuestion) => q.depends_on == null)
-  const dependingQuestions = awaitedQuestions.filter((q: DefaultQuestion) => q.depends_on != null)
-  const finishedQuestions = standaloneQuestions.map(
-    (question: Question) => {
-      if (question.questiontype != QuestionType.Conditional){
-        return question
-      }
-      question.params.choices.map(
-        (choice: Record<string, any>) => {
-          choice["questions"] = dependingQuestions.filter((q: Question) => q.depends_on == choice.choiceid)
-          return choice
-        }
-      )
-      return question
-    },
+  const awaitedQuestions = await Promise.all(combinedQuestions);
+  const standaloneQuestions = awaitedQuestions.filter(
+    (q: Question) => q.depends_on == null,
   );
-  return finishedQuestions;
+  const dependingQuestions = awaitedQuestions.filter(
+    (q: Question) => q.depends_on != null,
+  );
+  const finishedQuestions = standaloneQuestions.map((question: Question) => {
+    if (question.questiontype != QuestionType.Conditional) {
+      return question;
+    }
+    question.params.choices.map((choice: Record<string, any>) => {
+      choice["questions"] = dependingQuestions.filter(
+        (q: Question) => q.depends_on == choice.choiceid,
+      );
+      return choice;
+    });
+    return question;
+  });
+  const dependsOnCount: Record<string, number> = dependingQuestions.reduce(
+    (acc: Record<string, number>, question: Question) => {
+      const dependsOn = question.depends_on as string;
+      acc[dependsOn] = (acc[dependsOn] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const dependsOnIds = Object.keys(dependsOnCount);
+  const { data, error } = await initSupabaseActions()
+    .from("conditional_answer_table")
+    .select("selectedchoice")
+    .in("selectedchoice", dependsOnIds);
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  dependsOnCount["tobeanswered"] = 0;
+  data!.forEach((item) => {
+    if (
+      item.selectedchoice &&
+      dependsOnCount[item.selectedchoice] !== undefined
+    ) {
+      dependsOnCount["tobeanswered"] += dependsOnCount[item.selectedchoice];
+    }
+  });
+
+  return {
+    result: finishedQuestions as Question[],
+    depending: dependingQuestions as Question[],
+    cond: dependsOnCount,
+  };
 }
 
 export async function fetch_phase_by_name(
