@@ -3,6 +3,8 @@
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
+import { Question } from "@/components/questions";
+import { AnswerTypeTable } from "@/components/questiontypes/utils/questiontype_selector";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
@@ -92,33 +94,32 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
 
   let reqtype = "";
   if (answerid == "") {
-    const insertAnswerResponse = await supabase.from("answer_table").insert({
-      questionid: questionid,
-      applicationid: applicationid,
-      created: now,
-      lastupdated: now,
-    });
-
-    if (insertAnswerResponse) {
-      console.log(insertAnswerResponse);
-    }
-
-    const selectAnswerResponse = await supabase
+    const insertAnswerResponse = await supabase
       .from("answer_table")
-      .select("answerid")
-      .eq("applicationid", applicationid)
-      .eq("questionid", questionid)
+      .insert({
+        questionid: questionid,
+        applicationid: applicationid,
+        created: now,
+        lastupdated: now,
+      })
+      .select()
       .single();
-
-    if (selectAnswerResponse) {
-      console.log(selectAnswerResponse);
-    }
-    answerid = selectAnswerResponse!.data!.answerid;
+    answerid = insertAnswerResponse!.data!.answerid;
     reqtype = "created";
   } else {
+    const updateAnswerResponse = await supabase
+      .from("answer_table")
+      .update({
+        lastupdated: now,
+      })
+      .eq("questionid", questionid)
+      .eq("applicationid", applicationid)
+      .select()
+      .single();
+    answerid = updateAnswerResponse!.data!.answerid;
     reqtype = "updated";
   }
-
+  console.log(answerid);
   return { supabase: supabase, answerid: answerid, reqtype: reqtype };
 }
 
@@ -133,43 +134,16 @@ export async function deleteAnswer(questionid: string, answertype: string) {
       .delete()
       .eq("questionid", questionid)
       .eq("applicationid", applicationid);
-    const deleteAnswerTypeResponse = await supabase
-      .from(answertype)
-      .delete()
-      .eq("answerid", answerid);
   }
 }
 
-export async function saveDatePickerAnswer(
-  pickeddate: Date,
-  questionid: string,
-) {
-  const { supabase, answerid } = await saveAnswer(questionid);
-
-  const insertDatePickerAnswerResponse = await supabase
-    .from("date_picker_answer_table")
-    .insert({
-      answerid: answerid,
-      pickeddate: pickeddate,
-    });
-  if (insertDatePickerAnswerResponse) {
-    console.log(insertDatePickerAnswerResponse);
-  }
-}
-
-export async function saveDateTimePickerAnswer(
-  pickeddatetime: string,
-  questionid: string,
-) {
-  const { supabase, answerid } = await saveAnswer(questionid);
-
-  const insertDatePickerAnswerResponse = await supabase
-    .from("datetime_picker_answer_table")
-    .insert({
-      answerid: answerid,
-      pickeddatetime: pickeddatetime,
-    });
-  if (insertDatePickerAnswerResponse) {
-    console.log(insertDatePickerAnswerResponse);
+export async function deleteAnswersOfQuestions(questions: Question[]) {
+  for (const question of questions) {
+    await deleteAnswer(
+      question.questionid,
+      AnswerTypeTable[
+        `${question.questiontype.toUpperCase()}AnswerTable` as keyof typeof AnswerTypeTable
+      ],
+    );
   }
 }
