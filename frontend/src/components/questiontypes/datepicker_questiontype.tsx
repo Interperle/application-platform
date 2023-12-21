@@ -32,14 +32,13 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
 }) => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render Datepicker"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
       try {
         if (answerid) {
           const savedAnswer = await fetchDatePickerAnswer(answerid);
-          setAnswer(savedAnswer || "");
+          setAnswer(savedAnswer.pickeddate || "");
         }
         setIsLoading(false);
       } catch (error) {
