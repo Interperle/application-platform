@@ -44,6 +44,7 @@ answer_dict = {
     "VIDEO_UPLOAD_ANSWER_TABLE": ["videoname", "text"],
 }
 
+
 # Function to generate the policy script for a given table
 def generate_policy_script(table_name):
     return f"""
@@ -75,6 +76,7 @@ USING (
 
 def kill_policy_script(table_name):
     return f"DROP POLICY IF EXISTS select_reviewer_{table_name.lower()} ON {table_name};"
+
 
 def generate_sql_function(table_name, answer, answer_type):
     return f"""CREATE OR REPLACE FUNCTION FETCH_{table_name}(question_id uuid, user_id uuid)

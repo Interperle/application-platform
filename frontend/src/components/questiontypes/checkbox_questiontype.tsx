@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 
-
 export interface CheckBoxQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
 }

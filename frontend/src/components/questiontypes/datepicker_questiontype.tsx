@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 
-
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
   mindate: Date | null;
