@@ -37,7 +37,6 @@ export async function saveDropdownAnswer(
   }
 }
 
-
 interface DropdownAnswerResponse {
   answerid: string;
   selectedoptions: string;
@@ -48,13 +47,18 @@ const initialstate: DropdownAnswerResponse = {
   selectedoptions: "",
 };
 
-export async function fetchDropdownAnswer(questionid: string): Promise<DropdownAnswerResponse> {
+export async function fetchDropdownAnswer(
+  questionid: string,
+): Promise<DropdownAnswerResponse> {
   const supabase = initSupabaseActions();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: dropdownData, error: dropdownError } = await supabase
-    .rpc("fetch_dropdown_answer_table", { question_id: questionid, user_id: user?.id })
+    .rpc("fetch_dropdown_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
     .single<DropdownAnswerResponse>();
   return dropdownData || initialstate;
 }

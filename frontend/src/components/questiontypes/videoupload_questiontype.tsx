@@ -7,9 +7,10 @@ import {
   saveVideoUploadAnswer,
   fetchVideoUploadAnswer,
 } from "@/actions/answers/videoUpload";
-import { downloadFile } from "@/utils/helpers";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { downloadFile } from "@/utils/helpers";
+
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 import { SubmitButton } from "../submitButton";
@@ -39,7 +40,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
@@ -49,12 +50,15 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         const savedAnswer = await fetchVideoUploadAnswer(questionid);
-        if (savedAnswer?.videoname != ""){
-          const VideoUploadBucketData = await downloadFile(`video-${questionid}`, `${savedAnswer!.userid}_${savedAnswer!.videoname}`)
+        if (savedAnswer?.videoname != "") {
+          const VideoUploadBucketData = await downloadFile(
+            `video-${questionid}`,
+            `${savedAnswer!.userid}_${savedAnswer!.videoname}`,
+          );
           const url = URL.createObjectURL(VideoUploadBucketData!);
-          updateAnswerState(url || "");
+          updateAnswerState(url || "");
           setWasUploaded(true);
         } else {
           updateAnswerState("");
@@ -119,7 +123,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
     setWasUploaded(false);
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = '';
+      fileInput.value = "";
     }
   };
 

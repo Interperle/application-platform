@@ -7,6 +7,8 @@ import {
   fetchConditionalAnswer,
   saveConditionalAnswer,
 } from "@/actions/answers/conditional";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { numberToLetter } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
@@ -17,8 +19,6 @@ import { InformationBox } from "../informationBox";
 import Popup from "../popup";
 import { Question } from "../questions";
 import { SubmitButton } from "../submitButton";
-import { UpdateAnswer } from "@/store/slices/answerSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
 
 export interface conditionalChoicesProps {
   choiceid: string;
@@ -48,7 +48,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [choiceHelper, setChoiceHelper] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -61,10 +61,10 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
       setIsLoading(true);
       try {
         const savedAnswer = await fetchConditionalAnswer(questionid);
-        updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid)
+        updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
-      }finally {
+      } finally {
         setIsLoading(false);
       }
     }
@@ -94,10 +94,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
       choice.questions.filter((q) => q.depends_on == choice.choiceid),
     );
 
-    if (
-      dependingQuestions.length == 0 &&
-      answer === choice.choiceid
-    ) {
+    if (dependingQuestions.length == 0 && answer === choice.choiceid) {
       saveConditionalAnswer("", questionid);
       updateAnswerState("");
       return;

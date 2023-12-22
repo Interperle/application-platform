@@ -5,12 +5,12 @@ import {
   fetchDateTimePickerAnswer,
   saveDateTimePickerAnswer,
 } from "@/actions/answers/dateTimePicker";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setToPrefferedTimeZone } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { UpdateAnswer } from "@/store/slices/answerSlice";
 
 export interface DatetimePickerQuestionTypeProps
   extends DefaultQuestionTypeProps {
@@ -36,7 +36,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,7 +44,10 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         const savedAnswer = await fetchDateTimePickerAnswer(questionid);
-        updateAnswerState(setToPrefferedTimeZone(savedAnswer.pickeddatetime), savedAnswer.answerid);
+        updateAnswerState(
+          setToPrefferedTimeZone(savedAnswer.pickeddatetime),
+          savedAnswer.answerid,
+        );
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -75,10 +78,10 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    if (event.target.value == ""){
+    if (event.target.value == "") {
       updateAnswerState("");
       await saveDateTimePickerAnswer("", questionid);
-      return
+      return;
     }
     const selectedDate = new Date(event.target.value);
     const minDateTime = mindatetime ? new Date(mindatetime) : null;

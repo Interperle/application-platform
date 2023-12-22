@@ -6,12 +6,12 @@ import {
   fetchMultipleChoiceAnswer,
   saveMultipleChoiceAnswer,
 } from "@/actions/answers/multipleChoice";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { Choice, ChoiceProps } from "./utils/multiplechoice_choice";
 import { AwaitingChild } from "../awaiting";
-import { UpdateAnswer } from "@/store/slices/answerSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {
@@ -41,7 +41,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,7 +58,6 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     }
     loadAnswer();
   }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
-
 
   const updateAnswerState = (answervalue: string, answerid?: string) => {
     dispatch(
@@ -87,11 +86,13 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    const selectedChoices = answer.split(", ")
+    const selectedChoices = answer.split(", ");
     if (!selectedChoices.includes(choice.choiceid)) {
       if (selectedChoices.length + 1 > maxanswers) {
         updateAnswerState(
-          selectedChoices.filter((selected) => selected !== choice.choiceid).join(", "),
+          selectedChoices
+            .filter((selected) => selected !== choice.choiceid)
+            .join(", "),
         );
         alert("Du kannst maximal " + maxanswers + " auswählen!");
         return;
@@ -109,7 +110,9 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
         (selected) => selected !== choice.choiceid,
       );
     } else {
-      newChoices = [...selectedChoices, choice.choiceid].filter(choice => choice);
+      newChoices = [...selectedChoices, choice.choiceid].filter(
+        (choice) => choice,
+      );
     }
     await saveMultipleChoiceAnswer(newChoices.join(", "), questionid);
     updateAnswerState(newChoices.join(", "));

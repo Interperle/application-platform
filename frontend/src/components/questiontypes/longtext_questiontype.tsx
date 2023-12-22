@@ -33,7 +33,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,7 +42,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
       setIsLoading(true);
       try {
         const savedAnswer = await fetchLongTextAnswer(questionid);
-        updateAnswerState(savedAnswer.answertext, savedAnswer.answerid)
+        updateAnswerState(savedAnswer.answertext, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -93,8 +93,9 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
           value={answer}
         />
         <p
-          className={`italic  text-sm text-right ${answer.length == maxtextlength ? "text-red-500" : "text-gray-500"
-            } `}
+          className={`italic  text-sm text-right ${
+            answer.length == maxtextlength ? "text-red-500" : "text-gray-500"
+          } `}
         >
           {answer.length}/{maxtextlength} Zeichen
         </p>

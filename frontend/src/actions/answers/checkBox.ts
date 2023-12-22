@@ -44,13 +44,19 @@ const initialstate: LongTextAnswerResponse = {
   checked: false,
 };
 
-export async function fetchCheckBoxAnswer(questionid: string): Promise<LongTextAnswerResponse> {
+export async function fetchCheckBoxAnswer(
+  questionid: string,
+): Promise<LongTextAnswerResponse> {
   const supabase = initSupabaseActions();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: multipleCheckBoxData, error: multipleCheckBoxError } = await supabase
-    .rpc("fetch_checkbox_answer_table", { question_id: questionid, user_id: user?.id })
-    .single<LongTextAnswerResponse>();
+  const { data: multipleCheckBoxData, error: multipleCheckBoxError } =
+    await supabase
+      .rpc("fetch_checkbox_answer_table", {
+        question_id: questionid,
+        user_id: user?.id,
+      })
+      .single<LongTextAnswerResponse>();
   return multipleCheckBoxData || initialstate;
 }

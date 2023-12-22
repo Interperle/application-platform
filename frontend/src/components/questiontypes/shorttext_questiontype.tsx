@@ -5,9 +5,9 @@ import {
   fetchShortTextAnswer,
   saveShortTextAnswer,
 } from "@/actions/answers/shortText";
-import { checkRegex } from "@/utils/helpers";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { checkRegex } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
@@ -38,7 +38,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 

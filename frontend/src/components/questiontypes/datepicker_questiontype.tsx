@@ -5,11 +5,12 @@ import {
   fetchDatePickerAnswer,
   saveDatePickerAnswer,
 } from "@/actions/answers/datePicker";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { UpdateAnswer } from "@/store/slices/answerSlice";
+
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -34,7 +35,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -74,10 +75,10 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    if (event.target.value == ""){
+    if (event.target.value == "") {
       updateAnswerState("");
       saveDatePickerAnswer("", questionid);
-      return
+      return;
     }
     const selectedDate = new Date(event.target.value);
     const minDate = mindate ? new Date(mindate) : null;

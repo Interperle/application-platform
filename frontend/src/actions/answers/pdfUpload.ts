@@ -62,19 +62,19 @@ export async function savePdfUploadAnswer(
   }
 }
 
-export async function deletePdfUploadAnswer(
-  questionid: string,
-) {
+export async function deletePdfUploadAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const { data: pdfUploadData, error: pdfUploadError } = await supabase
-    .rpc("fetch_pdf_upload_answer_table", { question_id: questionid, user_id: user.id })
+    .rpc("fetch_pdf_upload_answer_table", {
+      question_id: questionid,
+      user_id: user.id,
+    })
     .single<PdfAnswerResponse>();
   const bucket_name = "pdf-" + questionid;
-  const { data: pdfDeleteData, error: pdfDeleteError } =
-    await supabase.storage
-      .from(bucket_name)
-      .remove([`${user.id}_${pdfUploadData?.pdfname}`]);
+  const { data: pdfDeleteData, error: pdfDeleteError } = await supabase.storage
+    .from(bucket_name)
+    .remove([`${user.id}_${pdfUploadData?.pdfname}`]);
   await deleteAnswer(questionid, "pdf_upload_answer_table");
 }
 
@@ -83,19 +83,20 @@ interface PdfAnswerResponse {
   pdfname: string;
 }
 
-export async function fetchPdfUploadAnswer(
-  questionid: string,
-) {
+export async function fetchPdfUploadAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const user_id = userData.user!.id;
 
   const { data: pdfUploadData, error: pdfUploadError } = await supabase
-    .rpc("fetch_pdf_upload_answer_table", { question_id: questionid, user_id: user_id })
+    .rpc("fetch_pdf_upload_answer_table", {
+      question_id: questionid,
+      user_id: user_id,
+    })
     .single<PdfAnswerResponse>();
 
-  if (pdfUploadError){
-    return null
+  if (pdfUploadError) {
+    return null;
   }
-  return {...pdfUploadData, userid: user_id};
+  return { ...pdfUploadData, userid: user_id };
 }

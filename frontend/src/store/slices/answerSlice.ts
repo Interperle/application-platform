@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type AnswerValue = string | number | boolean;
+type AnswerValue = string | number | boolean | null;
 
 type AnswerState = {
   [questionid: string]: {

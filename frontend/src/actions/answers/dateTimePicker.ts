@@ -51,8 +51,12 @@ export async function fetchDateTimePickerAnswer(questionid: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: dateTimePickerData, error: dateTimePickerError } = await supabase
-    .rpc("fetch_datetime_picker_answer_table", { question_id: questionid, user_id: user?.id })
-    .single<DateTimeAnswerResponse>();
+  const { data: dateTimePickerData, error: dateTimePickerError } =
+    await supabase
+      .rpc("fetch_datetime_picker_answer_table", {
+        question_id: questionid,
+        user_id: user?.id,
+      })
+      .single<DateTimeAnswerResponse>();
   return dateTimePickerData || initialstate;
 }

@@ -9,12 +9,11 @@ import {
 } from "@/actions/answers/pdfUpload";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { downloadFile } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 import { SubmitButton } from "../submitButton";
-import { downloadFile } from "@/utils/helpers";
-
 
 export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxfilesizeinmb: number;
@@ -37,7 +36,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
@@ -46,13 +45,16 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
 
   useEffect(() => {
     async function loadAnswer() {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         const savedAnswer = await fetchPdfUploadAnswer(questionid);
-        if (savedAnswer?.pdfname != ""){
-          const imageUploadBucketData = await downloadFile(`pdf-${questionid}`, `${savedAnswer!.userid}_${savedAnswer!.pdfname}`)
+        if (savedAnswer?.pdfname != "") {
+          const imageUploadBucketData = await downloadFile(
+            `pdf-${questionid}`,
+            `${savedAnswer!.userid}_${savedAnswer!.pdfname}`,
+          );
           const url = URL.createObjectURL(imageUploadBucketData!);
-          updateAnswerState(url || "");
+          updateAnswerState(url || "");
           setWasUploaded(true);
         } else {
           updateAnswerState("");
@@ -60,7 +62,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
     loadAnswer();
@@ -116,7 +118,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
     setWasUploaded(false);
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = '';
+      fileInput.value = "";
     }
   };
 

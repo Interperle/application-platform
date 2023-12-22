@@ -1,6 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import moment from "moment-timezone";
-import { supabase } from "./supabaseBrowserClient";
+
 
 export const getURL = () => {
   let url = process?.env?.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000/"; // Set this to your site URL in production env.
@@ -29,21 +29,16 @@ export function transformReadableDateTime(dateString: string) {
   return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY hh:mm");
 }
 
-export async function downloadFile(
-  bucket_name: string,
-  filename: string,
-) {
+export async function downloadFile(bucket_name: string, filename: string) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
   const { data: fileUploadBucketData, error: fileUploadBucketError } =
-    await supabase.storage
-      .from(bucket_name)
-      .download(filename);
-  if (fileUploadBucketError){
-    console.log(fileUploadBucketError)
-    return
+    await supabase.storage.from(bucket_name).download(filename);
+  if (fileUploadBucketError) {
+    console.log(fileUploadBucketError);
+    return;
   }
   // Can't return Blob from Server Component to Client Component!
   return fileUploadBucketData!;

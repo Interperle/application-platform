@@ -62,13 +62,14 @@ export async function saveImageUploadAnswer(
   }
 }
 
-export async function deleteImageUploadAnswer(
-  questionid: string,
-) {
+export async function deleteImageUploadAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const { data: imageUploadData, error: imageUploadError } = await supabase
-    .rpc("fetch_image_upload_answer_table", { question_id: questionid, user_id: user.id })
+    .rpc("fetch_image_upload_answer_table", {
+      question_id: questionid,
+      user_id: user.id,
+    })
     .single<ImageAnswerResponse>();
   const bucket_name = "image-" + questionid;
   const { data: imageDeleteData, error: imageDeleteError } =
@@ -83,19 +84,20 @@ interface ImageAnswerResponse {
   imagename: string;
 }
 
-export async function fetchImageUploadAnswer(
-  questionid: string,
-) {
+export async function fetchImageUploadAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const user_id = userData.user!.id;
 
   const { data: imageUploadData, error: imageUploadError } = await supabase
-    .rpc("fetch_image_upload_answer_table", { question_id: questionid, user_id: user_id })
+    .rpc("fetch_image_upload_answer_table", {
+      question_id: questionid,
+      user_id: user_id,
+    })
     .single<ImageAnswerResponse>();
 
-  if (imageUploadError){
-    return null
+  if (imageUploadError) {
+    return null;
   }
-  return {...imageUploadData, userid: user_id};
+  return { ...imageUploadData, userid: user_id };
 }

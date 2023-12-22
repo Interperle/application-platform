@@ -37,7 +37,6 @@ export async function saveNumberPickerAnswer(
   }
 }
 
-
 interface NumberPickerAnswerResponse {
   answerid: string;
   pickednumber: string;
@@ -48,13 +47,18 @@ const initialstate: NumberPickerAnswerResponse = {
   pickednumber: "",
 };
 
-export async function fetchNumberPickerAnswer(questionid: string): Promise<NumberPickerAnswerResponse> {
+export async function fetchNumberPickerAnswer(
+  questionid: string,
+): Promise<NumberPickerAnswerResponse> {
   const supabase = initSupabaseActions();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: numberPickerData, error: numberPickerError } = await supabase
-    .rpc("fetch_number_picker_answer_table", { question_id: questionid, user_id: user?.id })
+    .rpc("fetch_number_picker_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
     .single<NumberPickerAnswerResponse>();
   return numberPickerData || initialstate;
 }

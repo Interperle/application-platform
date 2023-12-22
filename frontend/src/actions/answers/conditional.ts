@@ -52,8 +52,12 @@ export async function fetchConditionalAnswer(questionid: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: conditionalTextData, error: conditionalTextError } = await supabase
-    .rpc("fetch_conditional_answer_table", { question_id: questionid, user_id: user?.id })
-    .single<ConditionalAnswerResponse>();
+  const { data: conditionalTextData, error: conditionalTextError } =
+    await supabase
+      .rpc("fetch_conditional_answer_table", {
+        question_id: questionid,
+        user_id: user?.id,
+      })
+      .single<ConditionalAnswerResponse>();
   return conditionalTextData || initialstate;
 }

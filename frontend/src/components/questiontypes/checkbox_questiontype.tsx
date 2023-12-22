@@ -5,11 +5,12 @@ import {
   fetchCheckBoxAnswer,
   saveCheckBoxAnswer,
 } from "@/actions/answers/checkBox";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { UpdateAnswer } from "@/store/slices/answerSlice";
+
 
 export interface CheckBoxQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -39,7 +40,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
       setIsLoading(true);
       try {
         const savedAnswer = await fetchCheckBoxAnswer(questionid);
-        updateAnswerState(savedAnswer.checked, savedAnswer.answerid)
+        updateAnswerState(savedAnswer.checked, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -76,7 +77,9 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
           className="block font-semibold text-secondary py-3"
         >
           <h4 className="py-1 text-base">
-            {questionsuborder ? `${questionorder}${questionsuborder})` : `${questionorder}. `}
+            {questionsuborder
+              ? `${questionorder}${questionsuborder})`
+              : `${questionorder}. `}
             <input
               id={questionid}
               name={questionid}

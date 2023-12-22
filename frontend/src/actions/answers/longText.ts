@@ -50,13 +50,18 @@ const initialstate: LongTextAnswerResponse = {
   answertext: "",
 };
 
-export async function fetchLongTextAnswer(questionid: string): Promise<LongTextAnswerResponse> {
+export async function fetchLongTextAnswer(
+  questionid: string,
+): Promise<LongTextAnswerResponse> {
   const supabase = initSupabaseActions();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: longTextData, error: longTextError } = await supabase
-    .rpc("fetch_long_text_answer_table", { question_id: questionid, user_id: user?.id })
+    .rpc("fetch_long_text_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
     .single<LongTextAnswerResponse>();
   return longTextData || initialstate;
 }

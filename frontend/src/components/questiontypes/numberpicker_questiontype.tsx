@@ -35,7 +35,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
-    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,7 +43,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
     async function loadAnswer() {
       try {
         const savedAnswer = await fetchNumberPickerAnswer(questionid);
-        updateAnswerState(savedAnswer.pickednumber, savedAnswer.answerid)
+        updateAnswerState(savedAnswer.pickednumber, savedAnswer.answerid);
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
