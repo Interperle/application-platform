@@ -5,7 +5,7 @@ import { fetch_answer_table, fetch_sections_by_phase } from "@/actions/phase";
 import Apl_Header from "@/components/header";
 import OverviewButton from "@/components/overviewButton";
 import { ProgressBar } from "@/components/progressbar";
-import Questionnaire from "@/components/questions";
+import Questionnaire, { Question } from "@/components/questions";
 import { SectionQuestionsMap, SectionView } from "@/components/sectionViewer";
 import { SectionData } from "@/store/slices/phaseSlice";
 import {
@@ -35,7 +35,11 @@ export default async function Page({
 
   const isEditable = currentDate >= startDate && currentDate <= endDate;
 
-  const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
+  const {
+    result: phase_questions,
+    depending: depending_questions,
+    cond: dependsOnCount,
+  } = await cached_fetch_phase_questions(phaseData.phaseid);
   let phase_sections = [] as SectionData[];
   let mapQuestions = {} as SectionQuestionsMap;
   if (phaseData.sectionsenabled) {
@@ -50,9 +54,9 @@ export default async function Page({
 
   const phase_answers = await fetchAllAnswersOfApplication();
   const mandatoryQuestionIds = phase_questions
-    .filter((q) => q.mandatory)
-    .map((q) => q.questionid);
-  const already_answered = await fetch_answer_table(mandatoryQuestionIds);
+    .filter((q: Question) => q.mandatory)
+    .map((q: Question) => q.questionid);
+  const numAnswers = await fetch_answer_table(mandatoryQuestionIds);
   return (
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
@@ -76,7 +80,7 @@ export default async function Page({
           <ProgressBar
             progressbarId={`${phaseData.phaseid}-top`}
             mandatoryQuestionIds={mandatoryQuestionIds}
-            numAnswers={already_answered}
+            numAnswers={numAnswers}
             endDate={phaseData.enddate}
           />
           <div className="space-y-4 max-w-screen-xl">
@@ -95,13 +99,14 @@ export default async function Page({
                 phaseAnswers={phase_answers}
                 iseditable={isEditable}
                 selectedSection={null}
+                selectedCondChoice={null}
               />
             )}
           </div>
           <ProgressBar
             progressbarId={`${phaseData.phaseid}-bottom`}
             mandatoryQuestionIds={mandatoryQuestionIds}
-            numAnswers={already_answered}
+            numAnswers={numAnswers}
             endDate={phaseData.enddate}
           />
         </div>
