@@ -40,11 +40,6 @@ export async function saveLongTextAnswer(
   return answerid;
 }
 
-interface FetchAnswerTextParams {
-  question_id: string;
-  user_id: string;
-}
-
 interface LongTextAnswerResponse {
   answerid: string;
   answertext: string;

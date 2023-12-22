@@ -6,13 +6,16 @@ import Image from "next/image";
 
 import {
   deleteImageUploadAnswer,
+  fetchImageUploadAnswer,
   saveImageUploadAnswer,
 } from "@/actions/answers/imageUpload";
-import { fetchImageUploadAnswer } from "@/utils/helpers";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 import { SubmitButton } from "../submitButton";
+import { downloadFile } from "@/utils/helpers";
 
 export interface ImageUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -28,7 +31,6 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   questionorder,
   iseditable,
   maxfilesizeinmb,
-  answerid,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
@@ -37,31 +39,46 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     null,
     questionid,
   );
-  const [uploadUrl, setUploadImage] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
-  console.log("Render Image Upload"); // Keep to ensure it's rerendered
 
   const validImgTypes = ["image/png", "image/jpeg"];
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true)
       try {
-        if (answerid) {
-          const imageUploadBucketData = await fetchImageUploadAnswer(
-            questionid,
-            answerid,
-          );
+        const savedAnswer = await fetchImageUploadAnswer(questionid);
+        if (savedAnswer?.imagename != ""){
+          const imageUploadBucketData = await downloadFile(`image-${questionid}`, `${savedAnswer!.userid}_${savedAnswer!.imagename}`)
           const url = URL.createObjectURL(imageUploadBucketData!);
-          setUploadImage(url);
+          updateAnswerState(url || "");
           setWasUploaded(true);
+        } else {
+          updateAnswerState("");
         }
-        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   function set_image_for_upload(file: File) {
     if (!iseditable) {
@@ -80,7 +97,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       alert(`Die Bilddatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
-    setUploadImage(URL.createObjectURL(file));
+    updateAnswerState(URL.createObjectURL(file));
     setWasUploaded(false);
   }
   const handleUploadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,9 +114,13 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    deleteImageUploadAnswer(questionid, answerid || "");
-    setUploadImage("");
+    deleteImageUploadAnswer(questionid);
+    updateAnswerState("");
     setWasUploaded(false);
+    const fileInput = document.getElementById(questionid) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   };
 
   const handleSubmit = () => {
@@ -139,7 +160,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       questionsuborder={questionsuborder}
     >
       <form action={saveImageUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${uploadUrl && "hidden"}`}>
+        <div className={`mt-1 ${answer && "hidden"}`}>
           <AwaitingChild isLoading={isLoading}>
             <div className="flex items-center justify-center w-full">
               <label
@@ -189,7 +210,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
         </div>
         <div
           className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !uploadUrl && "hidden"
+            !answer && "hidden"
           }`}
         >
           {iseditable && (
@@ -203,7 +224,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
           )}
           <Image
             alt="Preview"
-            src={uploadUrl}
+            src={answer}
             className="self-center max-w-xs max-h-96"
             id="imagePreview"
             width={100}

@@ -26,7 +26,6 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
   questionsuborder,
   children,
 }) => {
-  console.log("Render Question"); // Keep to ensure it's rerendered
   return (
     <div className="mb-4">
       <label

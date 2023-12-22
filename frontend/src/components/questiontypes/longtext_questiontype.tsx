@@ -6,6 +6,8 @@ import {
   fetchLongTextAnswer,
   saveLongTextAnswer,
 } from "@/actions/answers/longText";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
@@ -23,36 +25,48 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
   questionnote,
   questionorder,
   iseditable,
-  answerid,
   maxtextlength,
   selectedSection,
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
-  console.log("Render Longtext"); // Keep to ensure it's rerendered
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
-        if (answerid) {
-          const savedAnswer = await fetchLongTextAnswer(answerid);
-          setAnswer(savedAnswer || "");
-        }
-        setIsLoading(false);
+        const savedAnswer = await fetchLongTextAnswer(questionid);
+        updateAnswerState(savedAnswer.answertext, savedAnswer.answerid)
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!iseditable) {
       return;
     }
-    setAnswer(event.target.value);
+    updateAnswerState(event.target.value);
   };
 
   return (
@@ -79,9 +93,8 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
           value={answer}
         />
         <p
-          className={`italic  text-sm text-right ${
-            answer.length == maxtextlength ? "text-red-500" : "text-gray-500"
-          } `}
+          className={`italic  text-sm text-right ${answer.length == maxtextlength ? "text-red-500" : "text-gray-500"
+            } `}
         >
           {answer.length}/{maxtextlength} Zeichen
         </p>

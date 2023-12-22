@@ -62,21 +62,41 @@ export async function saveVideoUploadAnswer(
   }
 }
 
+
 export async function deleteVideoUploadAnswer(
   questionid: string,
-  answerid: string,
 ) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
-  const bucket_name = "video-" + questionid;
   const { data: videoUploadData, error: videoUploadError } = await supabase
-    .from("video_upload_answer_table")
-    .select("videoname")
-    .eq("answerid", answerid)
-    .single();
+    .rpc("fetch_video_upload_answer_table", { question_id: questionid, user_id: user.id })
+    .single<VideoAnswerResponse>();
+  const bucket_name = "video-" + questionid;
   const { data: videoDeleteData, error: videoDeleteError } =
     await supabase.storage
       .from(bucket_name)
-      .remove([`${user.id}_${videoUploadData!.videoname}`]);
+      .remove([`${user.id}_${videoUploadData?.videoname}`]);
   await deleteAnswer(questionid, "video_upload_answer_table");
+}
+
+interface VideoAnswerResponse {
+  answerid: string;
+  videoname: string;
+}
+
+export async function fetchVideoUploadAnswer(
+  questionid: string,
+) {
+  const supabase = initSupabaseActions();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user_id = userData.user!.id;
+
+  const { data: videoUploadData, error: videoUploadError } = await supabase
+    .rpc("fetch_video_upload_answer_table", { question_id: questionid, user_id: user_id })
+    .single<VideoAnswerResponse>();
+
+  if (videoUploadError){
+    return null
+  }
+  return {...videoUploadData, userid: user_id};
 }

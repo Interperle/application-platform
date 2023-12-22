@@ -5,15 +5,16 @@ import React, { useEffect, useState } from "react";
 import {
   deleteVideoUploadAnswer,
   saveVideoUploadAnswer,
+  fetchVideoUploadAnswer,
 } from "@/actions/answers/videoUpload";
-import { fetchVideoUploadAnswer } from "@/utils/helpers";
-
+import { downloadFile } from "@/utils/helpers";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
 import { SubmitButton } from "../submitButton";
 
 export interface VideoUploadQuestionTypeProps extends DefaultQuestionTypeProps {
-  answerid: string | null;
   maxfilesizeinmb: number;
 }
 
@@ -25,7 +26,6 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   questionnote,
   questionorder,
   iseditable,
-  answerid,
   maxfilesizeinmb,
   selectedSection,
   selectedCondChoice,
@@ -35,30 +35,48 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
     null,
     questionid,
   );
-  const [uploadUrl, setUploadVideo] = useState("");
+
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => state.answerReducer[questionid]?.answervalue as string || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
-  console.log("Render Video Upload"); // Keep to ensure it's rerendered
 
   const validImgTypes = ["video/mp4"];
 
   useEffect(() => {
     async function loadAnswer() {
       try {
-        if (answerid) {
-          const VideoUploadBucketData =
-            await fetchVideoUploadAnswer(questionid);
+        setIsLoading(true)
+        const savedAnswer = await fetchVideoUploadAnswer(questionid);
+        if (savedAnswer?.videoname != ""){
+          const VideoUploadBucketData = await downloadFile(`video-${questionid}`, `${savedAnswer!.userid}_${savedAnswer!.videoname}`)
           const url = URL.createObjectURL(VideoUploadBucketData!);
-          setUploadVideo(url);
+          updateAnswerState(url || "");
           setWasUploaded(true);
+        } else {
+          updateAnswerState("");
         }
-        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch answer", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
+
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
 
   function set_video_for_upload(file: File) {
     if (!iseditable) {
@@ -78,7 +96,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       alert(`Die Videodatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
-    setUploadVideo(URL.createObjectURL(file));
+    updateAnswerState(URL.createObjectURL(file));
     setWasUploaded(false);
   }
 
@@ -96,10 +114,12 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    if (answerid) {
-      deleteVideoUploadAnswer(questionid, answerid);
-      setUploadVideo("");
-      setWasUploaded(false);
+    deleteVideoUploadAnswer(questionid);
+    updateAnswerState("");
+    setWasUploaded(false);
+    const fileInput = document.getElementById(questionid) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
     }
   };
 
@@ -140,7 +160,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       questionsuborder={questionsuborder}
     >
       <form action={saveVideoUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${uploadUrl && "hidden"}`}>
+        <div className={`mt-1 ${answer && "hidden"}`}>
           <AwaitingChild isLoading={isLoading}>
             <div className="flex items-center justify-center w-full">
               <label
@@ -188,7 +208,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
         </div>
         <div
           className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !uploadUrl && "hidden"
+            !answer && "hidden"
           }`}
         >
           {iseditable && (
@@ -207,7 +227,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
             controls
             className="max-w-xs max-h-96"
           >
-            <source src={uploadUrl} type="video/mp4" />
+            <source src={answer} type="video/mp4" />
             Dein Browser supported diese Darstellung leider nicht
           </video>
           {!wasUploaded ? (
