@@ -16,6 +16,45 @@ export const MissingQuestions = ({
     (state) => state.answerReducer,
   );
 
+  const renderQuestion = (question: Question, dependingOrder?: number) => (
+    <li key={question.questionid}>
+      {dependingOrder ? `${dependingOrder} ${numberToLetter(question.questionorder)}) `: `${question.questionorder}. ` }<span
+        className="break-after-avoid"
+        dangerouslySetInnerHTML={{ __html: question.questiontext }}
+      ></span>
+    </li>
+  );
+
+  const questionsJSX = phaseQuestions
+    .sort((a, b) => a.questionorder - b.questionorder)
+    .flatMap((question) => {
+      if (question.questiontype !== "conditional") {
+        if (question.mandatory && !(question.questionid in answeredQuestions)) {
+          return renderQuestion(question);
+        }
+        return [];
+      }
+
+      if (question.questionid in answeredQuestions) {
+        return question.params.choices.flatMap((choice: {choiceid: string, choicevalue: string, questions: Question[]}) => {
+          return choice.questions
+            .sort((a: Question, b: Question) => a.questionorder - b.questionorder)
+            .flatMap((condQuestion: Question) => {
+              if (
+                condQuestion.mandatory &&
+                !(condQuestion.questionid in answeredQuestions) &&
+                answeredQuestions[question.questionid].answervalue === choice.choiceid
+              ) {
+                condQuestion.questionsuborder = ``
+                return renderQuestion(condQuestion, question.questionorder);
+              }
+              return [];
+            });
+        });
+      }
+      return [];
+    });
+
   return (
     <div className="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
       <svg
@@ -32,62 +71,7 @@ export const MissingQuestions = ({
           Die folgenden verpflichtenden Fragen sind noch ausstehend:
         </span>
         <ul className="mt-1.5 list-inside">
-          {phaseQuestions.map((question) => {
-            if (question.questiontype != "conditional") {
-              if (
-                !question.mandatory ||
-                question.questionid in answeredQuestions
-              ) {
-                return null;
-              }
-              return (
-                <li key={question.questionid}>
-                  {question.questionorder}. <span
-                        className="break-after-avoid"
-                        dangerouslySetInnerHTML={{ __html: question.questiontext }}
-                      ></span>
-                </li>
-              );
-            }
-            if (
-              question.mandatory &&
-              !(question.questionid in answeredQuestions)
-            ) {
-              return (
-                <li key={question.questionid}>
-                  {question.questionorder}. <span
-                    className="break-after-avoid"
-                    dangerouslySetInnerHTML={{ __html: question.questiontext }}
-                  ></span>
-                </li>
-              );
-            }
-            if (question.questionid in answeredQuestions) {
-              const allChoices = question.params.choices;
-              for (const choice of allChoices) {
-                for (const condQuestion of choice.questions) {
-                  if (
-                    !condQuestion.mandatory ||
-                    condQuestion.questionid in answeredQuestions ||
-                    answeredQuestions[question.questionid].answervalue !=
-                    choice.choiceid
-                  ) {
-                    return null;
-                  }
-                  return (
-                    <li key={condQuestion.questionid}>
-                      {question.questionorder}{" "}
-                      {numberToLetter(condQuestion.questionorder)}){" "}
-                      <span
-                        className="break-after-avoid"
-                        dangerouslySetInnerHTML={{ __html: condQuestion.questiontext }}
-                      ></span>
-                    </li>
-                  );
-                }
-              }
-            }
-          })}
+          {questionsJSX}
         </ul>
       </div>
     </div>

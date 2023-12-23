@@ -28,7 +28,7 @@ export function transformReadableDate(dateString: string) {
 }
 
 export function transformReadableDateTime(dateString: string) {
-  return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY hh:mm");
+  return moment(dateString).tz("Europe/Berlin").format("DD.MM.YYYY HH:mm");
 }
 
 export async function downloadFile(bucket_name: string, filename: string) {
