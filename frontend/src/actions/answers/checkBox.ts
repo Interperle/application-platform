@@ -51,12 +51,15 @@ export async function fetchCheckBoxAnswer(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: multipleCheckBoxData, error: multipleCheckBoxError } =
-    await supabase
-      .rpc("fetch_checkbox_answer_table", {
-        question_id: questionid,
-        user_id: user?.id,
-      })
-      .single<LongTextAnswerResponse>();
-  return multipleCheckBoxData || initialstate;
+  const { data: checkBoxData, error: checkBoxError } = await supabase
+    .rpc("fetch_checkbox_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
+    .single<LongTextAnswerResponse>();
+  if (checkBoxError) {
+    console.log("checkBoxError:");
+    console.log(checkBoxError);
+  }
+  return checkBoxData || initialstate;
 }

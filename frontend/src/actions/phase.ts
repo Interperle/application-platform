@@ -254,6 +254,10 @@ export async function fetch_conditional_questionid_mapping() {
     await initSupabaseActions()
       .from("conditional_question_choice_table")
       .select("*");
+  if (conditionalError) {
+    console.log(JSON.stringify(conditionalError));
+    return {} as Record<string, string[]>;
+  }
   return conditionalData?.reduce(
     (
       acc: Record<string, string>,
@@ -352,7 +356,7 @@ export async function fetch_answer_table(
     .eq("applicationid", applicationid);
 
   if (answerError) {
-    console.log("Error:" && answerError);
+    console.log("Error:" + answerError);
   }
 
   return answerData ? answerData.length : 0;

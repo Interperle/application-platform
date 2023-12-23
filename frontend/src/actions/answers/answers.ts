@@ -78,6 +78,8 @@ export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
 
   if (answerError) {
     if (answerError.code == "PGRST116") {
+      console.log("answerError:");
+      console.log(answerError);
       return [];
     }
     console.log(answerError);
@@ -138,6 +140,7 @@ export async function deleteAnswer(questionid: string, answertype: string) {
 }
 
 export async function deleteAnswersOfQuestions(questions: Question[]) {
+  console.log(JSON.stringify(questions));
   for (const question of questions) {
     await deleteAnswer(
       question.questionid,

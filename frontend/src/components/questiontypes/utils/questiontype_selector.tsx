@@ -1,17 +1,29 @@
 import { FC } from "react";
 
+import CheckBoxQuestionType, {
+  CheckBoxQuestionTypeProps,
+} from "@/components/questiontypes/checkbox_questiontype";
+import ConditionalQuestionType, {
+  ConditionalQuestionTypeProps,
+} from "@/components/questiontypes/conditional_questiontype";
 import DatePickerQuestionType, {
   DatePickerQuestionTypeProps,
 } from "@/components/questiontypes/datepicker_questiontype";
 import DatetimePickerQuestionType, {
   DatetimePickerQuestionTypeProps,
 } from "@/components/questiontypes/datetimepicker_questiontype";
+import DropdownQuestionType, {
+  DropdownQuestionTypeProps,
+} from "@/components/questiontypes/dropdown_questiontype";
 import ImageUploadQuestionType, {
   ImageUploadQuestionTypeProps,
 } from "@/components/questiontypes/imageupload_questiontype";
 import LongTextQuestionType, {
   LongTextQuestionTypeProps,
 } from "@/components/questiontypes/longtext_questiontype";
+import MultipleChoiceQuestionType, {
+  MultipleChoiceQuestionTypeProps,
+} from "@/components/questiontypes/multiplechoice_questiontype";
 import NumberPickerQuestionType, {
   NumberPickerQuestionTypeProps,
 } from "@/components/questiontypes/numberpicker_questiontype";
@@ -24,19 +36,6 @@ import ShortTextQuestionType, {
 import VideoUploadQuestionType, {
   VideoUploadQuestionTypeProps,
 } from "@/components/questiontypes/videoupload_questiontype";
-
-import CheckBoxQuestionType, {
-  CheckBoxQuestionTypeProps,
-} from "../checkbox_questiontype";
-import ConditionalQuestionType, {
-  ConditionalQuestionTypeProps,
-} from "../conditional_questiontype";
-import DropdownQuestionType, {
-  DropdownQuestionTypeProps,
-} from "../dropdown_questiontype";
-import MultipleChoiceQuestionType, {
-  MultipleChoiceQuestionTypeProps,
-} from "../multiplechoice_questiontype";
 
 export enum QuestionType {
   ShortText = "shortText",
@@ -98,25 +97,29 @@ type QuestionTypeSelectorProps = {
   conditional: FC<ConditionalQuestionTypeProps>;
 };
 
-const QuestionTypeSelector: QuestionTypeSelectorProps = {
-  shortText: ShortTextQuestionType,
-  longText: LongTextQuestionType,
-  videoUpload: VideoUploadQuestionType,
-  datetimePicker: DatetimePickerQuestionType,
-  datePicker: DatePickerQuestionType,
-  numberPicker: NumberPickerQuestionType,
-  imageUpload: ImageUploadQuestionType,
-  pdfUpload: PDFUploadQuestionType,
-  multipleChoice: MultipleChoiceQuestionType,
-  dropdown: DropdownQuestionType,
-  checkBox: CheckBoxQuestionType,
-  conditional: ConditionalQuestionType,
-};
-
 const getQuestionComponent = (
   questionType: keyof QuestionTypeSelectorProps,
 ) => {
-  return QuestionTypeSelector[questionType] || null;
+  const QuestionTypeSelector: QuestionTypeSelectorProps = {
+    shortText: ShortTextQuestionType,
+    longText: LongTextQuestionType,
+    videoUpload: VideoUploadQuestionType,
+    datetimePicker: DatetimePickerQuestionType,
+    datePicker: DatePickerQuestionType,
+    numberPicker: NumberPickerQuestionType,
+    imageUpload: ImageUploadQuestionType,
+    pdfUpload: PDFUploadQuestionType,
+    multipleChoice: MultipleChoiceQuestionType,
+    dropdown: DropdownQuestionType,
+    checkBox: CheckBoxQuestionType,
+    conditional: ConditionalQuestionType,
+  };
+
+  const QuestionComponent = QuestionTypeSelector[questionType];
+  if (QuestionComponent) {
+    return QuestionComponent;
+  }
+  return null;
 };
 
 export default getQuestionComponent;

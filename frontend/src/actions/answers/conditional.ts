@@ -59,5 +59,9 @@ export async function fetchConditionalAnswer(questionid: string) {
         user_id: user?.id,
       })
       .single<ConditionalAnswerResponse>();
+  if (conditionalTextError) {
+    console.log("conditionalTextError:");
+    console.log(conditionalTextError);
+  }
   return conditionalTextData || initialstate;
 }

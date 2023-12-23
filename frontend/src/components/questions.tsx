@@ -77,7 +77,6 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
       }),
     );
   };
-
   return (
     <div className="mt-10">
       {copyPhaseQuestions
@@ -87,9 +86,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             phaseQuestion.questiontype,
           );
           if (!QuestionComponent) {
-            console.error(
-              `Unknown question type: ${phaseQuestion.questiontype}`,
-            );
+            alert(`Unknown question type: ${phaseQuestion.questiontype}`);
             return null;
           }
           return (

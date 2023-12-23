@@ -70,38 +70,37 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
 
   return (
     <div className="mb-4" key={questionid}>
-      
-        <label
-          htmlFor={questionid}
-          className="block font-semibold text-secondary py-3"
-        >
-          <h4 className="py-1 text-base">
-            {questionsuborder
-              ? `${questionorder}${questionsuborder})`
-              : `${questionorder}. `}
-            <AwaitingChild isLoading={isLoading}>
-              <input
-                id={questionid}
-                name={questionid}
-                disabled={!iseditable}
-                aria-disabled={!iseditable}
-                type="checkbox"
-                checked={answer as boolean}
-                onChange={handleChange}
-                onClick={handleChange}
-                className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
-              />
-            </AwaitingChild>
-            {mandatory && <span className="text-red-500">*</span>}
-            <span
-              className="break-after-avoid"
-              dangerouslySetInnerHTML={{ __html: questiontext }}
-            ></span>
-          </h4>
-          {questionnote && (
-            <p className="italic text-gray-500 text-sm">{questionnote}</p>
-          )}
-        </label>
+      <label
+        htmlFor={questionid}
+        className="block font-semibold text-secondary py-3"
+      >
+        <h4 className="py-1 text-base">
+          {questionsuborder
+            ? `${questionorder}${questionsuborder})`
+            : `${questionorder}. `}
+          <AwaitingChild isLoading={isLoading}>
+            <input
+              id={questionid}
+              name={questionid}
+              disabled={!iseditable}
+              aria-disabled={!iseditable}
+              type="checkbox"
+              checked={answer as boolean}
+              onChange={handleChange}
+              onClick={handleChange}
+              className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
+            />
+          </AwaitingChild>
+          {mandatory && <span className="text-red-500">*</span>}
+          <span
+            className="break-after-avoid"
+            dangerouslySetInnerHTML={{ __html: questiontext }}
+          ></span>
+        </h4>
+        {questionnote && (
+          <p className="italic text-gray-500 text-sm">{questionnote}</p>
+        )}
+      </label>
     </div>
   );
 };
