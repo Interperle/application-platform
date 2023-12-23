@@ -70,7 +70,7 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
 
   return (
     <div className="mb-4" key={questionid}>
-      <AwaitingChild isLoading={isLoading}>
+      
         <label
           htmlFor={questionid}
           className="block font-semibold text-secondary py-3"
@@ -79,17 +79,19 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
             {questionsuborder
               ? `${questionorder}${questionsuborder})`
               : `${questionorder}. `}
-            <input
-              id={questionid}
-              name={questionid}
-              disabled={!iseditable}
-              aria-disabled={!iseditable}
-              type="checkbox"
-              checked={answer as boolean}
-              onChange={handleChange}
-              onClick={handleChange}
-              className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
-            />
+            <AwaitingChild isLoading={isLoading}>
+              <input
+                id={questionid}
+                name={questionid}
+                disabled={!iseditable}
+                aria-disabled={!iseditable}
+                type="checkbox"
+                checked={answer as boolean}
+                onChange={handleChange}
+                onClick={handleChange}
+                className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
+              />
+            </AwaitingChild>
             {mandatory && <span className="text-red-500">*</span>}
             <span
               className="break-after-avoid"
@@ -100,7 +102,6 @@ const CheckBoxQuestionType: React.FC<CheckBoxQuestionTypeProps> = ({
             <p className="italic text-gray-500 text-sm">{questionnote}</p>
           )}
         </label>
-      </AwaitingChild>
     </div>
   );
 };
