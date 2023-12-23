@@ -21,39 +21,12 @@ export const ProgressBar = ({
   const answeredQuestions = useAppSelector<AnswerState>(
     (state) => state.answerReducer,
   );
-  const [allAnswered, setAllAnswered] = useState<string[]>([]);
   const [numAnswered, setNumAnswered] = useState(0);
   const [numMandatory, setNumMandatory] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    /*const fetchData = async () => {
-      const phase_answers = await fetchAllAnswersOfApplication();
-      const answeredQuestionIds = phase_answers.map(answer => answer.questionid);
-      setAllAnswered(answeredQuestionIds);
-    };
-
-    fetchData();
-
-    const progressbarChannel = supabase
-      .channel(`progressbar-channel-${progressbarId}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'answer_table',
-      }, payload => {
-        setAllAnswered(current => Array.from(new Set([...current, payload.new.questionid])));
-      })
-      .on('postgres_changes', {
-        event: 'DELETE',
-        schema: 'public',
-        table: 'answer_table',
-      }, async () => {
-        const phase_answers = await fetchAllAnswersOfApplication();
-        setAllAnswered(phase_answers.map(answer => answer.questionid));
-      })
-      .subscribe();*/
 
     const answeredMandatory = mandatoryQuestionIds.filter(
       (questionId) => questionId in answeredQuestions,
@@ -76,9 +49,6 @@ export const ProgressBar = ({
     setNumAnswered(answeredMandatory + answeredConditional.length);
     setNumMandatory(mandatoryQuestionIds.length + conditionalMandatory);
     setIsLoading(false);
-    //return () => {
-    //  supabase.removeChannel(progressbarChannel);
-    //};
   }, [
     mandatoryQuestionIds,
     progressbarId,
@@ -99,12 +69,7 @@ export const ProgressBar = ({
           }`}
         />
       </div>
-      <div>
-        <div>{JSON.stringify(allAnswered)}</div>
-        <div>{JSON.stringify(mandatoryQuestionIds)}</div>
-        <div>{JSON.stringify(dependingOn)}</div>
-        <div>{JSON.stringify(Object.keys(answeredQuestions))}</div>
-      </div>
+      <div>Testing Helper: {numAnswered}/{numMandatory}</div>
       {numAnswered == numMandatory &&
         (new Date(endDate) > new Date(Date.now()) ? (
           <div className="md-3 italic text-gray-500">
