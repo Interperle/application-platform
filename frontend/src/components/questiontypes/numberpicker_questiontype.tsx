@@ -41,6 +41,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
         const savedAnswer = await fetchNumberPickerAnswer(questionid);
         updateAnswerState(savedAnswer.pickednumber, savedAnswer.answerid);

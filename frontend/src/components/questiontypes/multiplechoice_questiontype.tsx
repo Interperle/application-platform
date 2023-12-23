@@ -47,6 +47,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
         const savedAnswer = await fetchMultipleChoiceAnswer(questionid);
         updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);

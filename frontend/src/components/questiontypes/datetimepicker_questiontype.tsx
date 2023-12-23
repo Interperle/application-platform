@@ -42,6 +42,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
         const savedAnswer = await fetchDateTimePickerAnswer(questionid);
         updateAnswerState(

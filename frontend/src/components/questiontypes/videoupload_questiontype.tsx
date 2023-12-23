@@ -49,8 +49,8 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
         const savedAnswer = await fetchVideoUploadAnswer(questionid);
         if (savedAnswer?.videoname != "") {
           const VideoUploadBucketData = await downloadFile(

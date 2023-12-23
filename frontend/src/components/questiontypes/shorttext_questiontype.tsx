@@ -44,6 +44,7 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
         const savedAnswer = await fetchShortTextAnswer(questionid);
         updateAnswerState(savedAnswer.answertext, savedAnswer.answerid);
