@@ -224,7 +224,6 @@ export async function fetch_question_table(
 
   const ConditionalChoiceIdToQuestionId =
     await fetch_conditional_questionid_mapping();
-  console.log(JSON.stringify(ConditionalChoiceIdToQuestionId));
   const dependingOn: Record<string, string[]> = dependingQuestions.reduce(
     (acc: Record<string, string[]>, question: Question) => {
       if (!question.mandatory) {
@@ -416,10 +415,10 @@ export async function fetch_sections_by_phase(
     .select("*")
     .eq("phaseid", phaseId);
   if (sectionsError) {
-    console.log("Error: " + JSON.stringify(sectionsError) + " -> Redirect");
+    console.log("Error: " + JSON.stringify(sectionsError));
   }
   if (!sectionsData) {
-    console.log("No data " + JSON.stringify(sectionsData) + " -> Redirect");
+    console.log("No data " + JSON.stringify(sectionsData));
   }
   return sectionsData as SectionData[];
 }

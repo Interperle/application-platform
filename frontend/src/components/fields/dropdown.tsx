@@ -15,7 +15,6 @@ function Dropdown<T extends Record<string, string | number>>({
   onChange,
 }: DropdownProps<T>) {
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("Dropdown onChange triggered");
     const selectedOption = parseInt(
       event.target.value,
       10,

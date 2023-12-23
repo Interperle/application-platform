@@ -38,7 +38,10 @@ export const ProgressBar = ({
       if (dependingOnId in answeredQuestions) {
         const dependingQuestionIds = dependingOn[dependingOnId];
         dependingQuestionIds.forEach((dependentOnId) => {
-          if (dependentOnId in answeredQuestions && answeredQuestions[dependingOnId].answervalue == dependentOnId) {
+          if (
+            dependentOnId in answeredQuestions &&
+            answeredQuestions[dependingOnId].answervalue == dependentOnId
+          ) {
             conditionalMandatory += 1;
             answeredConditional.push(dependentOnId);
           }

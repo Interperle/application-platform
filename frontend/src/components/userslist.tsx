@@ -35,7 +35,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
   };
 
   const handleRoleChange = async (user: userData, newRoleId: UserRole) => {
-    console.log("Trigger");
     const updatedUser = await changeRoleOfUser(user, newRoleId);
     if (updatedUser) {
       dispatch(
