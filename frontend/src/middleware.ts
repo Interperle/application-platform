@@ -69,6 +69,7 @@ export async function middleware(request: NextRequest) {
   if (!user) {
     console.log("Not logged in -> /login");
     if (pathname != "/login") {
+      console.log("redirect to /login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
     return response;
@@ -83,6 +84,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (redirectUrl) {
+    console.log("redirect to " + redirectUrl);
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
@@ -93,6 +95,7 @@ export async function middleware(request: NextRequest) {
       .eq("userid", user!.id)
       .single();
     if (roleData && !roleData.isactive) {
+      console.log("redirect to /403");
       return NextResponse.redirect(new URL("/403", request.url));
     }
 
