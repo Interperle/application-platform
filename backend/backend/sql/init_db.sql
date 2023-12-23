@@ -365,7 +365,7 @@ ALTER TABLE
 
 create table PUBLIC.USER_PROFILES_TABLE (
   userid uuid not null references auth.users on delete cascade,
-  userrole INT REFERENCES user_roles_table(userroleid),
+  userrole INT  not null,
   isactive BOOLEAN DEFAULT TRUE,
 
   PRIMARY KEY (userid)
@@ -1822,6 +1822,8 @@ USING (
     )
 );
 
+CREATE POLICY select_policy ON CHECKBOX_QUESTION_TABLE
+  FOR SELECT USING (auth.uid() IS NOT NULL);
 
 CREATE POLICY insert_checkbox_answer ON checkbox_answer_table
 FOR INSERT TO authenticated
@@ -1868,32 +1870,6 @@ USING (
   )
 );
 
-CREATE POLICY select_policy ON CHECKBOX_QUESTION_TABLE
-  FOR SELECT USING (auth.uid() IS NOT NULL);
-
-CREATE POLICY select_objects_for_owner ON storage.objects
-    FOR SELECT USING (auth.uid() = owner);
-
-CREATE POLICY insert_objects_for_owner ON storage.objects
-    FOR INSERT WITH CHECK (auth.uid() = owner);
-
-CREATE POLICY update_objects_for_owner ON storage.objects
-    FOR UPDATE USING (auth.uid() = owner);
-
-CREATE POLICY delete_objects_for_owner ON storage.objects
-    FOR DELETE USING (auth.uid() = owner);
-
-CREATE POLICY select_buckets_for_owner ON storage.buckets
-    FOR SELECT USING (auth.uid() = owner);
-
-CREATE POLICY insert_buckets_for_owner ON storage.buckets
-    FOR INSERT WITH CHECK (auth.uid() = owner);
-
-CREATE POLICY update_buckets_for_owner ON storage.buckets
-    FOR UPDATE USING (auth.uid() = owner);
-
-CREATE POLICY delete_buckets_for_owner ON storage.buckets
-    FOR DELETE USING (auth.uid() = owner);
 
 CREATE POLICY select_policy ON conditional_question_choice_table
   FOR SELECT USING (auth.uid() IS NOT NULL);
