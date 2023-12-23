@@ -49,7 +49,6 @@ export async function signUpUser(prevState: any, formData: FormData) {
     return { message: `Passwörter stimmen nicht überein!`, status: "ERROR" };
   }
   try {
-    console.log("TEST0");
     const supabase = initSupabaseActions();
     const { data: userData, error: userError } = await supabase.auth.signUp({
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
@@ -59,7 +58,6 @@ export async function signUpUser(prevState: any, formData: FormData) {
       },
     });
     revalidatePath("/login");
-    console.log("TEST0");
     if (userError) {
       console.log(JSON.stringify(userError));
       return { message: userError.message, status: "ERROR" };
