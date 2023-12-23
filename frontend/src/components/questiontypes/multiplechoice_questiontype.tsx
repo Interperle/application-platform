@@ -58,7 +58,7 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
       }
     }
     loadAnswer();
-  }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
+  }, [questionid, selectedSection, selectedCondChoice]);
 
   const updateAnswerState = (answervalue: string, answerid?: string) => {
     dispatch(

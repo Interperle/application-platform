@@ -41,6 +41,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
   questionorder,
   iseditable,
   selectedSection,
+  selectedCondChoice,
   choices,
   phaseAnswers,
   questionsuborder,
@@ -54,8 +55,13 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [dependingQuestions, setDependingQuestions] = useState<Question[]>([]);
-
+  const dependingQuestions: { [key: string]: Question[] } = choices.reduce(
+    (acc, curr) => {
+      acc[curr.choiceid] = curr.questions;
+      return acc;
+    },
+    {} as { [key: string]: Question[] },
+  );
   useEffect(() => {
     async function loadAnswer() {
       setIsLoading(true);
@@ -63,13 +69,13 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
         const savedAnswer = await fetchConditionalAnswer(questionid);
         updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        console.log("Failed to fetch answer", error);
       } finally {
         setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, selectedSection, answer]);
+  }, [questionid, selectedSection, selectedCondChoice, phaseAnswers]);
 
   const updateAnswerState = (answervalue: string, answerid?: string) => {
     dispatch(
@@ -90,11 +96,11 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
       updateAnswerState(choice.choiceid);
       return;
     }
-    setDependingQuestions(
-      choice.questions.filter((q) => q.depends_on == choice.choiceid),
-    );
 
-    if (dependingQuestions.length == 0 && answer === choice.choiceid) {
+    if (
+      dependingQuestions[choice.choiceid].length == 0 &&
+      answer === choice.choiceid
+    ) {
       saveConditionalAnswer("", questionid);
       updateAnswerState("");
       return;
@@ -102,27 +108,41 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
     if (answer === choice.choiceid) {
       setChoiceHelper("");
       setMessage(
-        `Es sind ${dependingQuestions.length} Unterfragen von dieser Auswahl abhängig. Mit dem Abwählen dieser Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
+        `Es sind ${
+          dependingQuestions[choice.choiceid].length
+        } Unterfragen von dieser Auswahl abhängig. Mit dem Abwählen dieser Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
       );
       setPopupOpen(true);
       return;
     }
     setChoiceHelper(choice.choiceid);
+
     setMessage(
-      `Es sind ${dependingQuestions.length} Unterfragen sind von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
+      `Es sind ${
+        dependingQuestions[choice.choiceid].length
+      } Unterfragen sind von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
     );
     setPopupOpen(true);
   };
 
   const togglePopup = async () => {
     setPopupOpen(!isPopupOpen);
-    await deleteAnswersOfQuestions(dependingQuestions);
+    await deleteAnswersOfQuestions(dependingQuestions[answer]);
     saveConditionalAnswer(choiceHelper, questionid);
     updateAnswerState(choiceHelper);
   };
 
   return (
-    <>
+    <QuestionTypes
+      phasename={phasename}
+      questionid={questionid}
+      mandatory={mandatory}
+      questiontext={questiontext}
+      questionnote={questionnote}
+      questionorder={questionorder}
+      iseditable={iseditable}
+      questionsuborder={questionsuborder}
+    >
       {isPopupOpen && (
         <Popup onClose={() => setPopupOpen(!isPopupOpen)}>
           <form onSubmit={togglePopup} className="space-y-6">
@@ -132,96 +152,83 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
           </form>
         </Popup>
       )}
-      <QuestionTypes
-        phasename={phasename}
-        questionid={questionid}
-        mandatory={mandatory}
-        questiontext={questiontext}
-        questionnote={questionnote}
-        questionorder={questionorder}
-        iseditable={iseditable}
-        questionsuborder={questionsuborder}
-      >
-        <AwaitingChild isLoading={isLoading}>
-          <div role="group" aria-labelledby={questionid} className="mt-2">
-            {choices.map((choice) => (
-              <ConditionalChoice
-                key={choice.choiceid}
-                iseditable={iseditable}
-                choiceid={choice.choiceid}
-                choicevalue={choice.choicevalue}
-                isSelected={answer === choice.choiceid}
-                onChange={() => handleChange(choice)}
-              />
-            ))}
-          </div>
-          <div className="mt-5">
-            {choices.map((choice) =>
-              [...choice.questions]
-                .sort((a, b) => a.questionorder - b.questionorder)
-                .map((condQuestion) => {
-                  const QuestionComponent = getQuestionComponent(
-                    condQuestion.questiontype,
-                  );
-                  if (!QuestionComponent) {
-                    console.error(
-                      `Unknown question type: ${condQuestion.questiontype}`,
-                    );
-                    return null;
-                  }
-                  const sub_order = numberToLetter(condQuestion.questionorder);
-                  return (
-                    <div
-                      key={condQuestion.questionid}
-                      style={{
-                        display:
-                          condQuestion.depends_on == choice.choiceid &&
-                          choice.choiceid == answer
-                            ? "block"
-                            : "none",
-                      }}
-                      className="ml-8"
-                    >
-                      {condQuestion.preinformationbox && (
-                        <InformationBox
-                          key={`${condQuestion.questionid}_pre_infobox`}
-                          text={condQuestion.preinformationbox}
-                        />
-                      )}
-                      <QuestionComponent
-                        key={condQuestion.questionid}
-                        phasename={phasename}
-                        questionid={condQuestion.questionid}
-                        mandatory={condQuestion.mandatory}
-                        questiontext={condQuestion.questiontext}
-                        questionnote={condQuestion.questionnote}
-                        questionorder={questionorder}
-                        iseditable={iseditable}
-                        selectedSection={selectedSection}
-                        answer={answer}
-                        questionsuborder={sub_order}
-                        answerid={
-                          phaseAnswers.find(
-                            (answer) =>
-                              answer.questionid == condQuestion.questionid,
-                          )?.answerid
-                        }
-                        {...condQuestion.params}
-                      />
-                      {condQuestion.postinformationbox && (
-                        <InformationBox
-                          key={`${condQuestion.questionid}_post_infobox`}
-                          text={condQuestion.postinformationbox}
-                        />
-                      )}
-                    </div>
-                  );
-                }),
-            )}
-          </div>
-        </AwaitingChild>
-      </QuestionTypes>
-    </>
+      <AwaitingChild isLoading={isLoading}>
+        <div role="group" aria-labelledby={questionid} className="mt-2">
+          {choices.map((choice) => (
+            <ConditionalChoice
+              key={choice.choiceid}
+              iseditable={iseditable}
+              choiceid={choice.choiceid}
+              choicevalue={choice.choicevalue}
+              isSelected={answer === choice.choiceid}
+              onChange={() => handleChange(choice)}
+            />
+          ))}
+        </div>
+      </AwaitingChild>
+      <div className="mt-5">
+        {choices.map((choice) =>
+          [...choice.questions]
+            .sort((a, b) => a.questionorder - b.questionorder)
+            .map((condQuestion) => {
+              const QuestionComponent = getQuestionComponent(
+                condQuestion.questiontype,
+              );
+              if (!QuestionComponent) {
+                console.log(
+                  `Unknown question type: ${condQuestion.questiontype}`,
+                );
+                return null;
+              }
+              const sub_order = numberToLetter(condQuestion.questionorder);
+              return (
+                <div
+                  key={condQuestion.questionid}
+                  className={`ml-8 ${
+                    condQuestion.depends_on == choice.choiceid &&
+                    choice.choiceid == answer
+                      ? "visible"
+                      : "hidden"
+                  }`}
+                >
+                  {condQuestion.preinformationbox && (
+                    <InformationBox
+                      key={`${condQuestion.questionid}_pre_infobox`}
+                      text={condQuestion.preinformationbox}
+                    />
+                  )}
+                  <QuestionComponent
+                    key={condQuestion.questionid}
+                    phasename={phasename}
+                    questionid={condQuestion.questionid}
+                    mandatory={condQuestion.mandatory}
+                    questiontext={condQuestion.questiontext}
+                    questionnote={condQuestion.questionnote}
+                    questionorder={questionorder}
+                    iseditable={iseditable}
+                    selectedSection={selectedSection}
+                    answer={answer}
+                    questionsuborder={sub_order}
+                    answerid={
+                      phaseAnswers.find(
+                        (answer) =>
+                          answer.questionid == condQuestion.questionid,
+                      )?.answerid
+                    }
+                    {...condQuestion.params}
+                  />
+                  {condQuestion.postinformationbox && (
+                    <InformationBox
+                      key={`${condQuestion.questionid}_post_infobox`}
+                      text={condQuestion.postinformationbox}
+                    />
+                  )}
+                </div>
+              );
+            }),
+        )}
+      </div>
+    </QuestionTypes>
   );
 };
 
