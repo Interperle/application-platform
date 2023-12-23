@@ -13,6 +13,7 @@ import {
   cached_fetch_phase_questions,
 } from "@/utils/cached";
 import { createCurrentTimestamp } from "@/utils/helpers";
+import { MissingQuestions } from "@/components/missingQuestions";
 
 export default async function Page({
   params,
@@ -103,6 +104,7 @@ export default async function Page({
             )}
           </div>
           {progressBarComponent}
+          <MissingQuestions phaseQuestions={phase_questions} dependingOn={depending_on}/>
         </div>
         <OverviewButton />
       </div>

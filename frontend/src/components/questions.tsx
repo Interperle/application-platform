@@ -77,8 +77,9 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
       }),
     );
   };
+
   return (
-    <div className="mt-10">
+    <div className="mt-5 mb-7 border-b border-r rounded-xl shadow shadow-secondary p-5">
       {copyPhaseQuestions
         .sort((a, b) => a.questionorder - b.questionorder)
         .map((phaseQuestion) => {
