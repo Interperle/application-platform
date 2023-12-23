@@ -68,13 +68,14 @@ def process_question(question, phase_id, phase_sections, supabase, depends_on=No
     elif question_type == QuestionType.CONDITIONAL:
         for answer in question['Answers']:
             data_conditional_choice_table = create_data_conditional_choice_table(question_id, answer["value"])
-            supabase.table("conditional_question_choice_table").insert(data_conditional_choice_table).execute()
+            response_conditional_choice_table = supabase.table("conditional_question_choice_table").insert(
+                data_conditional_choice_table).execute()
             process_nested_questions(answer['questions'], phase_id, phase_sections, supabase,
-                                     response_question_table.data[0]['choiceid'])
+                                     response_conditional_choice_table.data[0]['choiceid'])
 
 
 def process_config():
-    config_data = read_yaml_file('apl_config.yml')
+    config_data = read_yaml_file('apl_config_gend.yml')
     run_structure_checks(config_data)
 
     supabase = init_supabase()
