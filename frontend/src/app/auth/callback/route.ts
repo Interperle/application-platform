@@ -9,13 +9,11 @@ import {
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  console.log(requestUrl);
 
   const supabase = initSupabaseRoute();
 
   if (code) {
     const data = await supabase.auth.exchangeCodeForSession(code);
-    console.log(data);
   }
   const {
     data: { user },

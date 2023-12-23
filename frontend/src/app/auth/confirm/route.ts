@@ -17,7 +17,6 @@ export async function GET(request: Request) {
       type,
       token_hash,
     });
-    console.log(error);
     if (!error) {
       return NextResponse.redirect(`${getURL()}${next}`);
     }

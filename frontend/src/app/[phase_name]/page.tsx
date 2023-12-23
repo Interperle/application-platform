@@ -106,7 +106,6 @@ export default async function Page({
           {progressBarComponent}
           <MissingQuestions
             phaseQuestions={phase_questions}
-            dependingOn={depending_on}
           />
         </div>
         <OverviewButton />

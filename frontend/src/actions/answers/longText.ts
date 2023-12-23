@@ -7,13 +7,11 @@ export async function saveLongTextAnswer(
   answertext: string,
   questionid: string,
 ) {
-  console.log(answertext);
   if (answertext == "") {
     await deleteAnswer(questionid, "long_text_answer_table");
     return "";
   }
   const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-  console.log(answerid + "##" + reqtype);
   if (reqtype == "created") {
     const insertLongTextAnswerResponse = await supabase
       .from("long_text_answer_table")

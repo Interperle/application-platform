@@ -9,10 +9,8 @@ import { Question } from "./questions";
 
 export const MissingQuestions = ({
   phaseQuestions,
-  dependingOn,
 }: {
   phaseQuestions: Question[];
-  dependingOn: Record<string, string[]>;
 }) => {
   const answeredQuestions = useAppSelector<AnswerState>(
     (state) => state.answerReducer,
@@ -44,7 +42,10 @@ export const MissingQuestions = ({
               }
               return (
                 <li key={question.questionid}>
-                  {question.questionorder}. {question.questiontext}
+                  {question.questionorder}. <span
+                        className="break-after-avoid"
+                        dangerouslySetInnerHTML={{ __html: question.questiontext }}
+                      ></span>
                 </li>
               );
             }
@@ -54,7 +55,10 @@ export const MissingQuestions = ({
             ) {
               return (
                 <li key={question.questionid}>
-                  {question.questionorder}. {question.questiontext}
+                  {question.questionorder}. <span
+                    className="break-after-avoid"
+                    dangerouslySetInnerHTML={{ __html: question.questiontext }}
+                  ></span>
                 </li>
               );
             }
@@ -66,7 +70,7 @@ export const MissingQuestions = ({
                     !condQuestion.mandatory ||
                     condQuestion.questionid in answeredQuestions ||
                     answeredQuestions[question.questionid].answervalue !=
-                      choice.choiceid
+                    choice.choiceid
                   ) {
                     return null;
                   }
@@ -74,7 +78,10 @@ export const MissingQuestions = ({
                     <li key={condQuestion.questionid}>
                       {question.questionorder}{" "}
                       {numberToLetter(condQuestion.questionorder)}){" "}
-                      {condQuestion.questiontext}
+                      <span
+                        className="break-after-avoid"
+                        dangerouslySetInnerHTML={{ __html: condQuestion.questiontext }}
+                      ></span>
                     </li>
                   );
                 }

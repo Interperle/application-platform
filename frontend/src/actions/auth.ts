@@ -70,12 +70,10 @@ export async function signUpUser(prevState: any, formData: FormData) {
     ) {
       return { message: "Der User ist bereits registriert!", status: "ERROR" };
     }
-
     const { data: userProfileData, error: userProfileError } =
       await supabaseServiceRole
         .from("user_profiles_table")
         .insert({ userid: userData.user!.id, userrole: 1, isactive: true });
-    console.log("TEST");
     if (userProfileError) {
       if (userProfileError.code == "23505") {
         return {

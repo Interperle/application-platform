@@ -57,7 +57,6 @@ export async function savePdfUploadAnswer(
           }_${getOldPdfUploadAnswerResponse.data?.pdfname}`,
           uploadFile,
         );
-      console.log(createBucketEntry);
     }
   }
 }

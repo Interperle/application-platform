@@ -34,7 +34,6 @@ export async function saveVideoUploadAnswer(
           `${(await supabase.auth.getUser()).data.user!.id}_${uploadFile.name}`,
           uploadFile,
         );
-      console.log(createBucketEntry);
     } else if (reqtype == "updated") {
       const getOldVideoUploadAnswerResponse = await supabase
         .from("video_upload_answer_table")
@@ -57,7 +56,6 @@ export async function saveVideoUploadAnswer(
           }_${getOldVideoUploadAnswerResponse.data?.videoname}`,
           uploadFile,
         );
-      console.log(createBucketEntry);
     }
   }
 }
