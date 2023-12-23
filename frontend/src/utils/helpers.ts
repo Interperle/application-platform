@@ -15,6 +15,9 @@ export function createCurrentTimestamp() {
 }
 
 export function setToPrefferedTimeZone(dateString: string) {
+  if (dateString == ""){
+    return "";
+  }
   return moment(dateString)
     .tz("Europe/Berlin")
     .format("YYYY-MM-DDTHH:mm:ss.SSS");

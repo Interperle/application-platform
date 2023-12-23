@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Answer } from "@/actions/answers/answers";
 import getQuestionComponent, {
@@ -10,6 +10,7 @@ import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
 
 import { InformationBox } from "./informationBox";
+import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
 
 export interface DefaultQuestion {
   questionid: string;
@@ -61,6 +62,22 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
       phasequestions: phaseQuestions,
     }),
   );
+  useEffect(() => {
+    phaseAnswers.forEach((answer) => {
+      updateAnswerState(answer.questionid, answer.answerid)
+    })
+  })
+
+  const updateAnswerState = (questionid: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: INIT_PLACEHOLDER,
+        answerid: answerid || "",
+      }),
+    );
+  };
+
   return (
     <div className="mt-10">
       {copyPhaseQuestions

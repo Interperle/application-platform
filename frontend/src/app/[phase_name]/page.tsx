@@ -1,7 +1,7 @@
 import { RedirectType, redirect } from "next/navigation";
 
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
-import { fetch_answer_table, fetch_sections_by_phase } from "@/actions/phase";
+import { fetch_sections_by_phase } from "@/actions/phase";
 import Apl_Header from "@/components/header";
 import OverviewButton from "@/components/overviewButton";
 import { ProgressBar } from "@/components/progressbar";
@@ -35,11 +35,8 @@ export default async function Page({
 
   const isEditable = currentDate >= startDate && currentDate <= endDate;
 
-  const {
-    result: phase_questions,
-    depending: depending_questions,
-    cond: dependsOnCount,
-  } = await cached_fetch_phase_questions(phaseData.phaseid);
+  const { result: phase_questions, depending: depending_on } =
+    await cached_fetch_phase_questions(phaseData.phaseid);
   let phase_sections = [] as SectionData[];
   let mapQuestions = {} as SectionQuestionsMap;
   if (phaseData.sectionsenabled) {
@@ -56,7 +53,14 @@ export default async function Page({
   const mandatoryQuestionIds = phase_questions
     .filter((q: Question) => q.mandatory)
     .map((q: Question) => q.questionid);
-  const numAnswers = await fetch_answer_table(mandatoryQuestionIds);
+  const progressBarComponent = (
+    <ProgressBar
+      progressbarId={phaseData.phaseid}
+      mandatoryQuestionIds={mandatoryQuestionIds}
+      dependingOn={depending_on}
+      endDate={phaseData.enddate}
+    />
+  );
   return (
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
@@ -77,12 +81,7 @@ export default async function Page({
               </strong>
             </div>
           )}
-          <ProgressBar
-            progressbarId={`${phaseData.phaseid}-top`}
-            mandatoryQuestionIds={mandatoryQuestionIds}
-            numAnswers={numAnswers}
-            endDate={phaseData.enddate}
-          />
+          {progressBarComponent}
           <div className="space-y-4 max-w-screen-xl">
             {phaseData.sectionsenabled ? (
               <SectionView
@@ -103,12 +102,7 @@ export default async function Page({
               />
             )}
           </div>
-          <ProgressBar
-            progressbarId={`${phaseData.phaseid}-bottom`}
-            mandatoryQuestionIds={mandatoryQuestionIds}
-            numAnswers={numAnswers}
-            endDate={phaseData.enddate}
-          />
+          {progressBarComponent}
         </div>
         <OverviewButton />
       </div>

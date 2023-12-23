@@ -164,8 +164,7 @@ async function append_params(
 
 interface questionTableProps {
   result: Question[];
-  depending: Question[];
-  cond: Record<string, number>;
+  depending: Record<string, string[]>;
 }
 
 export async function fetch_question_table(
@@ -222,40 +221,49 @@ export async function fetch_question_table(
     });
     return question;
   });
-  const dependsOnCount: Record<string, number> = dependingQuestions.reduce(
-    (acc: Record<string, number>, question: Question) => {
-      const dependsOn = question.depends_on as string;
-      acc[dependsOn] = (acc[dependsOn] || 0) + 1;
+
+  const ConditionalChoiceIdToQuestionId =
+    await fetch_conditional_questionid_mapping();
+  console.log(JSON.stringify(ConditionalChoiceIdToQuestionId));
+  const dependingOn: Record<string, string[]> = dependingQuestions.reduce(
+    (acc: Record<string, string[]>, question: Question) => {
+      if (!question.mandatory) {
+        return acc;
+      }
+      const dependsOn = ConditionalChoiceIdToQuestionId[
+        question!.depends_on!
+      ] as string;
+      if (!(dependsOn in acc)) {
+        acc[dependsOn] = [question.questionid];
+      } else {
+        acc[dependsOn].push(question.questionid);
+      }
       return acc;
     },
-    {} as Record<string, number>,
+    {} as Record<string, string[]>,
   );
-
-  const dependsOnIds = Object.keys(dependsOnCount);
-  const { data, error } = await initSupabaseActions()
-    .from("conditional_answer_table")
-    .select("selectedchoice")
-    .in("selectedchoice", dependsOnIds);
-
-  if (error) {
-    console.log(error.message);
-  }
-
-  dependsOnCount["tobeanswered"] = 0;
-  data!.forEach((item) => {
-    if (
-      item.selectedchoice &&
-      dependsOnCount[item.selectedchoice] !== undefined
-    ) {
-      dependsOnCount["tobeanswered"] += dependsOnCount[item.selectedchoice];
-    }
-  });
 
   return {
     result: finishedQuestions as Question[],
-    depending: dependingQuestions as Question[],
-    cond: dependsOnCount,
+    depending: dependingOn as Record<string, string[]>,
   };
+}
+
+export async function fetch_conditional_questionid_mapping() {
+  const { data: conditionalData, error: conditionalError } =
+    await initSupabaseActions()
+      .from("conditional_question_choice_table")
+      .select("*");
+  return conditionalData?.reduce(
+    (
+      acc: Record<string, string>,
+      question: { choiceid: string; questionid: string; choicevalue: string },
+    ) => {
+      acc[question.choiceid] = question.questionid;
+      return acc;
+    },
+    {} as Record<string, string[]>,
+  );
 }
 
 export async function fetch_phase_by_name(
@@ -350,7 +358,7 @@ export async function fetch_answer_table(
   return answerData ? answerData.length : 0;
 }
 
-export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
+export async function fetch_all_questions(): Promise<Question[]> {
   const { data: questionData, error: errorData } = await initSupabaseActions()
     .from("question_table")
     .select("*");
@@ -364,7 +372,7 @@ export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
     return [];
   }
 
-  return questionData as DefaultQuestion[];
+  return questionData as Question[];
 }
 
 export async function fetch_first_phase_over(): Promise<boolean> {

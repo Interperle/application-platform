@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export const INIT_PLACEHOLDER = '__INITIALIZED_PLACEHOLDER__';
+
 type AnswerValue = string | number | boolean | null;
 
-type AnswerState = {
+export type AnswerState = {
   [questionid: string]: {
     answervalue: AnswerValue;
     answerid: string;
@@ -24,7 +26,13 @@ const answerSlice = createSlice({
       }>,
     ) => {
       const { questionid, answervalue, answerid } = action.payload;
-      state[questionid] = { answervalue, answerid };
+      if (answervalue === "" || answervalue === false || answervalue === null) {
+        if (state[questionid]) {
+          delete state[questionid];
+        }
+      } else {
+        state[questionid] = { answervalue, answerid };
+      }
     },
   },
 });
