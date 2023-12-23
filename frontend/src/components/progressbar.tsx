@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { AnswerState } from "@/store/slices/answerSlice";
+import { useAppSelector } from "@/store/store";
 import { transformReadableDate } from "@/utils/helpers";
 
 import { AwaitingChild } from "./awaiting";
-import { useAppSelector } from "@/store/store";
-import { AnswerState } from "@/store/slices/answerSlice";
 
 export const ProgressBar = ({
   progressbarId,
@@ -19,7 +19,7 @@ export const ProgressBar = ({
   endDate: string;
 }) => {
   const answeredQuestions = useAppSelector<AnswerState>(
-    (state) => (state.answerReducer),
+    (state) => state.answerReducer,
   );
   const [allAnswered, setAllAnswered] = useState<string[]>([]);
   const [numAnswered, setNumAnswered] = useState(0);
@@ -55,8 +55,8 @@ export const ProgressBar = ({
       })
       .subscribe();*/
 
-    const answeredMandatory = mandatoryQuestionIds.filter(questionId =>
-      questionId in answeredQuestions
+    const answeredMandatory = mandatoryQuestionIds.filter(
+      (questionId) => questionId in answeredQuestions,
     ).length;
     let conditionalMandatory = 0;
     const answeredConditional = [];
@@ -65,7 +65,7 @@ export const ProgressBar = ({
       if (dependingOnId in answeredQuestions) {
         const dependingQuestionIds = dependingOn[dependingOnId];
         conditionalMandatory += dependingQuestionIds.length;
-        dependingQuestionIds.forEach(dependentOnId => {
+        dependingQuestionIds.forEach((dependentOnId) => {
           if (dependentOnId in answeredQuestions) {
             answeredConditional.push(dependentOnId);
           }
@@ -79,7 +79,12 @@ export const ProgressBar = ({
     //return () => {
     //  supabase.removeChannel(progressbarChannel);
     //};
-  }, [mandatoryQuestionIds, progressbarId, dependingOn, Object.keys(answeredQuestions)]);
+  }, [
+    mandatoryQuestionIds,
+    progressbarId,
+    dependingOn,
+    Object.keys(answeredQuestions),
+  ]);
 
   const stringDate = transformReadableDate(endDate);
   return (

@@ -6,11 +6,11 @@ import { Answer } from "@/actions/answers/answers";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
 
 import { InformationBox } from "./informationBox";
-import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
 
 export interface DefaultQuestion {
   questionid: string;
@@ -64,9 +64,9 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
   );
   useEffect(() => {
     phaseAnswers.forEach((answer) => {
-      updateAnswerState(answer.questionid, answer.answerid)
-    })
-  })
+      updateAnswerState(answer.questionid, answer.answerid);
+    });
+  });
 
   const updateAnswerState = (questionid: string, answerid?: string) => {
     dispatch(

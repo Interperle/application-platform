@@ -5,10 +5,9 @@ import { useSearchParams } from "next/navigation";
 
 import { Answer } from "@/actions/answers/answers";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
+import { useAppDispatch } from "@/store/store";
 
 import Questionnaire, { Question } from "./questions";
-import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
-import { useAppDispatch } from "@/store/store";
 
 export type SectionQuestionsMap = {
   [key: string]: Question[];
@@ -115,10 +114,11 @@ export function SectionView({
             <button
               type="button"
               key={phaseSection.sectionid}
-              className={`flex-1 py-2 px-4 ${selectedSection === phaseSection.sectionid
+              className={`flex-1 py-2 px-4 ${
+                selectedSection === phaseSection.sectionid
                   ? "text-secondary border-b-2 border-secondary"
                   : "text-gray-500"
-                }`}
+              }`}
               onClick={() => setSelectedSectionWithUrl(phaseSection.sectionid)}
             >
               {phaseSection.sectionname}

@@ -9,6 +9,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
+import { Answer } from "@/actions/answers/answers";
+import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch } from "@/store/store";
 import {
   calcPhaseStatus,
   transformReadableDate,
@@ -16,9 +19,6 @@ import {
 } from "@/utils/helpers";
 
 import { ProgressBar } from "./progressbar";
-import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
-import { useAppDispatch } from "@/store/store";
-import { Answer } from "@/actions/answers/answers";
 
 const PhaseOverview: React.FC<{
   key: string;
@@ -60,9 +60,9 @@ const PhaseOverview: React.FC<{
 
   useEffect(() => {
     phaseAnswers.forEach((answer) => {
-      updateAnswerState(answer.questionid, answer.answerid)
-    })
-  })
+      updateAnswerState(answer.questionid, answer.answerid);
+    });
+  });
 
   const updateAnswerState = (questionid: string, answerid?: string) => {
     dispatch(

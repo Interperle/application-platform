@@ -15,7 +15,7 @@ export function createCurrentTimestamp() {
 }
 
 export function setToPrefferedTimeZone(dateString: string) {
-  if (dateString == ""){
+  if (dateString == "") {
     return "";
   }
   return moment(dateString)

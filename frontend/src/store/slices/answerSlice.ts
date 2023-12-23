@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export const INIT_PLACEHOLDER = '__INITIALIZED_PLACEHOLDER__';
+export const INIT_PLACEHOLDER = "__INITIALIZED_PLACEHOLDER__";
 
 type AnswerValue = string | number | boolean | null;
 
