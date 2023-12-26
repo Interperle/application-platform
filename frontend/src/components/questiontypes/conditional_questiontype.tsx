@@ -105,7 +105,6 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
       updateAnswerState("");
       return;
     }
-    alert(JSON.stringify(dependingQuestions))
     if (dependingQuestions[answer].length == 0){
       saveConditionalAnswer(choice.choiceid, questionid);
       updateAnswerState(choice.choiceid);
