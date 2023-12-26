@@ -98,11 +98,17 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
     }
 
     if (
-      dependingQuestions[choice.choiceid].length == 0 &&
-      answer === choice.choiceid
+      (dependingQuestions[choice.choiceid].length == 0 &&
+      answer === choice.choiceid)
     ) {
       saveConditionalAnswer("", questionid);
       updateAnswerState("");
+      return;
+    }
+    alert(JSON.stringify(dependingQuestions))
+    if (dependingQuestions[answer].length == 0){
+      saveConditionalAnswer(choice.choiceid, questionid);
+      updateAnswerState(choice.choiceid);
       return;
     }
     if (answer === choice.choiceid) {
@@ -119,7 +125,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
 
     setMessage(
       `Es sind ${
-        dependingQuestions[choice.choiceid].length
+        dependingQuestions[answer].length
       } Unterfragen sind von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
     );
     setPopupOpen(true);
