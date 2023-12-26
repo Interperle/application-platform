@@ -121,7 +121,6 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
     answerid = updateAnswerResponse!.data!.answerid;
     reqtype = "updated";
   }
-  console.log(answerid);
   return { supabase: supabase, answerid: answerid, reqtype: reqtype };
 }
 
