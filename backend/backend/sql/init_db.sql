@@ -1896,3 +1896,48 @@ USING (
         WHERE USER_PROFILES_TABLE.userid = auth.uid() AND USER_PROFILES_TABLE.userrole = 3
     )
 );
+
+CREATE POLICY insert_conditional_answer ON conditional_answer_table
+FOR INSERT TO authenticated
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = conditional_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+
+CREATE POLICY select_conditional_answer ON conditional_answer_table
+FOR SELECT TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = conditional_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY update_conditional_answer ON conditional_answer_table
+FOR UPDATE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = conditional_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
+
+CREATE POLICY delete_conditional_answer ON conditional_answer_table
+FOR DELETE TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.answer_table
+    INNER JOIN public.application_table ON application_table.applicationid = answer_table.applicationid
+    WHERE answer_table.answerid = conditional_answer_table.answerid
+    AND application_table.userid = auth.uid()
+  )
+);
