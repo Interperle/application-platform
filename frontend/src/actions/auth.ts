@@ -189,9 +189,6 @@ export async function sendResetPasswordLink(
     const supabase = initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
       resetPasswordFormData.data.email.replace("@googlemail.com", "@gmail.com"),
-      {
-        redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
-      },
     );
     if (error) {
       return { message: error.message, status: "ERROR" };
@@ -298,7 +295,7 @@ export async function signInWithSlack() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "slack",
     options: {
-      redirectTo: `${getURL()}auth/callback/`,
+      redirectTo: `auth/callback/`,
     },
   });
   console.log(error);
@@ -348,9 +345,6 @@ export async function sendResetPasswordLinkFromSettings(
     const supabase = initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
       email.replace("@googlemail.com", "@gmail.com"),
-      {
-        redirectTo: `${getURL()}auth/callback?next=${getURL()}login/update-password/`,
-      },
     );
     if (error) {
       return { message: error.message, status: "ERROR" };
