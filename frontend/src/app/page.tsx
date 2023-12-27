@@ -4,9 +4,9 @@ import {
   fetch_all_questions,
   fetch_conditional_questionid_mapping,
 } from "@/actions/phase";
+import ApplicationOverview from "@/components/applicationOverview";
 import Easteregg from "@/components/easteregg";
 import Apl_Header from "@/components/header";
-import PhaseOverview from "@/components/phaseOverview";
 import { Question } from "@/components/questions";
 import Logger from "@/logger/logger";
 import getOverviewPageText from "@/utils/getMarkdownText";
@@ -55,26 +55,7 @@ export default async function Home() {
           <Easteregg person="emma" />
         </span>
       </div>
-      {phasesData
-        .sort((a, b) => a.phaseorder - b.phaseorder)
-        .map(async (phase) => {
-          const mandatoryPhaseQuestionIds = mandatoryQuestions
-            .filter((q) => q.phaseid == phase.phaseid)
-            .map((q) => q.questionid);
-          return (
-            <PhaseOverview
-              key={phase.phaseid}
-              phaseName={phase.phasename}
-              phaseLabel={phase.phaselabel}
-              phaseOrder={phase.phaseorder}
-              phaseStart={phase.startdate}
-              phaseEnd={phase.enddate}
-              mandatoryQuestionIds={mandatoryPhaseQuestionIds}
-              dependingOn={dependingOn}
-              phaseAnswers={phase_answers}
-            />
-          );
-        })}
+      <ApplicationOverview phasesData={phasesData} mandatoryQuestions={mandatoryQuestions} dependingOn={dependingOn} phaseAnswers={phase_answers} />
     </>
   );
 }

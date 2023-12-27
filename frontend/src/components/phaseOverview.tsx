@@ -29,7 +29,6 @@ const PhaseOverview: React.FC<{
   phaseEnd: string;
   mandatoryQuestionIds: string[];
   dependingOn: Record<string, string[]>;
-  phaseAnswers: Answer[];
 }> = ({
   key,
   phaseName,
@@ -39,9 +38,7 @@ const PhaseOverview: React.FC<{
   phaseEnd,
   mandatoryQuestionIds,
   dependingOn,
-  phaseAnswers,
 }) => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const handleRedirect = () => {
     router.push(`/${phaseName}`);
@@ -56,22 +53,6 @@ const PhaseOverview: React.FC<{
       default:
         return <PencilSquareIcon className="h-6 w-6 text-secondary" />; // Replace with your actual pen icon component
     }
-  };
-
-  useEffect(() => {
-    phaseAnswers.forEach((answer) => {
-      updateAnswerState(answer.questionid, answer.answerid);
-    });
-  });
-
-  const updateAnswerState = (questionid: string, answerid?: string) => {
-    dispatch(
-      UpdateAnswer({
-        questionid: questionid,
-        answervalue: INIT_PLACEHOLDER,
-        answerid: answerid || "",
-      }),
-    );
   };
 
   return (
