@@ -78,6 +78,8 @@ export const MissingQuestions = ({
               });
           },
         );
+      } else if (question.mandatory) {
+        return renderQuestion(question);
       }
       return [];
     });
