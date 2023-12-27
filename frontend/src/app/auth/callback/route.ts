@@ -9,16 +9,24 @@ import {
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+  const code_challenge = requestUrl.searchParams.get("code_challenge");
 
   const supabase = initSupabaseActions();
 
   if (code) {
     const data = await supabase.auth.exchangeCodeForSession(code);
+  } else if (code_challenge){
+    const data = await supabase.auth.exchangeCodeForSession(code_challenge);
   }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user){
+    console.log("No User found!")
+    return NextResponse.redirect(`${getURL()}`);
+  }
   const { data: roleData, error: roleError } = await supabase
     .from("user_profiles_table")
     .select("*")
