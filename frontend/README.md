@@ -41,9 +41,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Setup Supabase
 
 - Email SMTP
-- Email Templates (especially Links & Topics)
+- Email Templates (especially Links and topics)
 - Email Ratelimit in 
-- Slack
+- Slack: https://supabase.com/docs/guides/auth/social-login/auth-slack
 - DB
 - RLS
 - Realtime (answers)
