@@ -12,11 +12,10 @@ export async function GET(request: Request) {
   const code_challenge = requestUrl.searchParams.get("code_challenge");
 
   const supabase = initSupabaseActions();
+  console.log(request.url)
 
   if (code) {
     const data = await supabase.auth.exchangeCodeForSession(code);
-  } else if (code_challenge){
-    const data = await supabase.auth.exchangeCodeForSession(code_challenge);
   }
 
   const {

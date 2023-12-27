@@ -301,10 +301,15 @@ export async function signInWithSlack() {
       redirectTo: `${getURL()}auth/callback/`,
     },
   });
-  console.log(error);
-  console.log(data);
+  console.log()
+  if (error){
+    console.log("Slack Error" + JSON.stringify(error));
+  }
+  if (data){
+    console.log("Slack Data" + JSON.stringify(data));
+  }
   if (data && data.url) {
-    console.log("Redirect to " + data.url);
+    console.log("Slack SignIn => redirect to " + data.url);
     redirect(data.url);
   } else {
     console.log("Error during sign in:", error);
