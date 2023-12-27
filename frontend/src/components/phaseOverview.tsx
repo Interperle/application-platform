@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
   CalendarDaysIcon,
@@ -9,9 +9,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
-import { Answer } from "@/actions/answers/answers";
-import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
-import { useAppDispatch } from "@/store/store";
 import {
   calcPhaseStatus,
   transformReadableDate,
@@ -19,6 +16,7 @@ import {
 } from "@/utils/helpers";
 
 import { ProgressBar } from "./progressbar";
+import { Question } from "./questions";
 
 const PhaseOverview: React.FC<{
   key: string;
@@ -28,7 +26,7 @@ const PhaseOverview: React.FC<{
   phaseStart: string;
   phaseEnd: string;
   mandatoryQuestionIds: string[];
-  dependingOn: Record<string, string[]>;
+  phaseQuestions: Question[];
 }> = ({
   key,
   phaseName,
@@ -37,7 +35,7 @@ const PhaseOverview: React.FC<{
   phaseStart,
   phaseEnd,
   mandatoryQuestionIds,
-  dependingOn,
+  phaseQuestions,
 }) => {
   const router = useRouter();
   const handleRedirect = () => {
@@ -82,7 +80,7 @@ const PhaseOverview: React.FC<{
             <ProgressBar
               progressbarId={`${key}-overview`}
               mandatoryQuestionIds={mandatoryQuestionIds}
-              dependingOn={dependingOn}
+              phaseQuestions={phaseQuestions}
               endDate={phaseEnd}
             />
           ) : (

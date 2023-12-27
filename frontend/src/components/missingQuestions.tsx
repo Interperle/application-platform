@@ -35,7 +35,11 @@ export const MissingQuestions = ({
     </li>
   );
 
-  const questionsJSX = phaseQuestions
+  const copyPhaseQuestions = phaseQuestions.map((phaseQuestion) => {
+    return phaseQuestion;
+  });
+
+  const questionsJSX = copyPhaseQuestions
     .sort((a, b) => a.questionorder - b.questionorder)
     .flatMap((question) => {
       if (question.questiontype !== "conditional") {
@@ -52,7 +56,12 @@ export const MissingQuestions = ({
             choicevalue: string;
             questions: Question[];
           }) => {
-            return choice.questions
+            const copyChoiceQuestions = choice.questions.map(
+              (choiceQuestion) => {
+                return choiceQuestion;
+              },
+            );
+            return copyChoiceQuestions
               .sort(
                 (a: Question, b: Question) => a.questionorder - b.questionorder,
               )
@@ -63,7 +72,6 @@ export const MissingQuestions = ({
                   answeredQuestions[question.questionid].answervalue ===
                     choice.choiceid
                 ) {
-                  condQuestion.questionsuborder = ``;
                   return renderQuestion(condQuestion, question.questionorder);
                 }
                 return [];

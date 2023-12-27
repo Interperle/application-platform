@@ -6,16 +6,17 @@ import { useAppSelector } from "@/store/store";
 import { transformReadableDate } from "@/utils/helpers";
 
 import { AwaitingChild } from "./awaiting";
+import { Question } from "./questions";
 
 export const ProgressBar = ({
   progressbarId,
   mandatoryQuestionIds,
-  dependingOn,
+  phaseQuestions,
   endDate,
 }: {
   progressbarId: string;
   mandatoryQuestionIds: string[];
-  dependingOn: Record<string, string[]>;
+  phaseQuestions: Question[];
   endDate: string;
 }) => {
   const answeredQuestions = useAppSelector<AnswerState>(
@@ -25,58 +26,73 @@ export const ProgressBar = ({
   const [numMandatory, setNumMandatory] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setIsLoading(true);
-
+  const calculateProgress = () => {
     const answeredMandatory = mandatoryQuestionIds.filter(
       (questionId) => questionId in answeredQuestions,
     ).length;
+
     let conditionalMandatory = 0;
-    const answeredConditional = [];
+    let answeredConditional = 0;
 
-    for (const dependingOnId in dependingOn) {
-      if (dependingOnId in answeredQuestions) {
-        const dependingQuestionIds = dependingOn[dependingOnId];
-        dependingQuestionIds.forEach((dependentOnId) => {
-          if (
-            dependentOnId in answeredQuestions &&
-            answeredQuestions[dependingOnId].answervalue == dependentOnId
-          ) {
-            conditionalMandatory += 1;
-            answeredConditional.push(dependentOnId);
-          }
-        });
+    phaseQuestions.forEach((question: Question) => {
+      if (
+        question.questiontype !== "conditional" ||
+        !(question.questionid in answeredQuestions)
+      ) {
+        return;
       }
-    }
 
-    setNumAnswered(answeredMandatory + answeredConditional.length);
+      question.params.choices.forEach(
+        (choice: {
+          choiceid: string;
+          choicevalue: string;
+          questions: Question[];
+        }) => {
+          const isChosen =
+            answeredQuestions[question.questionid].answervalue ===
+            choice.choiceid;
+          const mandatoryChoices = choice.questions.filter(
+            (q: Question) => q.mandatory,
+          ).length;
+          conditionalMandatory += isChosen ? mandatoryChoices : 0;
+
+          answeredConditional += isChosen
+            ? choice.questions.filter(
+                (q) => q.mandatory && q.questionid in answeredQuestions,
+              ).length
+            : 0;
+        },
+      );
+    });
+
+    setNumAnswered(answeredMandatory + answeredConditional);
     setNumMandatory(mandatoryQuestionIds.length + conditionalMandatory);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    calculateProgress();
     setIsLoading(false);
-  }, [
-    mandatoryQuestionIds,
-    progressbarId,
-    dependingOn,
-    Object.keys(answeredQuestions),
-  ]);
+  }, [mandatoryQuestionIds, progressbarId, phaseQuestions, answeredQuestions]);
 
   const stringDate = transformReadableDate(endDate);
+  const progressPercentage = (numAnswered / numMandatory) * 100;
+
   return (
     <AwaitingChild isLoading={isLoading}>
       <div className="w-full bg-gray-300 rounded-2xl border">
         <div
-          style={{
-            width: `${(numAnswered / numMandatory) * 100}%`,
-          }}
+          style={{ width: `${progressPercentage}%` }}
           className={`h-4 rounded-2xl border ${
-            numAnswered != numMandatory ? "bg-secondary" : "bg-green-600"
+            numAnswered !== numMandatory ? "bg-secondary" : "bg-green-600"
           }`}
         />
       </div>
       <div>
         Testing Helper: {numAnswered}/{numMandatory}
       </div>
-      {numAnswered == numMandatory &&
-        (new Date(endDate) > new Date(Date.now()) ? (
+      {numAnswered === numMandatory &&
+        (new Date(endDate) > new Date() ? (
           <div className="md-3 italic text-gray-500">
             Deine Bewerbungsphase ist vollständig, du kannst sie aber bis zum{" "}
             {stringDate} weiter ändern.

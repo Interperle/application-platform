@@ -67,7 +67,13 @@ export async function fetchAnswerId(
   return answerData![0].answerid;
 }
 
-export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
+export interface ExtendedAnswerType extends Answer {
+  answervalue?: string | null;
+}
+
+export async function fetchAllAnswersOfApplication(): Promise<
+  ExtendedAnswerType[]
+> {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
@@ -82,9 +88,41 @@ export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
       console.log(answerError);
       return [];
     }
+  }
+  const answerIds = answerData!.map((answer) => answer.answerid);
+  const { data: answerConditionalData, error: answerConditionalError } =
+    await supabase
+      .from("conditional_answer_table")
+      .select("*")
+      .in("answerid", answerIds);
+
+  if (answerConditionalError) {
+    if (answerConditionalError.code == "PGRST116") {
+      console.log("answerConditionalError:");
+      console.log(answerConditionalError);
+      return [];
+    }
     console.log(answerError);
   }
-  return answerData as Answer[];
+
+  const result =
+    answerData?.map((answer: ExtendedAnswerType) => {
+      const conditionalAnswer = answerConditionalData?.find(
+        (condAnswer) => condAnswer.answerid === answer.answerid,
+      );
+      answer.answervalue = conditionalAnswer?.selectedchoice;
+      return answer;
+    }) || [];
+
+  return (
+    answerData?.map((answer: ExtendedAnswerType) => {
+      const conditionalAnswer = answerConditionalData?.find(
+        (condAnswer) => condAnswer.answerid === answer.answerid,
+      );
+      answer.answervalue = conditionalAnswer?.selectedchoice;
+      return answer;
+    }) || []
+  );
 }
 
 export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
@@ -139,7 +177,6 @@ export async function deleteAnswer(questionid: string, answertype: string) {
 }
 
 export async function deleteAnswersOfQuestions(questions: Question[]) {
-  console.log(JSON.stringify(questions));
   for (const question of questions) {
     await deleteAnswer(
       question.questionid,

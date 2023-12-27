@@ -28,7 +28,11 @@ const answerSlice = createSlice({
       const { questionid, answervalue, answerid } = action.payload;
       if (answervalue === INIT_PLACEHOLDER) {
         state[questionid] = { answervalue: null, answerid };
-      } else if (answervalue === "" || answervalue === false || answervalue === null) {
+      } else if (
+        answervalue === "" ||
+        answervalue === false ||
+        answervalue === null
+      ) {
         if (state[questionid]) {
           delete state[questionid];
         }

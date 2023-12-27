@@ -1,14 +1,11 @@
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
-import {
-  fetch_all_phases,
-  fetch_all_questions,
-  fetch_conditional_questionid_mapping,
-} from "@/actions/phase";
+import { fetch_all_phases } from "@/actions/phase";
 import ApplicationOverview from "@/components/applicationOverview";
 import Easteregg from "@/components/easteregg";
 import Apl_Header from "@/components/header";
 import { Question } from "@/components/questions";
 import Logger from "@/logger/logger";
+import { cached_fetch_phase_questions } from "@/utils/cached";
 import getOverviewPageText from "@/utils/getMarkdownText";
 import "github-markdown-css/github-markdown-light.css";
 
@@ -16,33 +13,14 @@ export default async function Home() {
   const log = new Logger("Overview Page");
   const contentHtml = await getOverviewPageText();
   const phasesData = await fetch_all_phases();
-  const phase_questions = await fetch_all_questions();
-  const ConditionalChoiceIdToQuestionId =
-    await fetch_conditional_questionid_mapping();
-
-  const phase_answers = await fetchAllAnswersOfApplication();
-  const mandatoryQuestions = phase_questions.filter(
-    (q) => q.mandatory && q.depends_on == null,
-  );
-  const dependingOn: Record<string, string[]> = phase_questions
-    .filter((q) => q.mandatory && q.depends_on != null)
-    .reduce(
-      (acc: Record<string, string[]>, question: Question) => {
-        if (!question.mandatory) {
-          return acc;
-        }
-        const dependsOn = ConditionalChoiceIdToQuestionId[
-          question!.depends_on!
-        ] as string;
-        if (!(dependsOn in acc)) {
-          acc[dependsOn] = [question.questionid];
-        } else {
-          acc[dependsOn].push(question.questionid);
-        }
-        return acc;
-      },
-      {} as Record<string, string[]>,
+  const phasesQuestions: Record<string, Question[]> = {};
+  for (const phase of phasesData) {
+    phasesQuestions[phase.phaseid] = await cached_fetch_phase_questions(
+      phase.phaseid,
     );
+  }
+  const phaseAnswers = await fetchAllAnswersOfApplication();
+
   return (
     <>
       <div className="flex flex-col items-start justify-between space-y-4">
@@ -55,7 +33,11 @@ export default async function Home() {
           <Easteregg person="emma" />
         </span>
       </div>
-      <ApplicationOverview phasesData={phasesData} mandatoryQuestions={mandatoryQuestions} dependingOn={dependingOn} phaseAnswers={phase_answers} />
+      <ApplicationOverview
+        phasesData={phasesData}
+        phasesQuestions={phasesQuestions}
+        phaseAnswers={phaseAnswers}
+      />
     </>
   );
 }

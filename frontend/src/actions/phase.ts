@@ -162,14 +162,9 @@ async function append_params(
   };
 }
 
-interface questionTableProps {
-  result: Question[];
-  depending: Record<string, string[]>;
-}
-
 export async function fetch_question_table(
   phaseId: string,
-): Promise<questionTableProps> {
+): Promise<Question[]> {
   const { data: questionData, error: errorData } = await initSupabaseActions()
     .from("question_table")
     .select("*")
@@ -222,30 +217,7 @@ export async function fetch_question_table(
     return question;
   });
 
-  const ConditionalChoiceIdToQuestionId =
-    await fetch_conditional_questionid_mapping();
-  const dependingOn: Record<string, string[]> = dependingQuestions.reduce(
-    (acc: Record<string, string[]>, question: Question) => {
-      if (!question.mandatory) {
-        return acc;
-      }
-      const dependsOn = ConditionalChoiceIdToQuestionId[
-        question!.depends_on!
-      ] as string;
-      if (!(dependsOn in acc)) {
-        acc[dependsOn] = [question.questionid];
-      } else {
-        acc[dependsOn].push(question.questionid);
-      }
-      return acc;
-    },
-    {} as Record<string, string[]>,
-  );
-
-  return {
-    result: finishedQuestions as Question[],
-    depending: dependingOn as Record<string, string[]>,
-  };
+  return finishedQuestions as Question[];
 }
 
 export async function fetch_conditional_questionid_mapping() {
@@ -359,23 +331,6 @@ export async function fetch_answer_table(
   }
 
   return answerData ? answerData.length : 0;
-}
-
-export async function fetch_all_questions(): Promise<Question[]> {
-  const { data: questionData, error: errorData } = await initSupabaseActions()
-    .from("question_table")
-    .select("*");
-
-  if (errorData) {
-    console.log("Error:" && errorData);
-  }
-
-  if (!questionData) {
-    console.log("No Data");
-    return [];
-  }
-
-  return questionData as Question[];
 }
 
 export async function fetch_first_phase_over(): Promise<boolean> {

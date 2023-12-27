@@ -36,8 +36,7 @@ export default async function Page({
 
   const isEditable = currentDate >= startDate && currentDate <= endDate;
 
-  const { result: phase_questions, depending: depending_on } =
-    await cached_fetch_phase_questions(phaseData.phaseid);
+  const phase_questions = await cached_fetch_phase_questions(phaseData.phaseid);
   let phase_sections = [] as SectionData[];
   let mapQuestions = {} as SectionQuestionsMap;
   if (phaseData.sectionsenabled) {
@@ -58,7 +57,7 @@ export default async function Page({
     <ProgressBar
       progressbarId={phaseData.phaseid}
       mandatoryQuestionIds={mandatoryQuestionIds}
-      dependingOn={depending_on}
+      phaseQuestions={phase_questions}
       endDate={phaseData.enddate}
     />
   );

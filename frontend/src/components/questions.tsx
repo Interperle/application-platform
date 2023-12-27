@@ -64,15 +64,23 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
   );
   useEffect(() => {
     phaseAnswers.forEach((answer) => {
-      updateAnswerState(answer.questionid, answer.answerid);
+      updateAnswerState(
+        answer.questionid,
+        answer.answerid,
+        answer?.answervalue,
+      );
     });
-  });
+  }, [phaseAnswers]);
 
-  const updateAnswerState = (questionid: string, answerid?: string) => {
+  const updateAnswerState = (
+    questionid: string,
+    answerid?: string,
+    answervalue?: string | null,
+  ) => {
     dispatch(
       UpdateAnswer({
         questionid: questionid,
-        answervalue: INIT_PLACEHOLDER,
+        answervalue: answervalue || INIT_PLACEHOLDER,
         answerid: answerid || "",
       }),
     );
