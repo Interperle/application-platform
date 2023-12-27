@@ -4,6 +4,7 @@ import {
   fetch_all_questions,
   fetch_conditional_questionid_mapping,
 } from "@/actions/phase";
+import Easteregg from "@/components/easteregg";
 import Apl_Header from "@/components/header";
 import PhaseOverview from "@/components/phaseOverview";
 import { Question } from "@/components/questions";
@@ -50,6 +51,9 @@ export default async function Home() {
           className="markdown-body"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
+        <span className="hidden">
+          <Easteregg person="emma" />
+        </span>
       </div>
       {phasesData
         .sort((a, b) => a.phaseorder - b.phaseorder)

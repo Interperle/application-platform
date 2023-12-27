@@ -104,9 +104,7 @@ export default async function Page({
             )}
           </div>
           {progressBarComponent}
-          <MissingQuestions
-            phaseQuestions={phase_questions}
-          />
+          <MissingQuestions phaseQuestions={phase_questions} />
         </div>
         <OverviewButton />
       </div>

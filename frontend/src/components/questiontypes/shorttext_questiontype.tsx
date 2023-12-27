@@ -11,6 +11,7 @@ import { checkRegex } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
+import Easteregg from "../easteregg";
 
 export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -124,6 +125,17 @@ const ShortTextQuestionType: React.FC<ShortTextQuestionTypeProps> = ({
         >
           {answer.length}/{maxtextlength} Zeichen
         </p>
+        {(questionid == "3bcfc1c7-c5a7-4906-8df3-88c8c3f78129" ||
+          questionid == "984b00dc-d5c8-422f-942c-bab544f865ac") &&
+        answer == "Erlangen" ? (
+          <Easteregg person="marib" />
+        ) : formattingdescription == "Telefonnummer" && answer == "112" ? (
+          <Easteregg person="maurice" />
+        ) : (questionid == "82f33368-2bb0-42c6-b484-aeae2f83cad7" ||
+            questionid == "94789d4c-90c0-4850-94bf-0b51defe355e") &&
+          answer == "Bayerische EliteAkademie" ? (
+          <Easteregg person="charlie" />
+        ) : null}
       </AwaitingChild>
     </QuestionTypes>
   );

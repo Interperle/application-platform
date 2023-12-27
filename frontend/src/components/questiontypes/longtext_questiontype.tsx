@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../awaiting";
+import Easteregg from "../easteregg";
 
 export interface LongTextQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -99,6 +100,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
         >
           {answer.length}/{maxtextlength} Zeichen
         </p>
+        {answer.includes("Rizz") && <Easteregg person="lukas" />}
       </AwaitingChild>
     </QuestionTypes>
   );
