@@ -25,7 +25,6 @@ const ApplicationOverview: React.FC<{
         const dispatch = useAppDispatch();
 
         useEffect(() => {
-            alert(JSON.stringify(phaseAnswers))
             phaseAnswers.forEach((answer) => {
                 updateAnswerState(answer.questionid, answer.answerid);
             });
