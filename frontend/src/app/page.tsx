@@ -29,10 +29,10 @@ export default async function Home() {
           className="markdown-body"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
-        <span className="hidden">
-          <Easteregg person="emma" />
-        </span>
       </div>
+      <span className="hidden">
+        <Easteregg person="emma" />
+      </span>
       <ApplicationOverview
         phasesData={phasesData}
         phasesQuestions={phasesQuestions}
