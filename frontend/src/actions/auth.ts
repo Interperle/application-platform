@@ -295,7 +295,7 @@ export async function signInWithSlack() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "slack",
     options: {
-      redirectTo: `auth/callback/`,
+      redirectTo: `${getURL()}auth/callback/`,
     },
   });
   console.log(error);
