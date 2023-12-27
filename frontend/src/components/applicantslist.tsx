@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  userData,
-} from "@/actions/admin";
-
+import { userData } from "@/actions/admin";
 import { useAppSelector } from "@/store/store";
 
 import ToggleSwitch from "./fields/toggleswitch";
@@ -12,7 +9,7 @@ const ApplicantsList: React.FC = () => {
   const usersGlobal = useAppSelector((state) => state.userReducer.users);
 
   const handleToggle = async (user: userData) => {
-    return
+    return;
   };
 
   return (

@@ -8,14 +8,14 @@ export async function saveConditionalAnswer(
   answertext: string,
   questionid: string,
 ) {
-  console.log(answertext)
+  console.log(answertext);
   if (answertext == "") {
     await deleteAnswer(questionid, "conditional_answer_table");
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-    console.log(answerid)
-    console.log(reqtype)
+    console.log(answerid);
+    console.log(reqtype);
     if (reqtype == "created") {
       const insertConditionalAnswerResponse = await supabase
         .from("conditional_answer_table")

@@ -68,7 +68,10 @@ export async function signUpUser(prevState: any, formData: FormData) {
       userData.user.identities &&
       userData.user.identities.length === 0
     ) {
-      return { message: "Es existiert bereits ein Profil mit dieser Email Adresse!", status: "ERROR" };
+      return {
+        message: "Es existiert bereits ein Profil mit dieser Email Adresse!",
+        status: "ERROR",
+      };
     }
     const { data: userProfileData, error: userProfileError } =
       await supabaseServiceRole

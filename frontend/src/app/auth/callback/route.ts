@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     .single();
 
   if (roleError) {
-    console.log("TESTING: ")
+    console.log("TESTING: ");
     console.log(roleError);
   }
   var subdomain = "";

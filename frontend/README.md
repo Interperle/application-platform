@@ -37,12 +37,11 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-
 ## Setup Supabase
 
 - Email SMTP
 - Email Templates (especially Links and topics)
-- Email Ratelimit in 
+- Email Ratelimit in
 - Slack: https://supabase.com/docs/guides/auth/social-login/auth-slack
 - DB
 - RLS

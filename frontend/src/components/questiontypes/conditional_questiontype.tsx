@@ -98,14 +98,14 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
     }
 
     if (
-      (dependingQuestions[choice.choiceid].length == 0 &&
-      answer === choice.choiceid)
+      dependingQuestions[choice.choiceid].length == 0 &&
+      answer === choice.choiceid
     ) {
       saveConditionalAnswer("", questionid);
       updateAnswerState("");
       return;
     }
-    if (dependingQuestions[answer].length == 0){
+    if (dependingQuestions[answer].length == 0) {
       saveConditionalAnswer(choice.choiceid, questionid);
       updateAnswerState(choice.choiceid);
       return;
@@ -123,9 +123,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
     setChoiceHelper(choice.choiceid);
 
     setMessage(
-      `Es sind ${
-        dependingQuestions[answer].length
-      } Unterfragen sind von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
+      `Es sind ${dependingQuestions[answer].length} Unterfragen sind von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
     );
     setPopupOpen(true);
   };

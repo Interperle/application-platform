@@ -36,10 +36,10 @@ export async function downloadFile(bucket_name: string, filename: string) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
+
   const { data: fileUploadBucketData, error: fileUploadBucketError } =
     await supabase.storage.from(bucket_name).download(filename);
   if (fileUploadBucketError) {
-    console.log(fileUploadBucketError);
     return;
   }
   // Can't return Blob from Server Component to Client Component!
