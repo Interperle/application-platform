@@ -16,6 +16,7 @@ export async function GET(request: Request) {
 
   if (code) {
     const data = await supabase.auth.exchangeCodeForSession(code);
+    console.log(data)
   }
 
   const {
