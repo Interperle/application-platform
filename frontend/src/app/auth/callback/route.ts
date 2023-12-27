@@ -13,13 +13,11 @@ export async function GET(request: Request) {
   const supabase = initSupabaseActions();
 
   if (code) {
-    console.log("Code: " + code)
     const data = await supabase.auth.exchangeCodeForSession(code);
   }
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log("User: " + JSON.stringify(user))
 
   const { data: roleData, error: roleError } = await supabase
     .from("user_profiles_table")

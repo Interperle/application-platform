@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 
-import { ExtendedAnswerType, deleteAnswersOfQuestions } from "@/actions/answers/answers";
+import {
+  ExtendedAnswerType,
+  deleteAnswersOfQuestions,
+} from "@/actions/answers/answers";
 import {
   fetchConditionalAnswer,
   saveConditionalAnswer,
