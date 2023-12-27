@@ -13,6 +13,8 @@ export async function GET(request: Request) {
 
   const supabase = initSupabaseActions();
   console.log(request.url)
+  console.log("Redirect To:")
+  console.log(`${getURL()}`)
 
   if (code) {
     const data = await supabase.auth.exchangeCodeForSession(code);
@@ -43,6 +45,10 @@ export async function GET(request: Request) {
       await supabaseServiceRole
         .from("user_profiles_table")
         .insert({ userid: user!.id, userrole: 2, isactive: true });
+    if (userProfileError){
+      console.log("userProfileError")
+      console.log(userProfileError)
+    }
     subdomain = "review";
   } else if (!roleData.isactive) {
     subdomain = "403";
