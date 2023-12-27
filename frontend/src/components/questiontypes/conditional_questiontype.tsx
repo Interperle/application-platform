@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { Answer, deleteAnswersOfQuestions } from "@/actions/answers/answers";
+import { ExtendedAnswerType, deleteAnswersOfQuestions } from "@/actions/answers/answers";
 import {
   fetchConditionalAnswer,
   saveConditionalAnswer,
@@ -29,7 +29,7 @@ export interface conditionalChoicesProps {
 export interface ConditionalQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
   choices: conditionalChoicesProps[];
-  phaseAnswers: Answer[];
+  phaseAnswers: ExtendedAnswerType[];
 }
 
 const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({

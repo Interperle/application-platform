@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { Answer } from "@/actions/answers/answers";
+import { ExtendedAnswerType } from "@/actions/answers/answers";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
 
@@ -22,7 +22,7 @@ export function SectionView({
 }: {
   phaseData: PhaseData;
   mapQuestions: SectionQuestionsMap;
-  phaseAnswers: Answer[];
+  phaseAnswers: ExtendedAnswerType[];
   phaseSections: SectionData[];
   iseditable: boolean;
 }) {

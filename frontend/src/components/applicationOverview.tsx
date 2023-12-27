@@ -53,6 +53,7 @@ const ApplicationOverview: React.FC<{
           return (
             <PhaseOverview
               key={phase.phaseid}
+              phaseId={phase.phaseid}
               phaseName={phase.phasename}
               phaseLabel={phase.phaselabel}
               phaseOrder={phase.phaseorder}

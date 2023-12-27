@@ -19,7 +19,7 @@ import { ProgressBar } from "./progressbar";
 import { Question } from "./questions";
 
 const PhaseOverview: React.FC<{
-  key: string;
+  phaseId: string;
   phaseName: string;
   phaseLabel: string;
   phaseOrder: number;
@@ -28,7 +28,7 @@ const PhaseOverview: React.FC<{
   mandatoryQuestionIds: string[];
   phaseQuestions: Question[];
 }> = ({
-  key,
+  phaseId,
   phaseName,
   phaseLabel,
   phaseOrder,
@@ -55,7 +55,6 @@ const PhaseOverview: React.FC<{
 
   return (
     <div
-      key={key}
       className={`w-full max-w-screen-xl mx-auto p-8 rounded-lg shadow-md  ${
         phaseStatus === "UPCOMING" ? "bg-[#B8B8B8] opacity-30" : "bg-white"
       }`}
@@ -78,7 +77,7 @@ const PhaseOverview: React.FC<{
         <div className="p-4 rounded">
           {phaseStatus != "UPCOMING" ? (
             <ProgressBar
-              progressbarId={`${key}-overview`}
+              progressbarId={`${phaseId}-overview`}
               mandatoryQuestionIds={mandatoryQuestionIds}
               phaseQuestions={phaseQuestions}
               endDate={phaseEnd}

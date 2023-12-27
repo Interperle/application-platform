@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 
-import { Answer } from "@/actions/answers/answers";
+import { ExtendedAnswerType } from "@/actions/answers/answers";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
@@ -36,7 +36,7 @@ export interface Question extends DefaultQuestion {
 interface QuestionnaireProps {
   phaseData: PhaseData;
   phaseQuestions: Question[];
-  phaseAnswers: Answer[];
+  phaseAnswers: ExtendedAnswerType[];
   iseditable: boolean;
   selectedSection: string | null;
   selectedCondChoice: string | null;
