@@ -41,7 +41,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Setup Supabase
 
 - Email SMTP
-- Email Templates (especially Links & Topic)
+- Email Templates (especially Links & Topics)
 - Email Ratelimit in 
 - Slack
 - DB
