@@ -42,6 +42,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   const answer = useAppSelector<string>(
     (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
+  const [tempAnswer, setTempAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
 
@@ -50,6 +51,10 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       setIsLoading(true);
+      const fileInput = document.getElementById(questionid) as HTMLInputElement;
+      if (fileInput && fileInput.value == "") {
+        setTempAnswer("");
+      }
       try {
         const savedAnswer = await fetchVideoUploadAnswer(questionid);
         if (savedAnswer?.videoname != "") {
@@ -63,6 +68,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
         } else {
           updateAnswerState("");
         }
+        setTempAnswer("");
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -100,7 +106,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       alert(`Die Videodatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
-    updateAnswerState(URL.createObjectURL(file));
+    setTempAnswer(URL.createObjectURL(file));
     setWasUploaded(false);
   }
 
@@ -119,6 +125,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       return;
     }
     deleteVideoUploadAnswer(questionid);
+    setTempAnswer("");
     updateAnswerState("");
     setWasUploaded(false);
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
@@ -131,6 +138,8 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
+    updateAnswerState(tempAnswer);
+    setTempAnswer("");
     setWasUploaded(true);
   };
 
@@ -164,7 +173,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       questionsuborder={questionsuborder}
     >
       <form action={saveVideoUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${answer && "hidden"}`}>
+        <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
           <AwaitingChild isLoading={isLoading}>
             <div className="flex items-center justify-center w-full">
               <label
@@ -212,7 +221,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
         </div>
         <div
           className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !answer && "hidden"
+            !(tempAnswer || answer) && "hidden"
           }`}
         >
           {iseditable && (
@@ -231,7 +240,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
             controls
             className="max-w-xs max-h-96"
           >
-            <source src={answer} type="video/mp4" />
+            <source src={tempAnswer || answer} type="video/mp4" />
             Dein Browser supported diese Darstellung leider nicht
           </video>
           {!wasUploaded ? (

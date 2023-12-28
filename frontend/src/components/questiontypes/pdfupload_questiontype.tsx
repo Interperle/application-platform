@@ -38,6 +38,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   const answer = useAppSelector<string>(
     (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
+  const [tempAnswer, setTempAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
 
@@ -46,6 +47,10 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   useEffect(() => {
     async function loadAnswer() {
       setIsLoading(true);
+      const fileInput = document.getElementById(questionid) as HTMLInputElement;
+      if (fileInput && fileInput.value == "") {
+        setTempAnswer("");
+      }
       try {
         const savedAnswer = await fetchPdfUploadAnswer(questionid);
         if (savedAnswer?.pdfname != "") {
@@ -59,6 +64,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
         } else {
           updateAnswerState("");
         }
+        setTempAnswer("");
       } catch (error) {
         console.error("Failed to fetch answer", error);
       } finally {
@@ -95,7 +101,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       alert(`Die PDF Datei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
-    updateAnswerState(URL.createObjectURL(file));
+    setTempAnswer(URL.createObjectURL(file));
     setWasUploaded(false);
   }
 
@@ -114,6 +120,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       return;
     }
     deletePdfUploadAnswer(questionid);
+    setTempAnswer("");
     updateAnswerState("");
     setWasUploaded(false);
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
@@ -126,6 +133,8 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
+    updateAnswerState(tempAnswer);
+    setTempAnswer("");
     setWasUploaded(true);
   };
 
@@ -159,7 +168,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       questionsuborder={questionsuborder}
     >
       <form action={savePdfUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${answer && "hidden"}`}>
+        <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
           <AwaitingChild isLoading={isLoading}>
             <div className="flex items-center justify-center w-full">
               <label
@@ -207,7 +216,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
         </div>
         <div
           className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !answer && "hidden"
+            !(tempAnswer || answer) && "hidden"
           }`}
         >
           {iseditable && (
@@ -220,7 +229,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
             </button>
           )}
           <iframe
-            src={answer}
+            src={tempAnswer || answer}
             width="100%"
             height="600px max-w-xs max-h-96 self-center"
             style={{ border: "none" }}
