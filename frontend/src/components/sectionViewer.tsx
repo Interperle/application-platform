@@ -96,27 +96,34 @@ export function SectionView({
     }
   };
 
-  const isNotFirstSection =
-    sortedSections.findIndex(
-      (section) => section.sectionid === selectedSection,
-    ) > 0;
-  const isNotLastSection =
-    sortedSections.findIndex(
-      (section) => section.sectionid === selectedSection,
-    ) <
-    sortedSections.length - 1;
+  const currentIndex = sortedSections.findIndex(
+    (section) => section.sectionid === selectedSection,
+  );
+  
+  const nextSectionName =
+    currentIndex < sortedSections.length - 1
+      ? sortedSections[currentIndex + 1].sectionname
+      : null;
+  
+  const prevSectionName =
+    currentIndex > 0
+      ? sortedSections[currentIndex - 1].sectionname
+      : null;
+
+  const isNotFirstSection = currentIndex > 0;
+  const isNotLastSection = currentIndex < sortedSections.length - 1;
 
   return (
     <div className="text-sm font-medium text-gray-500 border-gray-200 mt-7 mb-7">
-      <ul className="flex flex-wrap -mb-px">
+      <ul className="flex flex-wrap -mb-px border-b">
         {sortedSections.map((phaseSection) => {
           return (
             <button
               type="button"
               key={phaseSection.sectionid}
-              className={`flex-1 py-2 px-4 ${
+              className={`flex-1 py-2 px-4 border-secondary ${
                 selectedSection === phaseSection.sectionid
-                  ? "text-secondary border-b-2 border-secondary"
+                  ? "text-secondary border-b-2"
                   : "text-gray-500"
               }`}
               onClick={() => setSelectedSectionWithUrl(phaseSection.sectionid)}
@@ -128,6 +135,7 @@ export function SectionView({
       </ul>
       {sortedSections.map((phaseSection) => {
         const isVisible = selectedSection === phaseSection.sectionid;
+        phaseSection.sectionname
         return (
           <div
             key={phaseSection.sectionid}
@@ -149,7 +157,7 @@ export function SectionView({
                   onClick={moveToPreviousSection}
                   className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
                 >
-                  Zurück
+                  Zurück zu "{prevSectionName}"
                 </button>
               ) : (
                 <div className="py-2 px-4"></div>
@@ -160,7 +168,7 @@ export function SectionView({
                   onClick={moveToNextSection}
                   className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
                 >
-                  Weiter
+                  Weiter zu "{nextSectionName}"
                 </button>
               ) : (
                 <div className="py-2 px-4"></div>

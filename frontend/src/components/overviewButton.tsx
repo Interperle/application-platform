@@ -10,7 +10,7 @@ const OverviewButton: React.FC = () => {
     router.push(`/`);
   };
 
-  return <button onClick={handleRedirect}>{"<- Zur Übersicht"}</button>;
+  return <button onClick={handleRedirect}>{"<- Zur Startseite"}</button>;
 };
 
 export default OverviewButton;
