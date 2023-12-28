@@ -18,7 +18,7 @@ export default async function Home() {
       <h1 className="text-4xl text-secondary md:text-5xl text-center">
         Generation-D Internal Login
       </h1>
-      {/*<form action={signInWithSlack}>
+      <form action={signInWithSlack}>
         <button
           type="submit"
           className="apl-button-fixed-big flex items-center"
@@ -33,7 +33,7 @@ export default async function Home() {
           <strong className="ml-2">Login mit Slack</strong>
         </button>
       </form>
-      <form action={formAction}>
+      {/*<form action={formAction}>
         <input
           type="text"
           name="magicLinkEmail"
