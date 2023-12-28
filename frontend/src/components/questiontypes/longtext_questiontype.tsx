@@ -95,7 +95,7 @@ const LongTextQuestionType: React.FC<LongTextQuestionTypeProps> = ({
         />
         <p
           className={`italic  text-sm text-right ${
-            answer.length == maxtextlength ? "text-red-500" : "text-gray-500"
+            answer.length >= maxtextlength ? "text-red-500" : "text-gray-500"
           } `}
         >
           {answer.length}/{maxtextlength} Zeichen
