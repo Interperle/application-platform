@@ -1,27 +1,31 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getURL } from "@/utils/helpers";
-import { initSupabaseRoute } from "@/utils/supabaseServerClients";
+import { initSupabaseRoute, initSupabaseRouteNew } from "@/utils/supabaseServerClients";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next") ?? "";
+  const redirectTo = request.nextUrl.clone()
+  redirectTo.pathname = next
 
   if (token_hash && type) {
-    const supabase = initSupabaseRoute();
+    const supabase = initSupabaseRouteNew();
 
     const { error } = await supabase.auth.verifyOtp({
       type,
       token_hash,
     });
     if (!error) {
-      return NextResponse.redirect(`${getURL()}${next}`);
+      return NextResponse.redirect(redirectTo);
     }
+    console.log(JSON.stringify(error))
   }
 
   // return the user to an error page with some instructions
-  return NextResponse.redirect(`${getURL()}`);
+  redirectTo.pathname = ""
+  return NextResponse.redirect(redirectTo);
 }

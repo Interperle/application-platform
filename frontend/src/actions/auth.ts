@@ -11,6 +11,7 @@ import {
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
+import { MIDDLEWARE_BUILD_MANIFEST } from "next/dist/shared/lib/constants";
 
 export async function signUpUser(prevState: any, formData: FormData) {
   const schema = z.object({
@@ -315,6 +316,33 @@ export async function signInWithSlack() {
     console.log("Error during sign in:", error);
   }
 }
+
+
+export async function signInWithMagicLink(prevState: any, formData: FormData) {
+  const schema = z.object({
+    magicLinkEmail: z.string().min(1),
+  });
+  console.log(JSON.stringify(formData))
+  const signInFormData = schema.safeParse({
+    magicLinkEmail: formData.get("magicLinkEmail"),
+  });
+  const supabase = initSupabaseActions();
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email: "marib.aldoais@generation-d.org",
+    options: {
+      shouldCreateUser: false,
+      emailRedirectTo: `http://localhost:3000/auth/confirm`,
+    },
+  });
+  console.log();
+  if (error) {
+    console.log("Slack Error" + JSON.stringify(error));
+  }
+  if (data) {
+    console.log("Slack Data" + JSON.stringify(data));
+  }
+}
+
 
 export async function isAuthorized(
   supabase: SupabaseClient,

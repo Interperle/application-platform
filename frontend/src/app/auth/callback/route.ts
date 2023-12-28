@@ -3,23 +3,26 @@ import { NextResponse } from "next/server";
 import { getURL } from "@/utils/helpers";
 import {
   initSupabaseActions,
+  initSupabaseRouteNew,
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 
 export async function GET(request: Request) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
-  const code_challenge = requestUrl.searchParams.get("code_challenge");
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get('next') ?? '/'
 
-  const supabase = initSupabaseActions();
+  const supabase = initSupabaseRouteNew();
   console.log(request.url);
   console.log("Redirect To:");
   console.log(`${getURL()}`);
 
-  if (code) {
-    const data = await supabase.auth.exchangeCodeForSession(code);
-    console.log(data);
+  if (!code) {
+    console.log("Redirect to Home")
+    return NextResponse.redirect(`${getURL()}`);
   }
+  const data = await supabase.auth.exchangeCodeForSession(code);
+  console.log(data);
 
   const {
     data: { user },
@@ -58,5 +61,5 @@ export async function GET(request: Request) {
   } else if (roleData.userrole == 3) {
     subdomain = "admin";
   }
-  return NextResponse.redirect(`${getURL()}${subdomain}/`);
+  return NextResponse.redirect(`${origin}/${subdomain}`);
 }
