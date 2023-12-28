@@ -6,6 +6,7 @@ import {
   initSupabaseRouteNew,
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
+import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
 
   if (!user) {
     console.log("No User found!");
-    return NextResponse.redirect(`${getURL()}`);
+    return redirect(`${getURL()}`);
   }
   const { data: roleData, error: roleError } = await supabase
     .from("user_profiles_table")
@@ -60,5 +61,5 @@ export async function GET(request: Request) {
   } else if (roleData.userrole == 3) {
     subdomain = "admin";
   }
-  return NextResponse.redirect(`${getURL()}${subdomain}`);
+  return redirect(`${getURL()}${subdomain}`);
 }
