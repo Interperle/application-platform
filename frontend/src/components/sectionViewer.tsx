@@ -115,16 +115,22 @@ export function SectionView({
 
   return (
     <div className="text-sm font-medium text-gray-500 border-gray-200 mt-7 mb-7">
-      <ul className="flex flex-wrap -mb-px border-b">
-        {sortedSections.map((phaseSection) => {
+      <ul className="flex flex-wrap -mb-px rounded-t-lg border-b">
+        {sortedSections.map((phaseSection, index) => {
+          const isFirstButton = index === 0;
+          const isLastButton = index === sortedSections.length - 1;
           return (
             <button
               type="button"
               key={phaseSection.sectionid}
-              className={`flex-1 py-2 px-4 border-secondary ${
+              className={`flex-1 py-2 px-4 border-b-secondary hover:bg-gray-200 hover:text-secondary ${
                 selectedSection === phaseSection.sectionid
                   ? "text-secondary border-b-2"
                   : "text-gray-500"
+              } ${
+                isFirstButton ? "rounded-tl-lg" : ""
+              } ${
+                isLastButton ? "rounded-tr-lg" : ""
               }`}
               onClick={() => setSelectedSectionWithUrl(phaseSection.sectionid)}
             >
