@@ -58,8 +58,8 @@ ALTER TABLE
 CREATE TABLE
   ANSWER_TABLE (
     answerid UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    questionid UUID NOT NULL REFERENCES QUESTION_TABLE (questionid),
-    applicationid UUID NOT NULL REFERENCES APPLICATION_TABLE (applicationid),
+    questionid UUID NOT NULL REFERENCES QUESTION_TABLE (questionid) on delete cascade,
+    applicationid UUID NOT NULL REFERENCES APPLICATION_TABLE (applicationid) on delete cascade,
     created TIMESTAMPTZ NOT NULL,
     lastUpdated TIMESTAMPTZ NOT NULL
   );
