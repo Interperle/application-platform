@@ -99,16 +99,14 @@ export function SectionView({
   const currentIndex = sortedSections.findIndex(
     (section) => section.sectionid === selectedSection,
   );
-  
+
   const nextSectionName =
     currentIndex < sortedSections.length - 1
       ? sortedSections[currentIndex + 1].sectionname
       : null;
-  
+
   const prevSectionName =
-    currentIndex > 0
-      ? sortedSections[currentIndex - 1].sectionname
-      : null;
+    currentIndex > 0 ? sortedSections[currentIndex - 1].sectionname : null;
 
   const isNotFirstSection = currentIndex > 0;
   const isNotLastSection = currentIndex < sortedSections.length - 1;
@@ -127,9 +125,7 @@ export function SectionView({
                 selectedSection === phaseSection.sectionid
                   ? "text-secondary border-b-2"
                   : "text-gray-500"
-              } ${
-                isFirstButton ? "rounded-tl-lg" : ""
-              } ${
+              } ${isFirstButton ? "rounded-tl-lg" : ""} ${
                 isLastButton ? "rounded-tr-lg" : ""
               }`}
               onClick={() => setSelectedSectionWithUrl(phaseSection.sectionid)}
@@ -141,7 +137,7 @@ export function SectionView({
       </ul>
       {sortedSections.map((phaseSection) => {
         const isVisible = selectedSection === phaseSection.sectionid;
-        phaseSection.sectionname
+        phaseSection.sectionname;
         return (
           <div
             key={phaseSection.sectionid}
@@ -163,7 +159,7 @@ export function SectionView({
                   onClick={moveToPreviousSection}
                   className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
                 >
-                  Zurück zu "{prevSectionName}"
+                  Zurück zu &quot;{prevSectionName}&quot;
                 </button>
               ) : (
                 <div className="py-2 px-4"></div>
@@ -174,7 +170,7 @@ export function SectionView({
                   onClick={moveToNextSection}
                   className="py-2 px-4 text-primary bg-secondary hover:bg-secondary rounded"
                 >
-                  Weiter zu "{nextSectionName}"
+                  Weiter zu &quot;{nextSectionName}&quot;
                 </button>
               ) : (
                 <div className="py-2 px-4"></div>

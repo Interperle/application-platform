@@ -4,12 +4,16 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 import { Question } from "@/components/questions";
-import { AnswerTypeTable, QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
+import {
+  AnswerTypeTable,
+  QuestionType,
+} from "@/components/questiontypes/utils/questiontype_selector";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
+
 import { deleteImageUploadAnswer } from "./imageUpload";
-import { deleteVideoUploadAnswer } from "./videoUpload";
 import { deletePdfUploadAnswer } from "./pdfUpload";
+import { deleteVideoUploadAnswer } from "./videoUpload";
 
 export interface saveAnswerType {
   supabase: SupabaseClient;
@@ -181,12 +185,12 @@ export async function deleteAnswer(questionid: string, answertype: string) {
 
 export async function deleteAnswersOfQuestions(questions: Question[]) {
   for (const question of questions) {
-    if (question.questiontype == QuestionType.ImageUpload){
-      await deleteImageUploadAnswer(question.questionid)
-    } else if (question.questiontype == QuestionType.VideoUpload){
-      await deleteVideoUploadAnswer(question.questionid)
-    } else if (question.questiontype == QuestionType.PDFUpload){
-      await deletePdfUploadAnswer(question.questionid)
+    if (question.questiontype == QuestionType.ImageUpload) {
+      await deleteImageUploadAnswer(question.questionid);
+    } else if (question.questiontype == QuestionType.VideoUpload) {
+      await deleteVideoUploadAnswer(question.questionid);
+    } else if (question.questiontype == QuestionType.PDFUpload) {
+      await deletePdfUploadAnswer(question.questionid);
     } else {
       await deleteAnswer(
         question.questionid,

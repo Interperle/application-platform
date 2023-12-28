@@ -12,21 +12,21 @@ export async function GET(request: Request) {
   const code_challenge = requestUrl.searchParams.get("code_challenge");
 
   const supabase = initSupabaseActions();
-  console.log(request.url)
-  console.log("Redirect To:")
-  console.log(`${getURL()}`)
+  console.log(request.url);
+  console.log("Redirect To:");
+  console.log(`${getURL()}`);
 
   if (code) {
     const data = await supabase.auth.exchangeCodeForSession(code);
-    console.log(data)
+    console.log(data);
   }
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user){
-    console.log("No User found!")
+  if (!user) {
+    console.log("No User found!");
     return NextResponse.redirect(`${getURL()}`);
   }
   const { data: roleData, error: roleError } = await supabase
@@ -45,9 +45,9 @@ export async function GET(request: Request) {
       await supabaseServiceRole
         .from("user_profiles_table")
         .insert({ userid: user!.id, userrole: 2, isactive: true });
-    if (userProfileError){
-      console.log("userProfileError")
-      console.log(userProfileError)
+    if (userProfileError) {
+      console.log("userProfileError");
+      console.log(userProfileError);
     }
     subdomain = "review";
   } else if (!roleData.isactive) {

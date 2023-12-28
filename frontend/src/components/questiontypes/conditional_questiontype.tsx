@@ -143,12 +143,14 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
           answerid: "",
         }),
       );
-      const fileInput = document.getElementById(question.questionid) as HTMLInputElement;
+      const fileInput = document.getElementById(
+        question.questionid,
+      ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = "";
       }
-    })
-  }
+    });
+  };
 
   const togglePopup = async () => {
     setPopupOpen(!isPopupOpen);
