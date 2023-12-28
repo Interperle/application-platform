@@ -10,7 +10,6 @@ import {
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get('next') ?? '/'
 
   const supabase = initSupabaseRouteNew();
   console.log(request.url);
@@ -61,5 +60,5 @@ export async function GET(request: Request) {
   } else if (roleData.userrole == 3) {
     subdomain = "admin";
   }
-  return NextResponse.redirect(`${origin}/${subdomain}`);
+  return NextResponse.redirect(`${getURL()}${subdomain}`);
 }

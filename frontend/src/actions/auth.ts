@@ -323,23 +323,22 @@ export async function signInWithMagicLink(prevState: any, formData: FormData) {
     magicLinkEmail: z.string().min(1),
   });
   console.log(JSON.stringify(formData))
-  const signInFormData = schema.safeParse({
+  const signInFormData = schema.parse({
     magicLinkEmail: formData.get("magicLinkEmail"),
   });
   const supabase = initSupabaseActions();
   const { data, error } = await supabase.auth.signInWithOtp({
-    email: "marib.aldoais@generation-d.org",
+    email: signInFormData.magicLinkEmail!,
     options: {
       shouldCreateUser: false,
       emailRedirectTo: `http://localhost:3000/auth/confirm`,
     },
   });
-  console.log();
   if (error) {
-    console.log("Slack Error" + JSON.stringify(error));
+    console.log("Magic Link Error" + JSON.stringify(error));
   }
   if (data) {
-    console.log("Slack Data" + JSON.stringify(data));
+    console.log("Magic Link Data" + JSON.stringify(data));
   }
 }
 

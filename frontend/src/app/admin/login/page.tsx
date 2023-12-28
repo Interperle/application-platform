@@ -33,7 +33,7 @@ export default async function Home() {
           <strong className="ml-2">Login mit Slack</strong>
         </button>
       </form>
-      {/*<form action={formAction}>
+      <form action={formAction}>
         <input
           type="text"
           name="magicLinkEmail"
@@ -47,7 +47,7 @@ export default async function Home() {
         >
           <strong className="ml-2">Login mit Magic Link</strong>
         </button>
-  </form>*/}
+      </form>
     </main>
   );
 }
