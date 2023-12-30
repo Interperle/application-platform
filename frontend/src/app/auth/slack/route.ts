@@ -6,7 +6,7 @@ import { getURL } from "@/utils/helpers";
 export async function GET(req: NextRequest) {
     console.log(req)
   let options: { redirectTo: string; scopes?: string } = {
-    redirectTo: `${getURL()}/admin/auth/callback`,
+    redirectTo: `${getURL()}/auth/admin/callback`,
   };
 
   const supabase = initSupabaseRouteNew();
