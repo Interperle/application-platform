@@ -11,6 +11,7 @@ import {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
+  console.log(req.url)
 
   var subdomain = "";
   if (code) {
@@ -19,7 +20,7 @@ export async function GET(req: NextRequest) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-
+    console.log(JSON.stringify(user))
     const { data: roleData, error: roleError } = await supabase
       .from("user_profiles_table")
       .select("*")
@@ -27,9 +28,15 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (roleError) {
-      console.log("TESTING: ");
-      console.log(roleError);
+      if (roleError.code == 'PGRST116'){
+        console.log("No Role yet");
+      } else {
+        console.log("RoleError:");
+        console.log(roleError);
+      }
     }
+    console.log("Role Data:")
+    console.log(roleData)
     if (!roleData) {
       const { data: userProfileData, error: userProfileError } =
         await supabaseServiceRole
@@ -38,6 +45,8 @@ export async function GET(req: NextRequest) {
       if (userProfileError) {
         console.log("userProfileError");
         console.log(userProfileError);
+      } else {
+        console.log("Created Reviewer Role...")
       }
       subdomain = "review";
     } else if (!roleData.isactive) {
@@ -49,6 +58,7 @@ export async function GET(req: NextRequest) {
       subdomain = "admin";
     }
   }
+  console.log(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`)
 
   return NextResponse.redirect(`${getURL()}${subdomain}`);
 }
