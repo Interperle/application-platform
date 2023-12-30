@@ -32,16 +32,12 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const saveVideoUploadAnswerWithId = saveVideoUploadAnswer.bind(
-    null,
-    questionid,
-  );
-
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
     (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [tempAnswer, setTempAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
@@ -106,6 +102,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       alert(`Die Videodatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
+    setUploadedFile(file);
     setTempAnswer(URL.createObjectURL(file));
     setWasUploaded(false);
   }
@@ -126,6 +123,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
     }
     deleteVideoUploadAnswer(questionid);
     setTempAnswer("");
+    setUploadedFile(null);
     updateAnswerState("");
     setWasUploaded(false);
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
@@ -134,13 +132,26 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!iseditable) {
       return;
     }
+    const formData = new FormData();
+    formData.append(questionid, uploadedFile!);
+    setIsLoading(true);
+    try {
+      await saveVideoUploadAnswer(questionid, formData);
+      // Handle success (e.g., showing a success message, resetting states)
+    } catch (error) {
+      // Handle error (e.g., showing an error message)
+      console.error("Failed to upload image", error);
+    }
     updateAnswerState(tempAnswer);
     setTempAnswer("");
+    setUploadedFile(null);
     setWasUploaded(true);
+    setIsLoading(true);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
@@ -172,9 +183,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       iseditable={iseditable}
       questionsuborder={questionsuborder}
     >
-      <form action={saveVideoUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
-          <AwaitingChild isLoading={isLoading}>
+      <form onSubmit={handleSubmit}>
+        <AwaitingChild isLoading={isLoading}>
+          <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
             <div className="flex items-center justify-center w-full">
               <label
                 htmlFor={questionid}
@@ -211,52 +222,52 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
                   disabled={!iseditable}
                   aria-disabled={!iseditable}
                   accept={validImgTypes.join(", ")}
-                  required={mandatory}
+                  required={mandatory && uploadedFile == null}
                   className="hidden"
                   onChange={(event) => handleUploadChange(event)}
                 />
               </label>
             </div>
-          </AwaitingChild>
-        </div>
-        <div
-          className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !(tempAnswer || answer) && "hidden"
-          }`}
-        >
-          {iseditable && (
-            <button
-              type="button"
-              className="self-end text-red-600"
-              onClick={handleDeleteOnClick}
-            >
-              Löschen
-            </button>
-          )}
-          <video
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-            controls
-            className="max-w-xs max-h-96"
+          </div>
+          <div
+            className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
+              !(tempAnswer || answer) && "hidden"
+            }`}
           >
-            <source src={tempAnswer || answer} type="video/mp4" />
-            Dein Browser supported diese Darstellung leider nicht
-          </video>
-          {!wasUploaded ? (
-            <>
-              <div className="italic">
-                Hinweis: Der Upload des ausgewählten Videos muss noch bestätigt
-                werden!
+            {iseditable && (
+              <button
+                type="button"
+                className="self-end text-red-600"
+                onClick={handleDeleteOnClick}
+              >
+                Löschen
+              </button>
+            )}
+            <video
+              width="100%"
+              height="100%"
+              style={{ border: "none" }}
+              controls
+              className="max-w-xs max-h-96"
+            >
+              <source src={tempAnswer || answer} type="video/mp4" />
+              Dein Browser supported diese Darstellung leider nicht
+            </video>
+            {!wasUploaded ? (
+              <>
+                <div className="italic">
+                  Hinweis: Der Upload des ausgewählten Videos muss noch
+                  bestätigt werden!
+                </div>
+                <SubmitButton text={"Video hochladen"} expanded={false} />
+              </>
+            ) : (
+              <div className="text-green-600">
+                Der Upload des Videos war erfolgreich!
               </div>
-              <SubmitButton text={"Video hochladen"} expanded={false} />
-            </>
-          ) : (
-            <div className="text-green-600">
-              Der Upload des Videos war erfolgreich!
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </AwaitingChild>
       </form>
     </QuestionTypes>
   );

@@ -32,12 +32,12 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const savePdfUploadAnswerWithId = savePdfUploadAnswer.bind(null, questionid);
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
     (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [tempAnswer, setTempAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
@@ -101,6 +101,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       alert(`Die PDF Datei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
+    setUploadedFile(file);
     setTempAnswer(URL.createObjectURL(file));
     setWasUploaded(false);
   }
@@ -123,19 +124,32 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
     setTempAnswer("");
     updateAnswerState("");
     setWasUploaded(false);
+    setUploadedFile(null);
+
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
     if (fileInput) {
       fileInput.value = "";
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!iseditable) {
       return;
     }
+    const formData = new FormData();
+    formData.append(questionid, uploadedFile!);
+    setIsLoading(true);
+    try {
+      await savePdfUploadAnswer(questionid, formData);
+    } catch (error) {
+      console.error("Failed to upload image", error);
+    }
     updateAnswerState(tempAnswer);
     setTempAnswer("");
+    setUploadedFile(null);
     setWasUploaded(true);
+    setIsLoading(false);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
@@ -167,9 +181,9 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
       questionorder={questionorder}
       questionsuborder={questionsuborder}
     >
-      <form action={savePdfUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
-          <AwaitingChild isLoading={isLoading}>
+      <form onSubmit={handleSubmit}>
+        <AwaitingChild isLoading={isLoading}>
+          <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
             <div className="flex items-center justify-center w-full">
               <label
                 htmlFor={questionid}
@@ -206,48 +220,48 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
                   disabled={!iseditable}
                   aria-disabled={!iseditable}
                   accept={validImgTypes.join(", ")}
-                  required={mandatory}
+                  required={mandatory && uploadedFile == null}
                   className="hidden"
                   onChange={(event) => handleUploadChange(event)}
                 />
               </label>
             </div>
-          </AwaitingChild>
-        </div>
-        <div
-          className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !(tempAnswer || answer) && "hidden"
-          }`}
-        >
-          {iseditable && (
-            <button
-              type="button"
-              className="self-end text-red-600 mb-1"
-              onClick={handleDeleteOnClick}
-            >
-              Löschen
-            </button>
-          )}
-          <iframe
-            src={tempAnswer || answer}
-            width="100%"
-            height="600px max-w-xs max-h-96 self-center"
-            style={{ border: "none" }}
-          />
-          {!wasUploaded ? (
-            <>
-              <div className="italic">
-                Hinweis: Der Upload der ausgewählten PDF muss noch bestätigt
-                werden!
+          </div>
+          <div
+            className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
+              !(tempAnswer || answer) && "hidden"
+            }`}
+          >
+            {iseditable && (
+              <button
+                type="button"
+                className="self-end text-red-600 mb-1"
+                onClick={handleDeleteOnClick}
+              >
+                Löschen
+              </button>
+            )}
+            <iframe
+              src={tempAnswer || answer}
+              width="100%"
+              height="600px max-w-xs max-h-96 self-center"
+              style={{ border: "none" }}
+            />
+            {!wasUploaded ? (
+              <>
+                <div className="italic">
+                  Hinweis: Der Upload der ausgewählten PDF muss noch bestätigt
+                  werden!
+                </div>
+                <SubmitButton text={"PDF hochladen"} expanded={false} />
+              </>
+            ) : (
+              <div className="text-green-600">
+                Der Upload der PDF war erfolgreich!
               </div>
-              <SubmitButton text={"PDF hochladen"} expanded={false} />
-            </>
-          ) : (
-            <div className="text-green-600">
-              Der Upload der PDF war erfolgreich!
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </AwaitingChild>
       </form>
     </QuestionTypes>
   );

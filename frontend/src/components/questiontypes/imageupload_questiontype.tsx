@@ -35,15 +35,12 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   selectedCondChoice,
   questionsuborder,
 }) => {
-  const saveImageUploadAnswerWithId = saveImageUploadAnswer.bind(
-    null,
-    questionid,
-  );
   const dispatch = useAppDispatch();
 
   const answer = useAppSelector<string>(
     (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
   );
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [tempAnswer, setTempAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [wasUploaded, setWasUploaded] = useState(false);
@@ -106,6 +103,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       alert(`Die Bilddatei darf maximal ${maxfilesizeinmb} MB groß sein!`);
       return;
     }
+    setUploadedFile(file);
     setTempAnswer(URL.createObjectURL(file));
     setWasUploaded(false);
   }
@@ -125,6 +123,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     }
     deleteImageUploadAnswer(questionid);
     setTempAnswer("");
+    setUploadedFile(null);
     updateAnswerState("");
     setWasUploaded(false);
     const fileInput = document.getElementById(questionid) as HTMLInputElement;
@@ -133,13 +132,24 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!iseditable) {
       return;
     }
+    const formData = new FormData();
+    formData.append(questionid, uploadedFile!);
+    setIsLoading(true);
+    try {
+      await saveImageUploadAnswer(questionid, formData);
+    } catch (error) {
+      console.error("Failed to upload image", error);
+    }
     updateAnswerState(tempAnswer);
     setTempAnswer("");
+    setUploadedFile(null);
     setWasUploaded(true);
+    setIsLoading(false);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
@@ -171,9 +181,9 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
       iseditable={iseditable}
       questionsuborder={questionsuborder}
     >
-      <form action={saveImageUploadAnswerWithId} onSubmit={handleSubmit}>
-        <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
-          <AwaitingChild isLoading={isLoading}>
+      <form onSubmit={handleSubmit}>
+        <AwaitingChild isLoading={isLoading}>
+          <div className={`mt-1 ${(tempAnswer || answer) && "hidden"}`}>
             <div className="flex items-center justify-center w-full">
               <label
                 htmlFor={questionid}
@@ -212,50 +222,50 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
                   id={questionid}
                   name={questionid}
                   accept={validImgTypes.join(", ")}
-                  required={mandatory}
+                  required={mandatory && uploadedFile == null}
                   className="hidden"
                   onChange={(event) => handleUploadChange(event)}
                 />
               </label>
             </div>
-          </AwaitingChild>
-        </div>
-        <div
-          className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
-            !(tempAnswer || answer) && "hidden"
-          }`}
-        >
-          {iseditable && (
-            <button
-              type="button"
-              className="self-end text-red-600"
-              onClick={handleDeleteOnClick}
-            >
-              Löschen
-            </button>
-          )}
-          <Image
-            alt="Preview"
-            src={tempAnswer || answer}
-            className="self-center max-w-xs max-h-96"
-            id="imagePreview"
-            width={100}
-            height={100}
-          />
-          {!wasUploaded ? (
-            <>
-              <div className="italic">
-                Hinweis: Der Upload des ausgewählten Bildes muss noch bestätigt
-                werden!
+          </div>
+          <div
+            className={`mt-4 flex flex-col gap-y-2 max-w-xs max-h-96 ${
+              !(tempAnswer || answer) && "hidden"
+            }`}
+          >
+            {iseditable && (
+              <button
+                type="button"
+                className="self-end text-red-600"
+                onClick={handleDeleteOnClick}
+              >
+                Löschen
+              </button>
+            )}
+            <Image
+              alt="Preview"
+              src={tempAnswer || answer}
+              className="self-center max-w-xs max-h-96"
+              id="imagePreview"
+              width={100}
+              height={100}
+            />
+            {!wasUploaded ? (
+              <>
+                <div className="italic">
+                  Hinweis: Der Upload des ausgewählten Bildes muss noch
+                  bestätigt werden!
+                </div>
+                <SubmitButton text={"Bild hochladen"} expanded={false} />
+              </>
+            ) : (
+              <div className="text-green-600">
+                Der Upload des Bildes war erfolgreich!
               </div>
-              <SubmitButton text={"Bild hochladen"} expanded={false} />
-            </>
-          ) : (
-            <div className="text-green-600">
-              Der Upload des Bildes war erfolgreich!
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </AwaitingChild>
       </form>
     </QuestionTypes>
   );
