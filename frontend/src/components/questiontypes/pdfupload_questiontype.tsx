@@ -240,7 +240,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
                 Hinweis: Der Upload der ausgewählten PDF muss noch bestätigt
                 werden!
               </div>
-              <SubmitButton text={"Bild hochladen"} expanded={false} />
+              <SubmitButton text={"PDF hochladen"} expanded={false} />
             </>
           ) : (
             <div className="text-green-600">
