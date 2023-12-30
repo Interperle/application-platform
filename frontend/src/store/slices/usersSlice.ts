@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { userData } from "@/actions/admin";
+
 import { RESET_STATE } from "../actionTypes";
 
 interface UsersState {

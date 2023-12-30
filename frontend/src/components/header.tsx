@@ -1,22 +1,22 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 
+import { RESET_STATE } from "@/store/actionTypes";
 import { toggle } from "@/store/slices/menuSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { SubmitButton } from "./submitButton";
-import { RESET_STATE } from "@/store/actionTypes";
 
 const Apl_Header: React.FC = () => {
   const isMenuOpen = useAppSelector((state) => state.menuReducer.isOpen);
   const dispatch = useAppDispatch();
 
   function handleSubmit(): void {
-    dispatch({type: RESET_STATE})
+    dispatch({ type: RESET_STATE });
   }
 
   return (

@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import { RESET_STATE } from "../actionTypes";
 
-const initialState:{isOpen: boolean} = {
+const initialState: { isOpen: boolean } = {
   isOpen: false,
-}
+};
 
 export const menuSlice = createSlice({
   name: "menu",

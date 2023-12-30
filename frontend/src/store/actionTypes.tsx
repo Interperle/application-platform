@@ -1,1 +1,1 @@
-export const RESET_STATE = 'resetState';
+export const RESET_STATE = "resetState";

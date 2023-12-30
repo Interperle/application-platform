@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { RESET_STATE } from "../actionTypes";
 
 type InitialState = {

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { Question } from "@/components/questions";
+
 import { RESET_STATE } from "../actionTypes";
 
 export interface PhaseData {
