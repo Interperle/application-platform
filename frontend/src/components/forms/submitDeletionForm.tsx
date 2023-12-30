@@ -7,6 +7,8 @@ import { useFormStatus } from "react-dom";
 
 import { deleteUser } from "@/actions/auth";
 import { supabase } from "@/utils/supabaseBrowserClient";
+import { useAppDispatch } from "@/store/store";
+import { RESET_STATE } from "@/store/actionTypes";
 
 interface messageType {
   message: string;
@@ -23,6 +25,7 @@ export default function SubmitDeletionForm({
 }: {
   email: string | null;
 }) {
+  const dispatch = useAppDispatch()
   const [state, setState] = useState<messageType>(initialState);
   const [countdown, setCountdown] = useState<number>(-1);
   const [countdownMessage, setCountdownMessage] = useState<string>("");
@@ -46,6 +49,7 @@ export default function SubmitDeletionForm({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    dispatch({type: RESET_STATE})
     const new_state = await deleteUser();
     if (new_state.status == "SUCCESS") {
       setCountdown(10);

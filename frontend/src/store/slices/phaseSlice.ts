@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { Question } from "@/components/questions";
+import { RESET_STATE } from "../actionTypes";
 
 export interface PhaseData {
   phaseid: string;
@@ -50,6 +51,9 @@ export const phaseSlice = createSlice({
       const { phasename, phasedata, phasequestions } = action.payload;
       state.phases[phasename] = { data: phasedata, questions: phasequestions };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(RESET_STATE, () => initialState);
   },
 });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FormEvent } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -9,10 +9,15 @@ import { toggle } from "@/store/slices/menuSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { SubmitButton } from "./submitButton";
+import { RESET_STATE } from "@/store/actionTypes";
 
 const Apl_Header: React.FC = () => {
   const isMenuOpen = useAppSelector((state) => state.menuReducer.isOpen);
   const dispatch = useAppDispatch();
+
+  function handleSubmit(): void {
+    dispatch({type: RESET_STATE})
+  }
 
   return (
     <div className="w-full bg-white h-24 flex items-center justify-between p-4 md:p-6">
@@ -55,7 +60,7 @@ const Apl_Header: React.FC = () => {
             Einstellungen
           </span>
         </Link>
-        <form action="/auth/signout" method="post">
+        <form action="/auth/signout" method="post" onSubmit={handleSubmit}>
           <SubmitButton text={"Ausloggen"} expanded={false} />
         </form>
       </div>
