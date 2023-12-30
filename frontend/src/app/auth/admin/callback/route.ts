@@ -15,8 +15,10 @@ export async function GET(req: NextRequest) {
   var subdomain = "";
   if (code) {
     const supabase = initSupabaseRouteNew();
-    const error = await supabase.auth.exchangeCodeForSession(code);
-    console.log(JSON.stringify(error));
+    await supabase.auth.exchangeCodeForSession(code);
+    return NextResponse.redirect(`${getURL()}review`);
+  }
+  /*
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -60,5 +62,5 @@ export async function GET(req: NextRequest) {
   }
   console.log(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`);
 
-  return NextResponse.redirect(`${getURL()}${subdomain}`);
+  return NextResponse.redirect(`${getURL()}${subdomain}`);*/
 }
