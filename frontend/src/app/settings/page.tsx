@@ -50,8 +50,8 @@ const SettingsPage: React.FC = () => {
         <h3 className="py-2 text-xl">Ändere dein Passwort</h3>
         <div>
           <h2>
-            Zum Zurücksetzen deines Passworts wird dir ein Passwort zurücksetzen
-            Link an obige Email Adresse gesendet
+            Dir wird zum Zurücksetzen deines Passworts an die oben genannte
+            Email-Adresse ein Link gesendet.
           </h2>
           {user?.email == undefined ? (
             <CircularProgress size={"1rem"} />

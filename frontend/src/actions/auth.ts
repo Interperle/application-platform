@@ -11,7 +11,6 @@ import {
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
-import { MIDDLEWARE_BUILD_MANIFEST } from "next/dist/shared/lib/constants";
 
 export async function signUpUser(prevState: any, formData: FormData) {
   const schema = z.object({
@@ -55,7 +54,7 @@ export async function signUpUser(prevState: any, formData: FormData) {
       email: signUpFormData.data.email.replace("@googlemail.com", "@gmail.com"),
       password: signUpFormData.data.password,
       options: {
-        emailRedirectTo: `${getURL()}`,
+        emailRedirectTo: `${getURL()}/auth/callback`,
       },
     });
     revalidatePath("/login");
@@ -162,19 +161,6 @@ export async function signInUser(prevState: any, formData: FormData) {
   redirect("/");
 }
 
-export async function signOutUser(prevState: any, formData: FormData) {
-  try {
-    const supabase = initSupabaseActions();
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      return { message: error.message, status: "ERROR" };
-    }
-  } catch (e) {
-    return { message: String(e), status: "ERROR" };
-  }
-  redirect("/");
-}
-
 export async function sendResetPasswordLink(
   prevState: any,
   formData: FormData,
@@ -193,6 +179,9 @@ export async function sendResetPasswordLink(
     const supabase = initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
       resetPasswordFormData.data.email.replace("@googlemail.com", "@gmail.com"),
+      {
+        redirectTo: `${getURL()}/auth/callback?next=login/update-password`,
+      },
     );
     if (error) {
       return { message: error.message, status: "ERROR" };
@@ -299,7 +288,7 @@ export async function signInWithSlack() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "slack",
     options: {
-      redirectTo: `${getURL()}auth/callback/`,
+      redirectTo: `${getURL()}auth/admin/callback/`,
     },
   });
   console.log();
@@ -317,12 +306,11 @@ export async function signInWithSlack() {
   }
 }
 
-
 export async function signInWithMagicLink(prevState: any, formData: FormData) {
   const schema = z.object({
     magicLinkEmail: z.string().min(1),
   });
-  console.log(JSON.stringify(formData))
+  console.log(JSON.stringify(formData));
   const signInFormData = schema.parse({
     magicLinkEmail: formData.get("magicLinkEmail"),
   });
@@ -331,7 +319,7 @@ export async function signInWithMagicLink(prevState: any, formData: FormData) {
     email: signInFormData.magicLinkEmail!,
     options: {
       shouldCreateUser: false,
-      emailRedirectTo: `http://localhost:3000/auth/confirm`,
+      emailRedirectTo: `${getURL()}auth/admin/callback/`,
     },
   });
   if (error) {
@@ -341,7 +329,6 @@ export async function signInWithMagicLink(prevState: any, formData: FormData) {
     console.log("Magic Link Data" + JSON.stringify(data));
   }
 }
-
 
 export async function isAuthorized(
   supabase: SupabaseClient,
@@ -380,6 +367,9 @@ export async function sendResetPasswordLinkFromSettings(
     const supabase = initSupabaseActions();
     const { data, error } = await supabase.auth.resetPasswordForEmail(
       email.replace("@googlemail.com", "@gmail.com"),
+      {
+        redirectTo: `${getURL()}/auth/callback?next=login/update-password`,
+      },
     );
     if (error) {
       return { message: error.message, status: "ERROR" };

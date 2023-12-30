@@ -1,10 +1,10 @@
-"use client"
+"use client";
 import Image from "next/image";
-
-import { signInWithMagicLink, signInWithSlack } from "@/actions/auth";
 import { useFormState } from "react-dom";
 
-export default async function Home() {
+import { signInWithMagicLink, signInWithSlack } from "@/actions/auth";
+
+export default function Home() {
   const [state, formAction] = useFormState(signInWithMagicLink, null);
   return (
     <main className="grid-cols-1 flex flex-col items-center justify-between space-y-6">
@@ -33,7 +33,7 @@ export default async function Home() {
           <strong className="ml-2">Login mit Slack</strong>
         </button>
       </form>
-      <form action={formAction}>
+      {/*<form action={formAction}>
         <input
           type="text"
           name="magicLinkEmail"
@@ -47,7 +47,7 @@ export default async function Home() {
         >
           <strong className="ml-2">Login mit Magic Link</strong>
         </button>
-      </form>
+  </form>*/}
     </main>
   );
 }

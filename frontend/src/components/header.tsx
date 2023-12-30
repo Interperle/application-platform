@@ -4,20 +4,13 @@ import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useFormState } from "react-dom";
 
-import { signOutUser } from "@/actions/auth";
 import { toggle } from "@/store/slices/menuSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { SubmitButton } from "./submitButton";
 
 const Apl_Header: React.FC = () => {
-  const initialState = {
-    message: "",
-    status: "",
-  };
-  const [state, signOutAction] = useFormState(signOutUser, initialState);
   const isMenuOpen = useAppSelector((state) => state.menuReducer.isOpen);
   const dispatch = useAppDispatch();
 
@@ -62,9 +55,8 @@ const Apl_Header: React.FC = () => {
             Einstellungen
           </span>
         </Link>
-        <form action={signOutAction}>
+        <form action="/auth/signout" method="post">
           <SubmitButton text={"Ausloggen"} expanded={false} />
-          <div className={`italic text-red-600`}>{state?.message}</div>
         </form>
       </div>
     </div>

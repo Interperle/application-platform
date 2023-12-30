@@ -1,14 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getURL } from "@/utils/helpers";
 import { initSupabaseRoute } from "@/utils/supabaseServerClients";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  console.log("Enter");
   const supabase = initSupabaseRoute();
 
-  await supabase.auth.signOut();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session) {
+    await supabase.auth.signOut();
+  }
 
   return NextResponse.redirect(`${getURL()}/login`, {
-    status: 301,
+    status: 302,
   });
 }
