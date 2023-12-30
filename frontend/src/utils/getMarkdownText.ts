@@ -6,11 +6,10 @@ import path from "path";
 import { extractCurrentPhase } from "@/actions/phase";
 
 import markdownToHtml from "./markdownToHtml";
+import { createCurrentTimestamp } from "./helpers";
 
 export default async function getOverviewPageText() {
-  const currentTime = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "Etc/GMT-2" }),
-  );
+  const currentTime = new Date(createCurrentTimestamp());
 
   const currentPhase = await extractCurrentPhase(currentTime);
 

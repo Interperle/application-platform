@@ -308,7 +308,6 @@ export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
   for (const phase of sortedPhases) {
     const startDate = new Date(phase.startdate);
     const endDate = new Date(phase.enddate);
-
     if (currentTime < startDate) {
       return previous_phase;
     } else if (currentTime >= startDate && currentTime <= endDate) {
