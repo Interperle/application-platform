@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       }
     }
     console.log("Role Data:")
-    console.log(roleData)
+    console.log(JSON.stringify(roleData))
     if (!roleData) {
       const { data: userProfileData, error: userProfileError } =
         await supabaseServiceRole
