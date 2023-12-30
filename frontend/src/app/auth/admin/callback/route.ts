@@ -10,19 +10,14 @@ import {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
-  console.log(req.url);
 
   var subdomain = "";
   if (code) {
     const supabase = initSupabaseRouteNew();
     await supabase.auth.exchangeCodeForSession(code);
-    return NextResponse.redirect(`${getURL()}review`);
-  }
-  /*
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(JSON.stringify(user));
     const { data: roleData, error: roleError } = await supabase
       .from("user_profiles_table")
       .select("*")
@@ -37,8 +32,6 @@ export async function GET(req: NextRequest) {
         console.log(roleError);
       }
     }
-    console.log("Role Data:");
-    console.log(JSON.stringify(roleData));
     if (!roleData) {
       const { data: userProfileData, error: userProfileError } =
         await supabaseServiceRole
@@ -62,5 +55,5 @@ export async function GET(req: NextRequest) {
   }
   console.log(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`);
 
-  return NextResponse.redirect(`${getURL()}${subdomain}`);*/
+  return NextResponse.redirect(`${getURL()}${subdomain}`);
 }
