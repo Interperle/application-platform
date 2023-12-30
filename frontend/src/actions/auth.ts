@@ -3,6 +3,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getURL, isValidPassword } from "@/utils/helpers";
@@ -285,6 +286,10 @@ export async function updatePassword(prevState: any, formData: FormData) {
 
 export async function signInWithSlack() {
   const supabase = initSupabaseActions();
+  console.log(
+    `Slack RedirectTo Link: ${getURL()}/auth/callback?next=login/update-password`,
+  );
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "slack",
     options: {
@@ -300,7 +305,7 @@ export async function signInWithSlack() {
   }
   if (data && data.url) {
     console.log("Slack SignIn => redirect to " + data.url);
-    redirect(data.url);
+    NextResponse.redirect(data.url);
   } else {
     console.log("Error during sign in:", error);
   }

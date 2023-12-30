@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useFormState } from "react-dom";
 
-import { signInWithMagicLink, signInWithSlack } from "@/actions/auth";
+import { signInWithMagicLink } from "@/actions/auth";
 
 export default function Home() {
   const [state, formAction] = useFormState(signInWithMagicLink, null);
@@ -18,7 +18,7 @@ export default function Home() {
       <h1 className="text-4xl text-secondary md:text-5xl text-center">
         Generation-D Internal Login
       </h1>
-      <form action={signInWithSlack}>
+      <form action={"/auth/slack"} method="GET">
         <button
           type="submit"
           className="apl-button-fixed-big flex items-center"

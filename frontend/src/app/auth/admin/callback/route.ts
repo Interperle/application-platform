@@ -7,20 +7,20 @@ import {
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
-  console.log(req.url)
+  console.log(req.url);
 
   var subdomain = "";
   if (code) {
     const supabase = initSupabaseRouteNew();
-    await supabase.auth.exchangeCodeForSession(code);
+    const error = await supabase.auth.exchangeCodeForSession(code);
+    console.log(JSON.stringify(error));
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(JSON.stringify(user))
+    console.log(JSON.stringify(user));
     const { data: roleData, error: roleError } = await supabase
       .from("user_profiles_table")
       .select("*")
@@ -28,15 +28,15 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (roleError) {
-      if (roleError.code == 'PGRST116'){
+      if (roleError.code == "PGRST116") {
         console.log("No Role yet");
       } else {
         console.log("RoleError:");
         console.log(roleError);
       }
     }
-    console.log("Role Data:")
-    console.log(JSON.stringify(roleData))
+    console.log("Role Data:");
+    console.log(JSON.stringify(roleData));
     if (!roleData) {
       const { data: userProfileData, error: userProfileError } =
         await supabaseServiceRole
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
         console.log("userProfileError");
         console.log(userProfileError);
       } else {
-        console.log("Created Reviewer Role...")
+        console.log("Created Reviewer Role...");
       }
       subdomain = "review";
     } else if (!roleData.isactive) {
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
       subdomain = "admin";
     }
   }
-  console.log(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`)
+  console.log(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`);
 
   return NextResponse.redirect(`${getURL()}${subdomain}`);
 }

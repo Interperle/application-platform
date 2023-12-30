@@ -4,7 +4,6 @@ import { NextRequest } from "next/server";
 import { getURL } from "@/utils/helpers";
 import { initSupabaseRouteNew } from "@/utils/supabaseServerClients";
 
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
