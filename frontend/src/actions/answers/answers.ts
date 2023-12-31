@@ -112,15 +112,6 @@ export async function fetchAllAnswersOfApplication(): Promise<
     console.log(answerError);
   }
 
-  const result =
-    answerData?.map((answer: ExtendedAnswerType) => {
-      const conditionalAnswer = answerConditionalData?.find(
-        (condAnswer) => condAnswer.answerid === answer.answerid,
-      );
-      answer.answervalue = conditionalAnswer?.selectedchoice;
-      return answer;
-    }) || [];
-
   return (
     answerData?.map((answer: ExtendedAnswerType) => {
       const conditionalAnswer = answerConditionalData?.find(

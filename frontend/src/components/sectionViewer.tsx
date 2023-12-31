@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 
 import { ExtendedAnswerType } from "@/actions/answers/answers";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
-import { useAppDispatch } from "@/store/store";
 
 import Questionnaire, { Question } from "./questions";
 
@@ -26,8 +25,6 @@ export function SectionView({
   phaseSections: SectionData[];
   iseditable: boolean;
 }) {
-  const dispatch = useAppDispatch();
-
   const searchParams = useSearchParams();
 
   const sortedSections = phaseSections.sort(
