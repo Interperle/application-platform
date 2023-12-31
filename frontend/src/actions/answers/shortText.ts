@@ -60,5 +60,12 @@ export async function fetchShortTextAnswer(
       user_id: user?.id,
     })
     .single<ShortTextAnswerResponse>();
+  if (shortTextError) {
+    if (shortTextError.code == "PGRST116") {
+      return initialstate;
+    }
+    console.log("shortTextError:");
+    console.log(shortTextError);
+  }
   return shortTextData || initialstate;
 }

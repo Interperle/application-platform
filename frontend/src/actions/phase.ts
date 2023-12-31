@@ -8,7 +8,10 @@ import {
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
-import { createCurrentTimestamp, setToPrefferedTimeZone } from "@/utils/helpers";
+import {
+  createCurrentTimestamp,
+  setToPrefferedTimeZone,
+} from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import {
@@ -260,8 +263,8 @@ export async function fetch_phase_by_name(
     console.log("No data " + phaseData + " -> Redirect");
     redirect("/", RedirectType.replace);
   }
-  phaseData.startdate = setToPrefferedTimeZone(phaseData.startdate)
-  phaseData.enddate = setToPrefferedTimeZone(phaseData.enddate)
+  phaseData.startdate = setToPrefferedTimeZone(phaseData.startdate);
+  phaseData.enddate = setToPrefferedTimeZone(phaseData.enddate);
   return phaseData;
 }
 
@@ -278,11 +281,13 @@ export async function fetch_all_phases(): Promise<PhaseData[]> {
     console.log("No data: " + JSON.stringify(phasesData, null, 2));
   }
 
-  return phasesData?.map(phase => ({
-    ...phase,
-    startdate: setToPrefferedTimeZone(phase.startdate),
-    enddate: setToPrefferedTimeZone(phase.enddate),
-  })) || [];
+  return (
+    phasesData?.map((phase) => ({
+      ...phase,
+      startdate: setToPrefferedTimeZone(phase.startdate),
+      enddate: setToPrefferedTimeZone(phase.enddate),
+    })) || []
+  );
 }
 
 type Phase = {

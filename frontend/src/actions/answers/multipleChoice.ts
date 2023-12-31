@@ -61,5 +61,12 @@ export async function fetchMultipleChoiceAnswer(
         user_id: user?.id,
       })
       .single<MultipleChoiceAnswerResponse>();
+  if (multipleChoiceError) {
+    if (multipleChoiceError.code == "PGRST116") {
+      return initialstate;
+    }
+    console.log("multipleChoiceError:");
+    console.log(multipleChoiceError);
+  }
   return multipleChoiceData || initialstate;
 }

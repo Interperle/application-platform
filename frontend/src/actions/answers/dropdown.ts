@@ -60,5 +60,12 @@ export async function fetchDropdownAnswer(
       user_id: user?.id,
     })
     .single<DropdownAnswerResponse>();
+  if (dropdownError) {
+    if (dropdownError.code == "PGRST116") {
+      return initialstate;
+    }
+    console.log("dropdownError:");
+    console.log(dropdownError);
+  }
   return dropdownData || initialstate;
 }

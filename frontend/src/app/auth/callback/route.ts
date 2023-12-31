@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
 
   if (code) {
     const supabase = initSupabaseRouteNew();
-    try{
+    try {
       await supabase.auth.exchangeCodeForSession(code);
-    } catch (error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
       return NextResponse.redirect(`${getURL()}`);
     }
   }

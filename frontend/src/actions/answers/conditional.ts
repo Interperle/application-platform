@@ -63,6 +63,9 @@ export async function fetchConditionalAnswer(questionid: string) {
       })
       .single<ConditionalAnswerResponse>();
   if (conditionalTextError) {
+    if (conditionalTextError.code == "PGRST116") {
+      return initialstate;
+    }
     console.log("conditionalTextError:");
     console.log(conditionalTextError);
   }

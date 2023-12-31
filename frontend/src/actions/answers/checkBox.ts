@@ -58,6 +58,9 @@ export async function fetchCheckBoxAnswer(
     })
     .single<LongTextAnswerResponse>();
   if (checkBoxError) {
+    if (checkBoxError.code == "PGRST116") {
+      return initialstate;
+    }
     console.log("checkBoxError:");
     console.log(checkBoxError);
   }

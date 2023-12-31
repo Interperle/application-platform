@@ -95,6 +95,11 @@ export async function fetchVideoUploadAnswer(questionid: string) {
     .single<VideoAnswerResponse>();
 
   if (videoUploadError) {
+    if (videoUploadError.code == "PGRST116") {
+      return null;
+    }
+    console.log("videoUploadError:");
+    console.log(videoUploadError);
     return null;
   }
   return { ...videoUploadData, userid: user_id };

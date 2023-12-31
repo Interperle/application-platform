@@ -60,5 +60,12 @@ export async function fetchNumberPickerAnswer(
       user_id: user?.id,
     })
     .single<NumberPickerAnswerResponse>();
+  if (numberPickerError) {
+    if (numberPickerError.code == "PGRST116") {
+      return initialstate;
+    }
+    console.log("numberPickerError:");
+    console.log(numberPickerError);
+  }
   return numberPickerData || initialstate;
 }

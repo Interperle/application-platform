@@ -57,5 +57,12 @@ export async function fetchDatePickerAnswer(questionid: string) {
       user_id: user?.id,
     })
     .single<DateAnswerResponse>();
+  if (datePickerError) {
+    if (datePickerError.code == "PGRST116") {
+      return initialstate;
+    }
+    console.log("datePickerError:");
+    console.log(datePickerError);
+  }
   return datePickerData || initialstate;
 }

@@ -61,5 +61,12 @@ export async function fetchLongTextAnswer(
       user_id: user?.id,
     })
     .single<LongTextAnswerResponse>();
+  if (longTextError) {
+    if (longTextError.code == "PGRST116") {
+      return initialstate;
+    }
+    console.log("longTextError:");
+    console.log(longTextError);
+  }
   return longTextData || initialstate;
 }

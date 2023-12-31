@@ -95,6 +95,11 @@ export async function fetchPdfUploadAnswer(questionid: string) {
     .single<PdfAnswerResponse>();
 
   if (pdfUploadError) {
+    if (pdfUploadError.code == "PGRST116") {
+      return null;
+    }
+    console.log("pdfUploadError:");
+    console.log(pdfUploadError);
     return null;
   }
   return { ...pdfUploadData, userid: user_id };

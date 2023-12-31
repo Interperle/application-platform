@@ -97,6 +97,11 @@ export async function fetchImageUploadAnswer(questionid: string) {
     .single<ImageAnswerResponse>();
 
   if (imageUploadError) {
+    if (imageUploadError.code == "PGRST116") {
+      return null;
+    }
+    console.log("imageUploadError:");
+    console.log(imageUploadError);
     return null;
   }
   return { ...imageUploadData, userid: user_id };
