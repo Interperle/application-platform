@@ -5,12 +5,12 @@ import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { User } from "@supabase/supabase-js";
 
-import Awaiting from "@/components/awaiting";
+import Awaiting from "@/components/layout/awaiting";
 import SendPasswordResetForm from "@/components/forms/sendPasswordReset-form";
 import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
-import Apl_Header from "@/components/header";
+import Apl_Header from "@/components/layout/header";
 import OverviewButton from "@/components/overviewButton";
-import Popup from "@/components/popup";
+import Popup from "@/components/layout/popup";
 import { supabase } from "@/utils/supabaseBrowserClient";
 
 const SettingsPage: React.FC = () => {

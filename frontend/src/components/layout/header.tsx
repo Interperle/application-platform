@@ -9,7 +9,7 @@ import { RESET_STATE } from "@/store/actionTypes";
 import { toggle } from "@/store/slices/menuSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
-import { SubmitButton } from "./submitButton";
+import { SubmitButton } from "../submitButton";
 
 const Apl_Header: React.FC = () => {
   const isMenuOpen = useAppSelector((state) => state.menuReducer.isOpen);

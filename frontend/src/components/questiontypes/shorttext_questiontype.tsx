@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { checkRegex } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 import Easteregg from "../easteregg";
 
 export interface ShortTextQuestionTypeProps extends DefaultQuestionTypeProps {

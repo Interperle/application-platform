@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import SignInForm from "@/components/forms/signin-form";
 import SignUpForm from "@/components/forms/signup-form";
-import Popup from "@/components/popup";
+import Popup from "@/components/layout/popup";
 
 export const LoginComponent: React.FC<{ signUpPossible: boolean }> = ({
   signUpPossible,

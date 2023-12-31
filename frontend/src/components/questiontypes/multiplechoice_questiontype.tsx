@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { Choice, ChoiceProps } from "./utils/multiplechoice_choice";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 
 export interface MultipleChoiceQuestionTypeProps
   extends DefaultQuestionTypeProps {

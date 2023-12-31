@@ -2,7 +2,7 @@ import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
 import { fetch_all_phases } from "@/actions/phase";
 import ApplicationOverview from "@/components/applicationOverview";
 import Easteregg from "@/components/easteregg";
-import Apl_Header from "@/components/header";
+import Apl_Header from "@/components/layout/header";
 import { Question } from "@/components/questions";
 import Logger from "@/logger/logger";
 import { cached_fetch_phase_questions } from "@/utils/cached";

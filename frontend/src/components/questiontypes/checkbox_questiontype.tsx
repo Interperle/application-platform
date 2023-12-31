@@ -9,7 +9,7 @@ import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { DefaultQuestionTypeProps } from "./questiontypes";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 
 export interface CheckBoxQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;

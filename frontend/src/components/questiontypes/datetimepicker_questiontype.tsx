@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setToPrefferedTimeZone } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 
 export interface DatetimePickerQuestionTypeProps
   extends DefaultQuestionTypeProps {

@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { downloadFile } from "@/utils/helpers";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 import { SubmitButton } from "../submitButton";
 
 export interface VideoUploadQuestionTypeProps extends DefaultQuestionTypeProps {

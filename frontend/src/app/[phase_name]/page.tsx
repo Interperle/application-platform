@@ -2,12 +2,12 @@ import { RedirectType, redirect } from "next/navigation";
 
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
 import { fetch_sections_by_phase } from "@/actions/phase";
-import Apl_Header from "@/components/header";
+import Apl_Header from "@/components/layout/header";
 import { MissingQuestions } from "@/components/missingQuestions";
 import OverviewButton from "@/components/overviewButton";
 import { ProgressBar } from "@/components/progressbar";
 import Questionnaire, { Question } from "@/components/questions";
-import { SectionQuestionsMap, SectionView } from "@/components/sectionViewer";
+import { SectionQuestionsMap, SectionView } from "@/components/layout/sectionViewer";
 import { SectionData } from "@/store/slices/phaseSlice";
 import {
   cached_fetch_phase_by_name,

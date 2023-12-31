@@ -5,7 +5,7 @@ import { AnswerState } from "@/store/slices/answerSlice";
 import { useAppSelector } from "@/store/store";
 import { transformReadableDate } from "@/utils/helpers";
 
-import { AwaitingChild } from "./awaiting";
+import { AwaitingChild } from "./layout/awaiting";
 import { Question } from "./questions";
 
 export const ProgressBar = ({

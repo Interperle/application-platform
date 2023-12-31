@@ -7,7 +7,7 @@ import { useFormState } from "react-dom";
 import { signInUser } from "@/actions/auth";
 
 import ForgottenPasswordForm from "./forgottenpassword-form";
-import Popup from "../popup";
+import Popup from "../layout/popup";
 import { SubmitButton } from "../submitButton";
 
 interface messageType {

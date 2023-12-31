@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { ExtendedAnswerType } from "@/actions/answers/answers";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
 
-import Questionnaire, { Question } from "./questions";
+import Questionnaire, { Question } from "../questions";
 
 export type SectionQuestionsMap = {
   [key: string]: Question[];

@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { DropdownOption, DropdownOptionProps } from "./utils/dropdown_option";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 
 export interface DropdownQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;

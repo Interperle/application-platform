@@ -17,9 +17,9 @@ import { numberToLetter } from "@/utils/helpers";
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { ConditionalChoice } from "./utils/conditional_choice";
 import getQuestionComponent from "./utils/questiontype_selector";
-import { AwaitingChild } from "../awaiting";
+import { AwaitingChild } from "../layout/awaiting";
 import { InformationBox } from "../informationBox";
-import Popup from "../popup";
+import Popup from "../layout/popup";
 import { Question } from "../questions";
 import { SubmitButton } from "../submitButton";
 

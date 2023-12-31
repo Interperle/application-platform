@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import Apl_Footer from "@/components/footer";
+import Apl_Footer from "@/components/layout/footer";
 import { ReduxProvider } from "@/store/provider";
 
 const inter = Inter({ subsets: ["latin"] });
