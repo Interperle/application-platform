@@ -45,7 +45,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
         const savedAnswer = await fetchDatePickerAnswer(questionid);
         updateAnswerState(savedAnswer.pickeddate, savedAnswer.answerid);
       } catch (error) {
-        alert("Failed to fetch answer");
+        console.log("Failed to fetch answer");
       } finally {
         setIsLoading(false);
       }

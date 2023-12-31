@@ -95,7 +95,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             phaseQuestion.questiontype,
           );
           if (!QuestionComponent) {
-            alert(`Unknown question type: ${phaseQuestion.questiontype}`);
+            console.log(`Unknown question type: ${phaseQuestion.questiontype}`);
             return null;
           }
           return (
