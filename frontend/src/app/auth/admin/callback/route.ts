@@ -14,7 +14,12 @@ export async function GET(req: NextRequest) {
   var subdomain = "";
   if (code) {
     const supabase = initSupabaseRouteNew();
-    await supabase.auth.exchangeCodeForSession(code);
+    try{
+      await supabase.auth.exchangeCodeForSession(code);
+    } catch (error){
+      console.log(error)
+      return NextResponse.redirect(`${getURL()}`);
+    }
     const {
       data: { user },
     } = await supabase.auth.getUser();
