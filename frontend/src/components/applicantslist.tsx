@@ -8,9 +8,18 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseBrowserClient";
 import { SubmitButton } from "./submitButton";
 
+type ApplicantsStateType = {
+  [questionid: string]: {
+    [userid: string]: {
+      status: ApplicantsStatus | undefined;
+      reviewer: userData | undefined;
+    }
+  };
+};
+
 const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applicantsStatus: ApplicantsStatus[] }> = ({ users, phases, applicantsStatus }) => {
   const [currentAdminId, setCurrentAdminId] = useState<string>("")
-  const [applicantsState, setApplicantsState] = useState<Record<string, boolean>>({})
+  const [applicantsState, setApplicantsState] = useState<ApplicantsStateType>({})
   let renderedUnfinishedPhase = false;
   useEffect(() => {
     async function loadAnswer() {
@@ -21,20 +30,40 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
   });
 
   useEffect(() => {
-    // Initialize applicantsState based on applicantsStatus
-    const newState: Record<string, boolean> = {};
-    applicantsStatus.forEach(status => {
-      newState[status.user_id] = status.outcome || false;
+    const newState: ApplicantsStateType = {};
+    phases.forEach(phase => {
+      newState[phase.phaseid] = {};
+      users.forEach(user => {
+        const applicantStatus = applicantsStatus.find((status) => status.phase_id === phase.phaseid && status.user_id === user.id);
+        const reviewer = users.find((reviewer) => reviewer.id === applicantStatus?.reviewed_by);
+
+        newState[phase.phaseid][user.id] = { status: applicantStatus, reviewer: reviewer };
+      });
     });
     setApplicantsState(newState);
-  }, [applicantsStatus]);
+  }, [applicantsStatus, phases]);
 
   const handleToggle = async (phase_id: string, user_id: string, applicantStatus: ApplicantsStatus | undefined) => {
-    await saveApplicationOutcome(phase_id, user_id, applicantStatus, currentAdminId)
-    setApplicantsState(prevState => ({
-      ...prevState,
-      [user_id]: !prevState[user_id]
-    }));
+    await saveApplicationOutcome(phase_id, user_id, applicantStatus, currentAdminId);
+
+    setApplicantsState(prevState => {
+      const currentPhaseState = prevState[phase_id] ?? {};
+      const currentUserState = currentPhaseState[user_id] ?? { status: undefined, reviewer: undefined };
+      const newStatus = currentUserState.status
+        ? { ...currentUserState.status, outcome: !currentUserState.status.outcome }
+        : {outcome_id: "", phase_id: phase_id, user_id: user_id, outcome: true, reviewed_by: "", review_date: ""};
+
+      return {
+        ...prevState,
+        [phase_id]: {
+          ...currentPhaseState,
+          [user_id]: {
+            status: newStatus,
+            reviewer: currentUserState.reviewer
+          }
+        }
+      };
+    });
   };
 
   return (
@@ -72,8 +101,8 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
                     if (user.userrole > 1) {
                       return null;
                     }
-                    const applicantStatus = applicantsStatus.find((status) => status.phase_id === phase.phaseid && status.user_id === user.id);
-                    const reviewer = users.find((reviewer) => reviewer.id === applicantStatus?.reviewed_by);
+
+                    const applicantState = applicantsState[phase.phaseid] ? applicantsState[phase.phaseid][user.id] : { status: undefined, reviewer: undefined };
                     return (
                       <tr key={user.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -84,24 +113,28 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <ToggleSwitch
-                            isActive={applicantsState[user.id]}
-                            onClick={() => handleToggle(phase.phaseid, user.id, applicantStatus)}
+                            isActive={applicantState.status !== undefined ? applicantState!.status!.outcome : false}
+                            onClick={() => handleToggle(phase.phaseid, user.id, applicantState.status)}
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {reviewer?.email || ""}
+                          {applicantState?.reviewer !== undefined ? applicantState?.reviewer.email : ""}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {applicantStatus?.review_date || ""}
+                          {applicantState?.status !== undefined ? applicantState?.status.review_date : ""}
                         </td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
-              <div className="mt-5 flex justify-end">
-              <SubmitButton text={"Finish Evaluation"} expanded={false} onClick={(event) => finishEvaluationOfPhase(phase.phaseid)} />
-              </div>
+              {!phase.finished_evaluation && (
+                <div className="mt-5 flex justify-end">
+                  <SubmitButton text={"Finish Evaluation"} expanded={false} onClick={(event) => finishEvaluationOfPhase(phase.phaseid)} />
+                </div>
+              )
+              }
+
             </div>
           );
         }

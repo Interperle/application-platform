@@ -106,9 +106,6 @@ export async function fetchAllApplicantsStatus() {
 
 
 export async function saveApplicationOutcome(phase_id: string, user_id: string, applicantStatus: ApplicantsStatus | undefined, admin_id: string) {
-  console.log(JSON.stringify(applicantStatus))
-  console.log(phase_id)
-  console.log(user_id)
   const supabase = await initSupabaseActions()
   if (applicantStatus === undefined) {
     const { data: applicantStatusData, error: applicantStatusError } = await supabase
