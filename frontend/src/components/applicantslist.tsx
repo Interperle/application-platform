@@ -51,7 +51,7 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
       const currentUserState = currentPhaseState[user_id] ?? { status: undefined, reviewer: undefined };
       const newStatus = currentUserState.status
         ? { ...currentUserState.status, outcome: !currentUserState.status.outcome }
-        : {outcome_id: "", phase_id: phase_id, user_id: user_id, outcome: true, reviewed_by: "", review_date: ""};
+        : { outcome_id: "", phase_id: phase_id, user_id: user_id, outcome: true, reviewed_by: "", review_date: "" };
 
       return {
         ...prevState,
@@ -68,7 +68,9 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
 
   return (
     <div className="overflow-x-auto">
-      {phases.map((phase) => {
+      {phases.map((phase, index) => {
+        const isFirstPhase = index === 0;
+        let previousPhaseId = index > 0 ? phases[index - 1].phaseid : null;
         if (phase.finished_evaluation !== null || !renderedUnfinishedPhase) {
           if (phase.finished_evaluation === null) {
             renderedUnfinishedPhase = true;
@@ -102,8 +104,12 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
                       return null;
                     }
 
-                    const applicantState = applicantsState[phase.phaseid] ? applicantsState[phase.phaseid][user.id] : { status: undefined, reviewer: undefined };
-                    return (
+                    const currentPhaseApplicantState = applicantsState[phase.phaseid] ? applicantsState[phase.phaseid][user.id] : { status: undefined, reviewer: undefined };
+                    const previousPhaseApplicantState = previousPhaseId && applicantsState[previousPhaseId] ? applicantsState[previousPhaseId][user.id] : { status: undefined, reviewer: undefined };
+
+                    const shouldRenderUser = isFirstPhase || previousPhaseApplicantState.status?.outcome;
+      
+                    return shouldRenderUser ? (
                       <tr key={user.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {user.email}
@@ -113,18 +119,18 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <ToggleSwitch
-                            isActive={applicantState.status !== undefined ? applicantState!.status!.outcome : false}
-                            onClick={() => handleToggle(phase.phaseid, user.id, applicantState.status)}
+                            isActive={currentPhaseApplicantState.status !== undefined ? currentPhaseApplicantState!.status!.outcome : false}
+                            onClick={() => handleToggle(phase.phaseid, user.id, currentPhaseApplicantState.status)}
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {applicantState?.reviewer !== undefined ? applicantState?.reviewer.email : ""}
+                          {currentPhaseApplicantState?.reviewer !== undefined ? currentPhaseApplicantState?.reviewer.email : ""}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {applicantState?.status !== undefined ? applicantState?.status.review_date : ""}
+                          {currentPhaseApplicantState?.status !== undefined ? currentPhaseApplicantState?.status.review_date : ""}
                         </td>
                       </tr>
-                    );
+                    ) : null;
                   })}
                 </tbody>
               </table>
