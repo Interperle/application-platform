@@ -290,25 +290,21 @@ export async function fetch_all_phases(): Promise<PhaseData[]> {
   );
 }
 
-type Phase = {
-  phaseid: string;
-  phasename: string;
-  phaseorder: number;
-  startdate: string;
-  enddate: string;
-};
 
-export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
+export async function extractCurrentPhase(currentTime: Date): Promise<PhaseData> {
   const phasesData = await fetch_all_phases();
   const sortedPhases = phasesData!.sort((a, b) => a.phaseorder - b.phaseorder);
 
-  var previous_phase: Phase;
+  var previous_phase: PhaseData;
   previous_phase = {
     phaseid: "",
     phasename: "",
+    phaselabel: "",
     phaseorder: -1,
     startdate: "",
     enddate: "",
+    sectionsenabled: false,
+    finished_evaluation: ""
   };
   for (const phase of sortedPhases) {
     const startDate = new Date(phase.startdate);

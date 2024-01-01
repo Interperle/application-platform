@@ -4,7 +4,6 @@ import { getURL } from "@/utils/helpers";
 import { initSupabaseRouteNew } from "@/utils/supabaseServerClients";
 
 export async function GET(req: NextRequest) {
-  console.log(req);
   let options: { redirectTo: string; scopes?: string } = {
     redirectTo: `${getURL()}/auth/admin/callback`,
   };
@@ -14,7 +13,6 @@ export async function GET(req: NextRequest) {
     provider: "slack",
     options,
   });
-  console.log(data);
 
   if (error) throw error;
 

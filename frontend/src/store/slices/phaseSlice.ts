@@ -12,6 +12,7 @@ export interface PhaseData {
   startdate: string;
   enddate: string;
   sectionsenabled: boolean;
+  finished_evaluation: string | null;
 }
 
 export interface SectionData {
