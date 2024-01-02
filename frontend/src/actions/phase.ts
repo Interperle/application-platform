@@ -384,3 +384,51 @@ export async function fetch_sections_by_phase(
   }
   return sectionsData as SectionData[];
 }
+
+export type PhaseOutcome = {
+  outcome_id: string;
+  outcome: boolean;
+  review_date: string;
+  phase: {
+    phaseid: string;
+    phasename: string;
+    phaselabel: string;
+    phaseorder: number;
+    startdate: string;
+    enddate: string;
+    finished_evaluation: string;
+  };
+};
+
+export async function fetch_phases_status(): Promise<PhaseOutcome[]> {
+  const supabase = initSupabaseActions();
+  const user = await getCurrentUser(supabase);
+  const all_phases = await fetch_all_phases();
+  const { data, error } = await supabase
+    .from("phase_outcome_table")
+    .select(
+      `
+          outcome_id,
+          outcome,
+          review_date,
+          phase_id
+        `,
+    )
+    .eq("user_id", user.id);
+  const transformedData = data?.map((item) => {
+    const matchingPhase = all_phases.find(
+      (phaseToFind) => phaseToFind.phaseid == item.phase_id,
+    )!;
+    return {
+      ...item,
+      phase: {
+        ...matchingPhase,
+      },
+    };
+  });
+
+  transformedData?.sort((a, b) => a.phase?.phaseorder - b.phase?.phaseorder);
+
+  console.log(transformedData);
+  return (transformedData as PhaseOutcome[]) || [];
+}
