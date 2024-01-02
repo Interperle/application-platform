@@ -1,6 +1,9 @@
 "use server";
 import { createCurrentTimestamp } from "@/utils/helpers";
-import { initSupabaseActions, supabaseServiceRole } from "@/utils/supabaseServerClients";
+import {
+  initSupabaseActions,
+  supabaseServiceRole,
+} from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
 
 export interface userData {
@@ -85,7 +88,6 @@ export async function changeRoleOfUser(currUser: userData, role: UserRole) {
   }
 }
 
-
 export interface ApplicantsStatus {
   outcome_id: string;
   phase_id: string;
@@ -95,34 +97,48 @@ export interface ApplicantsStatus {
   review_date: string;
 }
 
-
 export async function fetchAllApplicantsStatus() {
-  const { data: applicantsStatusData, error: applicantsStatusError } = await initSupabaseActions()
-    .from("phase_outcome_table")
-    .select("*");
+  const { data: applicantsStatusData, error: applicantsStatusError } =
+    await initSupabaseActions().from("phase_outcome_table").select("*");
   if (applicantsStatusError) throw applicantsStatusError;
   return applicantsStatusData;
 }
 
-
-export async function saveApplicationOutcome(phase_id: string, user_id: string, applicantStatus: ApplicantsStatus | undefined, admin_id: string) {
-  const supabase = await initSupabaseActions()
+export async function saveApplicationOutcome(
+  phase_id: string,
+  user_id: string,
+  applicantStatus: ApplicantsStatus | undefined,
+  admin_id: string,
+) {
+  const supabase = await initSupabaseActions();
   if (applicantStatus === undefined) {
-    const { data: applicantStatusData, error: applicantStatusError } = await supabase
-      .from("phase_outcome_table")
-      .insert({ "phase_id": phase_id, "user_id": user_id, "outcome": true, "reviewed_by": admin_id, "review_date": createCurrentTimestamp() });
+    const { data: applicantStatusData, error: applicantStatusError } =
+      await supabase
+        .from("phase_outcome_table")
+        .insert({
+          phase_id: phase_id,
+          user_id: user_id,
+          outcome: true,
+          reviewed_by: admin_id,
+          review_date: createCurrentTimestamp(),
+        });
   } else {
-    const { data: applicantStatusData, error: applicantStatusError } = await supabase
-      .from("phase_outcome_table")
-      .update({ "outcome": !applicantStatus.outcome, "reviewed_by": admin_id, "review_date": createCurrentTimestamp() })
-      .eq("outcome_id", applicantStatus.outcome_id);
+    const { data: applicantStatusData, error: applicantStatusError } =
+      await supabase
+        .from("phase_outcome_table")
+        .update({
+          outcome: !applicantStatus.outcome,
+          reviewed_by: admin_id,
+          review_date: createCurrentTimestamp(),
+        })
+        .eq("outcome_id", applicantStatus.outcome_id);
   }
 }
 
-
 export async function finishEvaluationOfPhase(phase_id: string) {
-  const { data: applicantStatusData, error: applicantStatusError } = await supabaseServiceRole
+  const { data: applicantStatusData, error: applicantStatusError } =
+    await supabaseServiceRole
       .from("phase_table")
-      .update({ "finished_evaluation": createCurrentTimestamp() })
+      .update({ finished_evaluation: createCurrentTimestamp() })
       .eq("phaseid", phase_id);
 }

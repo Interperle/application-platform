@@ -3,11 +3,14 @@ import { RedirectType, redirect } from "next/navigation";
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
 import { fetch_sections_by_phase } from "@/actions/phase";
 import Apl_Header from "@/components/layout/header";
+import {
+  SectionQuestionsMap,
+  SectionView,
+} from "@/components/layout/sectionViewer";
 import { MissingQuestions } from "@/components/missingQuestions";
 import OverviewButton from "@/components/overviewButton";
 import { ProgressBar } from "@/components/progressbar";
 import Questionnaire, { Question } from "@/components/questions";
-import { SectionQuestionsMap, SectionView } from "@/components/layout/sectionViewer";
 import { SectionData } from "@/store/slices/phaseSlice";
 import {
   cached_fetch_phase_by_name,
@@ -21,16 +24,15 @@ export default async function Page({
   params: { phase_name: string };
 }) {
   const phaseName = params.phase_name;
-  console.log("");
-  console.log("Phasename: " + phaseName);
-
   const phaseData = await cached_fetch_phase_by_name(phaseName);
+  if (phaseData.phaseorder != 0) {
+    //const passedPreviousPhase = await fetch_passed_previous_phase();
+  }
   const currentDate = new Date(createCurrentTimestamp());
   const startDate = new Date(phaseData.startdate);
   const endDate = new Date(phaseData.enddate);
 
   if (currentDate < startDate) {
-    console.log("Phase didn't start yet");
     return redirect("/", RedirectType.replace);
   }
 

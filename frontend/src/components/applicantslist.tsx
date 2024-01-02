@@ -1,11 +1,17 @@
 "use client";
 
-import { ApplicantsStatus, finishEvaluationOfPhase, saveApplicationOutcome, userData } from "@/actions/admin";
+import { useEffect, useState } from "react";
+
+import {
+  ApplicantsStatus,
+  finishEvaluationOfPhase,
+  saveApplicationOutcome,
+  userData,
+} from "@/actions/admin";
+import { PhaseData } from "@/store/slices/phaseSlice";
+import { supabase } from "@/utils/supabaseBrowserClient";
 
 import ToggleSwitch from "./fields/toggleswitch";
-import { PhaseData } from "@/store/slices/phaseSlice";
-import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabaseBrowserClient";
 import { SubmitButton } from "./submitButton";
 
 type ApplicantsStateType = {
@@ -13,17 +19,23 @@ type ApplicantsStateType = {
     [userid: string]: {
       status: ApplicantsStatus | undefined;
       reviewer: userData | undefined;
-    }
+    };
   };
 };
 
-const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applicantsStatus: ApplicantsStatus[] }> = ({ users, phases, applicantsStatus }) => {
-  const [currentAdminId, setCurrentAdminId] = useState<string>("")
-  const [applicantsState, setApplicantsState] = useState<ApplicantsStateType>({})
+const ApplicantsList: React.FC<{
+  users: userData[];
+  phases: PhaseData[];
+  applicantsStatus: ApplicantsStatus[];
+}> = ({ users, phases, applicantsStatus }) => {
+  const [currentAdminId, setCurrentAdminId] = useState<string>("");
+  const [applicantsState, setApplicantsState] = useState<ApplicantsStateType>(
+    {},
+  );
   let renderedUnfinishedPhase = false;
   useEffect(() => {
     async function loadAnswer() {
-      const { data: user, error: userError } = await supabase.auth.getUser()
+      const { data: user, error: userError } = await supabase.auth.getUser();
       setCurrentAdminId(user?.user?.id || "");
     }
     loadAnswer();
@@ -31,27 +43,57 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
 
   useEffect(() => {
     const newState: ApplicantsStateType = {};
-    phases.forEach(phase => {
+    phases.forEach((phase) => {
       newState[phase.phaseid] = {};
-      users.forEach(user => {
-        const applicantStatus = applicantsStatus.find((status) => status.phase_id === phase.phaseid && status.user_id === user.id);
-        const reviewer = users.find((reviewer) => reviewer.id === applicantStatus?.reviewed_by);
+      users.forEach((user) => {
+        const applicantStatus = applicantsStatus.find(
+          (status) =>
+            status.phase_id === phase.phaseid && status.user_id === user.id,
+        );
+        const reviewer = users.find(
+          (reviewer) => reviewer.id === applicantStatus?.reviewed_by,
+        );
 
-        newState[phase.phaseid][user.id] = { status: applicantStatus, reviewer: reviewer };
+        newState[phase.phaseid][user.id] = {
+          status: applicantStatus,
+          reviewer: reviewer,
+        };
       });
     });
     setApplicantsState(newState);
   }, [applicantsStatus, phases]);
 
-  const handleToggle = async (phase_id: string, user_id: string, applicantStatus: ApplicantsStatus | undefined) => {
-    await saveApplicationOutcome(phase_id, user_id, applicantStatus, currentAdminId);
+  const handleToggle = async (
+    phase_id: string,
+    user_id: string,
+    applicantStatus: ApplicantsStatus | undefined,
+  ) => {
+    await saveApplicationOutcome(
+      phase_id,
+      user_id,
+      applicantStatus,
+      currentAdminId,
+    );
 
-    setApplicantsState(prevState => {
+    setApplicantsState((prevState) => {
       const currentPhaseState = prevState[phase_id] ?? {};
-      const currentUserState = currentPhaseState[user_id] ?? { status: undefined, reviewer: undefined };
+      const currentUserState = currentPhaseState[user_id] ?? {
+        status: undefined,
+        reviewer: undefined,
+      };
       const newStatus = currentUserState.status
-        ? { ...currentUserState.status, outcome: !currentUserState.status.outcome }
-        : { outcome_id: "", phase_id: phase_id, user_id: user_id, outcome: true, reviewed_by: "", review_date: "" };
+        ? {
+            ...currentUserState.status,
+            outcome: !currentUserState.status.outcome,
+          }
+        : {
+            outcome_id: "",
+            phase_id: phase_id,
+            user_id: user_id,
+            outcome: true,
+            reviewed_by: "",
+            review_date: "",
+          };
 
       return {
         ...prevState,
@@ -59,9 +101,9 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
           ...currentPhaseState,
           [user_id]: {
             status: newStatus,
-            reviewer: currentUserState.reviewer
-          }
-        }
+            reviewer: currentUserState.reviewer,
+          },
+        },
       };
     });
   };
@@ -104,11 +146,20 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
                       return null;
                     }
 
-                    const currentPhaseApplicantState = applicantsState[phase.phaseid] ? applicantsState[phase.phaseid][user.id] : { status: undefined, reviewer: undefined };
-                    const previousPhaseApplicantState = previousPhaseId && applicantsState[previousPhaseId] ? applicantsState[previousPhaseId][user.id] : { status: undefined, reviewer: undefined };
+                    const currentPhaseApplicantState = applicantsState[
+                      phase.phaseid
+                    ]
+                      ? applicantsState[phase.phaseid][user.id]
+                      : { status: undefined, reviewer: undefined };
+                    const previousPhaseApplicantState =
+                      previousPhaseId && applicantsState[previousPhaseId]
+                        ? applicantsState[previousPhaseId][user.id]
+                        : { status: undefined, reviewer: undefined };
 
-                    const shouldRenderUser = isFirstPhase || previousPhaseApplicantState.status?.outcome;
-      
+                    const shouldRenderUser =
+                      isFirstPhase ||
+                      previousPhaseApplicantState.status?.outcome;
+
                     return shouldRenderUser ? (
                       <tr key={user.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -119,15 +170,29 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <ToggleSwitch
-                            isActive={currentPhaseApplicantState.status !== undefined ? currentPhaseApplicantState!.status!.outcome : false}
-                            onClick={() => handleToggle(phase.phaseid, user.id, currentPhaseApplicantState.status)}
+                            isActive={
+                              currentPhaseApplicantState.status !== undefined
+                                ? currentPhaseApplicantState!.status!.outcome
+                                : false
+                            }
+                            onClick={() =>
+                              handleToggle(
+                                phase.phaseid,
+                                user.id,
+                                currentPhaseApplicantState.status,
+                              )
+                            }
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {currentPhaseApplicantState?.reviewer !== undefined ? currentPhaseApplicantState?.reviewer.email : ""}
+                          {currentPhaseApplicantState?.reviewer !== undefined
+                            ? currentPhaseApplicantState?.reviewer.email
+                            : ""}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {currentPhaseApplicantState?.status !== undefined ? currentPhaseApplicantState?.status.review_date : ""}
+                          {currentPhaseApplicantState?.status !== undefined
+                            ? currentPhaseApplicantState?.status.review_date
+                            : ""}
                         </td>
                       </tr>
                     ) : null;
@@ -136,11 +201,13 @@ const ApplicantsList: React.FC<{ users: userData[]; phases: PhaseData[]; applica
               </table>
               {!phase.finished_evaluation && (
                 <div className="mt-5 flex justify-end">
-                  <SubmitButton text={"Finish Evaluation"} expanded={false} onClick={(event) => finishEvaluationOfPhase(phase.phaseid)} />
+                  <SubmitButton
+                    text={"Finish Evaluation"}
+                    expanded={false}
+                    onClick={(event) => finishEvaluationOfPhase(phase.phaseid)}
+                  />
                 </div>
-              )
-              }
-
+              )}
             </div>
           );
         }

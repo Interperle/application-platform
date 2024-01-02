@@ -2,10 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
-import CircularProgress from "@mui/material/CircularProgress";
 import { User } from "@supabase/supabase-js";
 
-import SendPasswordResetForm from "@/components/forms/sendPasswordReset-form";
 import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
 import Awaiting from "@/components/layout/awaiting";
 import Apl_Header from "@/components/layout/header";
@@ -37,7 +35,7 @@ const SettingsPage: React.FC = () => {
     <span className="w-full">
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
-        <OverviewButton />
+        <OverviewButton slug="admin" />
         <h1 className="text-2xl font-bold mb-4">Einstellungen</h1>
         {isPopupOpen && (
           <Popup onClose={togglePopup}>
@@ -46,18 +44,6 @@ const SettingsPage: React.FC = () => {
         )}
         <div>
           <label>Email: {Awaiting(isLoading, user?.email)}</label>
-        </div>
-        <h3 className="py-2 text-xl">Ändere dein Passwort</h3>
-        <div>
-          <h2>
-            Dir wird zum Zurücksetzen deines Passworts an die oben genannte
-            Email-Adresse ein Link gesendet.
-          </h2>
-          {user?.email == undefined ? (
-            <CircularProgress size={"1rem"} />
-          ) : (
-            <SendPasswordResetForm email={user!.email!} />
-          )}
         </div>
         <h4 className="py-2 text-xl mb-3">Lösche deinen Account</h4>
         <button
