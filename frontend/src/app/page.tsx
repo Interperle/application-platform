@@ -1,5 +1,5 @@
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
-import { fetch_all_phases } from "@/actions/phase";
+import { fetch_all_phases, fetch_phases_status } from "@/actions/phase";
 import ApplicationOverview from "@/components/applicationOverview";
 import Easteregg from "@/components/easteregg";
 import Apl_Header from "@/components/layout/header";
@@ -13,6 +13,7 @@ export default async function Home() {
   const log = new Logger("Overview Page");
   const contentHtml = await getOverviewPageText();
   const phasesData = await fetch_all_phases();
+  const phases_status = await fetch_phases_status();
   const phasesQuestions: Record<string, Question[]> = {};
   for (const phase of phasesData) {
     phasesQuestions[phase.phaseid] = await cached_fetch_phase_questions(

@@ -88,9 +88,6 @@ export const ProgressBar = ({
           }`}
         />
       </div>
-      <div>
-        Testing Helper: {numAnswered}/{numMandatory}
-      </div>
       {numAnswered === numMandatory &&
         (new Date(endDate) > new Date() ? (
           <div className="md-3 italic text-gray-500">

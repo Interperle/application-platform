@@ -113,15 +113,13 @@ export async function saveApplicationOutcome(
   const supabase = await initSupabaseActions();
   if (applicantStatus === undefined) {
     const { data: applicantStatusData, error: applicantStatusError } =
-      await supabase
-        .from("phase_outcome_table")
-        .insert({
-          phase_id: phase_id,
-          user_id: user_id,
-          outcome: true,
-          reviewed_by: admin_id,
-          review_date: createCurrentTimestamp(),
-        });
+      await supabase.from("phase_outcome_table").insert({
+        phase_id: phase_id,
+        user_id: user_id,
+        outcome: true,
+        reviewed_by: admin_id,
+        review_date: createCurrentTimestamp(),
+      });
   } else {
     const { data: applicantStatusData, error: applicantStatusError } =
       await supabase
