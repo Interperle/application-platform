@@ -14,7 +14,7 @@ import { supabase } from "@/utils/supabaseBrowserClient";
 import ToggleSwitch from "./fields/toggleswitch";
 import { SubmitButton } from "./submitButton";
 
-type ApplicantsStateType = {
+export type ApplicantsStateType = {
   [questionid: string]: {
     [userid: string]: {
       status: ApplicantsStatus | undefined;
@@ -204,14 +204,14 @@ const ApplicantsList: React.FC<{
                   <SubmitButton
                     text={"Finish Evaluation"}
                     expanded={false}
-                    onClick={(event) => finishEvaluationOfPhase(phase.phaseid)}
+                    onClick={(event) => finishEvaluationOfPhase(phase.phaseid, users, applicantsState, previousPhaseId, isFirstPhase, currentAdminId)}
                   />
                 </div>
               )}
             </div>
           );
         }
-        return null; // Return null if the phase should not be rendered
+        return null;
       })}
     </div>
   );

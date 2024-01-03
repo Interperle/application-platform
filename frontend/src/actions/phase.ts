@@ -18,11 +18,15 @@ import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,
 } from "./answers/answers";
+import Logger from "@/logger/logger";
 
 type IdType = {
   questionid: string;
   [key: string]: any;
 };
+
+const log = new Logger("Overview Page");
+
 
 export async function fetch_question_type_table(questions: DefaultQuestion[]) {
   const result: Record<QuestionType, any> = {
@@ -401,6 +405,8 @@ export type PhaseOutcome = {
 };
 
 export async function fetch_phases_status(): Promise<PhaseOutcome[]> {
+  log.info("Fetch Phase Status")
+
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const all_phases = await fetch_all_phases();

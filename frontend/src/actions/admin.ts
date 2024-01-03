@@ -1,4 +1,5 @@
 "use server";
+import { ApplicantsStateType } from "@/components/applicantslist";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import {
   initSupabaseActions,
@@ -97,7 +98,7 @@ export interface ApplicantsStatus {
   review_date: string;
 }
 
-export async function fetchAllApplicantsStatus() {
+export async function fetchAllApplicantsStatus(): Promise<ApplicantsStatus[]> {
   const { data: applicantsStatusData, error: applicantsStatusError } =
     await initSupabaseActions().from("phase_outcome_table").select("*");
   if (applicantsStatusError) throw applicantsStatusError;
@@ -109,6 +110,7 @@ export async function saveApplicationOutcome(
   user_id: string,
   applicantStatus: ApplicantsStatus | undefined,
   admin_id: string,
+  outcome?: boolean,
 ) {
   const supabase = await initSupabaseActions();
   if (applicantStatus === undefined) {
@@ -116,7 +118,7 @@ export async function saveApplicationOutcome(
       await supabase.from("phase_outcome_table").insert({
         phase_id: phase_id,
         user_id: user_id,
-        outcome: true,
+        outcome: outcome == undefined ? true : outcome,
         reviewed_by: admin_id,
         review_date: createCurrentTimestamp(),
       });
@@ -133,7 +135,31 @@ export async function saveApplicationOutcome(
   }
 }
 
-export async function finishEvaluationOfPhase(phase_id: string) {
+export async function finishEvaluationOfPhase(phase_id: string, users: userData[], applicantsState: ApplicantsStateType, previousPhaseId: string | null, isFirstPhase: boolean, admin_id: string) {
+  const allPhaseOutcomes = await fetchAllApplicantsStatus()
+
+  users.forEach(async (user) => {
+    if (user.userrole > 1) {
+      return null;
+    }
+
+    if (allPhaseOutcomes.find((phaseOutcome) => (phaseOutcome.user_id == user.id && phaseOutcome.phase_id == phase_id)) != undefined) {
+      return null;
+    }
+
+    const previousPhaseApplicantState =
+      previousPhaseId && applicantsState[previousPhaseId]
+        ? applicantsState[previousPhaseId][user.id]
+        : { status: undefined, reviewer: undefined };
+
+    const userIsInPhase =
+      isFirstPhase ||
+      previousPhaseApplicantState.status?.outcome;
+
+    if (userIsInPhase) {
+      await saveApplicationOutcome(phase_id, user.id, undefined, admin_id, false)
+    }
+  })
   const { data: applicantStatusData, error: applicantStatusError } =
     await supabaseServiceRole
       .from("phase_table")

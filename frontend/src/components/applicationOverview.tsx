@@ -9,12 +9,14 @@ import { useAppDispatch } from "@/store/store";
 
 import PhaseOverview from "./phaseOverview";
 import { Question } from "./questions";
+import { PhaseOutcome } from "@/actions/phase";
 
 const ApplicationOverview: React.FC<{
   phasesData: PhaseData[];
   phasesQuestions: Record<string, Question[]>;
   phaseAnswers: ExtendedAnswerType[];
-}> = ({ phasesData, phasesQuestions, phaseAnswers }) => {
+  phasesOutcome: PhaseOutcome[];
+}> = ({ phasesData, phasesQuestions, phaseAnswers, phasesOutcome }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -40,7 +42,7 @@ const ApplicationOverview: React.FC<{
       }),
     );
   };
-
+  let failedPhase:boolean = false;
   return (
     <>
       {phasesData
@@ -50,6 +52,10 @@ const ApplicationOverview: React.FC<{
           const mandatoryPhaseQuestionIds = phaseQuestions
             .filter((q) => q.mandatory)
             .map((q) => q.questionid);
+          const phaseOutcome = phasesOutcome.find((thisPhase) => thisPhase.phase.phaseid == phase.phaseid)
+          if (phaseOutcome !== undefined && !phaseOutcome.outcome){
+            failedPhase = true
+          }
           return (
             <PhaseOverview
               key={phase.phaseid}
@@ -61,6 +67,8 @@ const ApplicationOverview: React.FC<{
               phaseEnd={phase.enddate}
               mandatoryQuestionIds={mandatoryPhaseQuestionIds}
               phaseQuestions={phaseQuestions}
+              phaseOutcome={phaseOutcome}
+              failedPhase={failedPhase}
             />
           );
         })}

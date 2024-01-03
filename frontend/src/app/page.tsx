@@ -11,9 +11,10 @@ import "github-markdown-css/github-markdown-light.css";
 
 export default async function Home() {
   const log = new Logger("Overview Page");
+  log.info("Render Overview Page")
   const contentHtml = await getOverviewPageText();
   const phasesData = await fetch_all_phases();
-  const phases_status = await fetch_phases_status();
+  const phasesOutcome = await fetch_phases_status();
   const phasesQuestions: Record<string, Question[]> = {};
   for (const phase of phasesData) {
     phasesQuestions[phase.phaseid] = await cached_fetch_phase_questions(
@@ -38,6 +39,7 @@ export default async function Home() {
         phasesData={phasesData}
         phasesQuestions={phasesQuestions}
         phaseAnswers={phaseAnswers}
+        phasesOutcome={phasesOutcome}
       />
     </>
   );

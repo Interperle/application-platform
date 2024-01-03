@@ -1,7 +1,7 @@
 import { RedirectType, redirect } from "next/navigation";
 
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
-import { fetch_sections_by_phase } from "@/actions/phase";
+import { fetch_phases_status, fetch_sections_by_phase } from "@/actions/phase";
 import Apl_Header from "@/components/layout/header";
 import {
   SectionQuestionsMap,
@@ -25,8 +25,18 @@ export default async function Page({
 }) {
   const phaseName = params.phase_name;
   const phaseData = await cached_fetch_phase_by_name(phaseName);
-  if (phaseData.phaseorder != 0) {
-    //const passedPreviousPhase = await fetch_passed_previous_phase();
+  const phasesOutcome = await fetch_phases_status();
+  let failedPhase: boolean = false
+  phasesOutcome.forEach((thisPhase) => {
+    if (thisPhase.phase.phaseorder < phaseData.phaseorder){
+      if (!thisPhase.outcome){
+        failedPhase = true
+      }
+    }
+  })
+  const phaseOutcome = phasesOutcome.find((thisPhase) => thisPhase.phase.phaseid == phaseData.phaseid)
+  if (phaseOutcome == undefined && failedPhase){
+    return redirect("/", RedirectType.replace);
   }
   const currentDate = new Date(createCurrentTimestamp());
   const startDate = new Date(phaseData.startdate);
