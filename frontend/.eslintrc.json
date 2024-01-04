@@ -1,6 +1,7 @@
 {
-  "extends": "next/core-web-vitals",
-  "plugins": ["import", "unused-imports"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["import", "unused-imports", "@typescript-eslint"],
   "rules": {
     "unused-imports/no-unused-imports": "warn",
     "unused-imports/no-unused-vars": [
@@ -13,14 +14,12 @@
       }
     ],
     "import/no-unresolved": "warn",
-    "import/named": 0,
     "import/default": "warn",
     "import/namespace": "warn",
     "import/no-absolute-path": "warn",
     "import/no-dynamic-require": "warn",
     "import/no-webpack-loader-syntax": "warn",
     "import/no-self-import": "warn",
-    "import/no-cycle": 0,
     "import/no-unused-modules": ["warn"],
     "import/no-useless-path-segments": "warn",
     "import/order": [
@@ -43,10 +42,15 @@
       }
     ],
     "import/newline-after-import": "warn",
-    "import/prefer-default-export": 0,
     "import/no-named-as-default": "warn",
     "import/no-deprecated": "warn",
     "import/no-extraneous-dependencies": "warn",
-    "import/no-mutable-exports": "warn"
+    "import/no-mutable-exports": "warn",
+    "import/named": 0,
+    "import/no-cycle": 0,
+    "import/prefer-default-export": 0,
+    "@typescript-eslint/no-unused-vars": 0,
+    "@typescript-eslint/no-duplicate-enum-values": 0,
+    "@typescript-eslint/no-explicit-any": 0
   }
 }
