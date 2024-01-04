@@ -3,9 +3,10 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { isAuthorized } from "./actions/auth";
 import { UserRole } from "./utils/userRole";
+import Logger from "./logger/logger";
 
 export async function middleware(request: NextRequest) {
-  console.log("Enter Middleware");
+  const log = new Logger("Middleware");
 
   let response = NextResponse.next({
     request: {
@@ -67,9 +68,8 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   if (!user) {
-    console.log("Not logged in -> /login");
     if (pathname != "/login") {
-      console.log("redirect to /login");
+      log.info("Not logged in! Redirect to /login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
     return response;
@@ -84,7 +84,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (redirectUrl) {
-    console.log("redirect to " + redirectUrl);
+    log.info(`The User ${user.email} is not authorized to access ${pathname}. Redirect to ${redirectUrl}`);
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
@@ -95,17 +95,15 @@ export async function middleware(request: NextRequest) {
       .eq("userid", user!.id)
       .single();
     if (roleData && !roleData.isactive) {
-      console.log("redirect to /403");
+      log.info(`The User ${user.email} is not active. Redirect to /403`);
       return NextResponse.redirect(new URL("/403", request.url));
     }
 
     // if user is signed in and the current path is /login redirect the user to /
     if (request.nextUrl.pathname === "/login") {
-      console.log("redirect to /");
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
-  console.log("Leaving Middleware without changes!");
   return response;
 }
 

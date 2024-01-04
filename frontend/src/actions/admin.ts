@@ -1,11 +1,14 @@
 "use server";
 import { ApplicantsStateType } from "@/components/applicantslist";
+import Logger from "@/logger/logger";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import {
   initSupabaseActions,
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 import { UserRole } from "@/utils/userRole";
+
+const log = new Logger("actions/admin");
 
 export interface userData {
   id: string;
@@ -40,51 +43,58 @@ function mergeUserDatas(users: any[], userProfiles: any[]): userData[] {
 export async function fetchAllUsers() {
   const {
     data: { users },
-    error,
+    error: adminError,
   } = await supabaseServiceRole.auth.admin.listUsers();
+  if (adminError) {
+    log.error(JSON.stringify(adminError));
+    throw adminError;
+  }
   const { data: profileData, error: profileError } = await supabaseServiceRole
     .from("user_profiles_table")
     .select("*");
-  if (profileError) throw profileError;
+  if (profileError) {
+    log.error(JSON.stringify(profileError));
+    throw profileError;
+  }
   return mergeUserDatas(users, profileData!);
 }
 
 export async function toggleStatusOfUser(currUser: userData) {
   try {
-    const { data: userProfileData, error: userProfileError } =
+    const { error: userProfileError } =
       await supabaseServiceRole
         .from("user_profiles_table")
         .update({ isactive: !currUser.isactive })
         .eq("userid", currUser.id);
 
     if (userProfileError) {
+      log.error(JSON.stringify(userProfileError));
       throw userProfileError;
     }
+    log.info(`Changed Status of User (${currUser.email} to '${currUser.isactive ? "inactive" : "active"}')`);
     return { ...currUser, isactive: !currUser.isactive };
   } catch (error) {
-    console.error("Error toggling user status:", error);
+    log.error(`Error toggling user status: ${error}`);
     return null;
   }
 }
 
 export async function changeRoleOfUser(currUser: userData, role: UserRole) {
   try {
-    const { data: userProfileData, error: userProfileError } =
+    const { error: userProfileError } =
       await supabaseServiceRole
         .from("user_profiles_table")
         .update({ userrole: role.valueOf() })
         .eq("userid", currUser.id);
 
     if (userProfileError) {
-      console.log("Didn't change Userrole");
+      log.error(JSON.stringify(userProfileError));
       throw userProfileError;
     }
-    console.log("Changed Userrole");
+    log.info(`Changed Userrole of User (${currUser.email} to '${role}')`);
     return { ...currUser, userrole: role.valueOf() };
   } catch (error) {
-    console.error("Error changing user status:", error);
-    // Handle the error appropriately
-    // You might want to return 'null' or the error itself
+    log.error(`Error changing user status: ${error}`);
     return null;
   }
 }
@@ -101,7 +111,10 @@ export interface ApplicantsStatus {
 export async function fetchAllApplicantsStatus(): Promise<ApplicantsStatus[]> {
   const { data: applicantsStatusData, error: applicantsStatusError } =
     await initSupabaseActions().from("phase_outcome_table").select("*");
-  if (applicantsStatusError) throw applicantsStatusError;
+  if (applicantsStatusError) {
+    log.error(JSON.stringify(applicantsStatusError))
+    throw applicantsStatusError;
+  }
   return applicantsStatusData;
 }
 
@@ -112,9 +125,9 @@ export async function saveApplicationOutcome(
   admin_id: string,
   outcome?: boolean,
 ) {
-  const supabase = await initSupabaseActions();
+  const supabase = initSupabaseActions();
   if (applicantStatus === undefined) {
-    const { data: applicantStatusData, error: applicantStatusError } =
+    const { error: applicantStatusError } =
       await supabase.from("phase_outcome_table").insert({
         phase_id: phase_id,
         user_id: user_id,
@@ -122,8 +135,12 @@ export async function saveApplicationOutcome(
         reviewed_by: admin_id,
         review_date: createCurrentTimestamp(),
       });
+    if (applicantStatusError) {
+      log.error(JSON.stringify(applicantStatusError))
+      throw applicantStatusError;
+    }
   } else {
-    const { data: applicantStatusData, error: applicantStatusError } =
+    const { error: applicantStatusError } =
       await supabase
         .from("phase_outcome_table")
         .update({
@@ -132,7 +149,12 @@ export async function saveApplicationOutcome(
           review_date: createCurrentTimestamp(),
         })
         .eq("outcome_id", applicantStatus.outcome_id);
+    if (applicantStatusError) {
+      log.error(JSON.stringify(applicantStatusError))
+      throw applicantStatusError;
+    }
   }
+
 }
 
 export async function finishEvaluationOfPhase(phase_id: string, users: userData[], applicantsState: ApplicantsStateType, previousPhaseId: string | null, isFirstPhase: boolean, admin_id: string) {
@@ -157,12 +179,18 @@ export async function finishEvaluationOfPhase(phase_id: string, users: userData[
       previousPhaseApplicantState.status?.outcome;
 
     if (userIsInPhase) {
+      log.info(`Set Application Outcome of ${user.email} in Phase ${phase_id} to failed.`)
       await saveApplicationOutcome(phase_id, user.id, undefined, admin_id, false)
     }
   })
-  const { data: applicantStatusData, error: applicantStatusError } =
+  const { error: applicantStatusError } =
     await supabaseServiceRole
       .from("phase_table")
       .update({ finished_evaluation: createCurrentTimestamp() })
       .eq("phaseid", phase_id);
+  if (applicantStatusError){
+    log.error(JSON.stringify(applicantStatusError))
+    throw applicantStatusError;
+  }
+  log.info(`Finished Evaluation of Phase ${phase_id}`)
 }
