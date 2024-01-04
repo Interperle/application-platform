@@ -5,7 +5,6 @@ import { AnswerState } from "@/store/slices/answerSlice";
 import { useAppSelector } from "@/store/store";
 import { numberToLetter } from "@/utils/helpers";
 
-import Easteregg from "./easteregg";
 import { Question } from "./questions";
 
 export const MissingQuestions = ({
@@ -16,12 +15,6 @@ export const MissingQuestions = ({
   const answeredQuestions = useAppSelector<AnswerState>(
     (state) => state.answerReducer,
   );
-
-  const [isVisible, setIsVisible] = useState(false); // EASTEREGG
-
-  function onClick() {
-    setIsVisible(true);
-  }
 
   const renderQuestion = (question: Question, dependingOrder?: number) => (
     <li key={question.questionid}>
@@ -98,18 +91,9 @@ export const MissingQuestions = ({
         </svg>
         <div>
           <span className="font-medium">
-            Die folgenden verpflichtenden{" "}
-            {/*Easteregg remove Button, keep text*/}{" "}
-            <button className="border-none cursor-text" onClick={onClick}>
-              Fragen
-            </button>{" "}
-            {/*Easteregg*/}sind noch ausstehend:
+            Die folgenden verpflichtenden Fragen sind noch ausstehend:
           </span>
           <ul className="mt-1.5 list-inside">{questionsJSX}</ul>
-          {
-            // EASTEREGG
-            isVisible && <Easteregg person="basti" />
-          }
         </div>
       </div>
     )

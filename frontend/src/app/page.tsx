@@ -1,7 +1,6 @@
 import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
 import { fetch_all_phases, fetch_phases_status } from "@/actions/phase";
 import ApplicationOverview from "@/components/applicationOverview";
-import Easteregg from "@/components/easteregg";
 import Apl_Header from "@/components/layout/header";
 import { Question } from "@/components/questions";
 import Logger from "@/logger/logger";
@@ -32,9 +31,6 @@ export default async function Home() {
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
       </div>
-      <span className="hidden">
-        <Easteregg person="emma" />
-      </span>
       <ApplicationOverview
         phasesData={phasesData}
         phasesQuestions={phasesQuestions}
