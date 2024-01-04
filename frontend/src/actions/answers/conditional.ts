@@ -64,7 +64,6 @@ export async function fetchConditionalAnswer(questionid: string) {
       .single<ConditionalAnswerResponse>();
   if (conditionalTextError) {
     if (conditionalTextError.code == "PGRST116") {
-      log.debug("No Conditional Entries");
       return initialstate;
     }
     log.error(JSON.stringify(conditionalTextError));

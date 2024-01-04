@@ -11,7 +11,7 @@ import {
   saveConditionalAnswer,
 } from "@/actions/answers/conditional";
 import Logger from "@/logger/logger";
-import { AnswerState, UpdateAnswer } from "@/store/slices/answerSlice";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { numberToLetter } from "@/utils/helpers";
 
@@ -56,9 +56,6 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
 
   const answer = useAppSelector<string>(
     (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
-  );
-  const answeredQuestions = useAppSelector<AnswerState>(
-    (state) => state.answerReducer,
   );
   const [choiceHelper, setChoiceHelper] = useState("");
   const [isLoading, setIsLoading] = useState(true);

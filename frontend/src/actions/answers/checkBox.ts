@@ -62,7 +62,6 @@ export async function fetchCheckBoxAnswer(
     .single<LongTextAnswerResponse>();
   if (checkBoxError) {
     if (checkBoxError.code == "PGRST116") {
-      log.debug("No Checkbox Entries");
       return initialstate;
     }
     log.error(JSON.stringify(checkBoxError));

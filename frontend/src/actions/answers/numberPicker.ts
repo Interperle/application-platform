@@ -64,7 +64,6 @@ export async function fetchNumberPickerAnswer(
     .single<NumberPickerAnswerResponse>();
   if (numberPickerError) {
     if (numberPickerError.code == "PGRST116") {
-      log.debug("No Number Entries");
       return initialstate;
     }
     log.error(JSON.stringify(numberPickerError));

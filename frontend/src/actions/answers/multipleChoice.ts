@@ -66,7 +66,6 @@ export async function fetchMultipleChoiceAnswer(
       .single<MultipleChoiceAnswerResponse>();
   if (multipleChoiceError) {
     if (multipleChoiceError.code == "PGRST116") {
-      log.debug("No MultipleChoice Entries");
       return initialstate;
     }
     log.error(JSON.stringify(multipleChoiceError));

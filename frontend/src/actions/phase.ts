@@ -411,6 +411,9 @@ export async function fetch_phases_status(): Promise<PhaseOutcome[]> {
     .from("phase_outcome_table")
     .select("outcome_id, outcome, review_date, phase_id")
     .eq("user_id", user.id);
+  if (error) {
+    log.error(JSON.stringify(error));
+  }
   const transformedData = data?.map((item) => {
     const matchingPhase = all_phases.find(
       (phaseToFind) => phaseToFind.phaseid == item.phase_id,

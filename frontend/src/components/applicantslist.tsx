@@ -36,6 +36,9 @@ const ApplicantsList: React.FC<{
   useEffect(() => {
     async function loadAnswer() {
       const { data: user, error: userError } = await supabase.auth.getUser();
+      if (userError) {
+        console.error(userError);
+      }
       setCurrentAdminId(user?.user?.id || "");
     }
     loadAnswer();
@@ -204,7 +207,7 @@ const ApplicantsList: React.FC<{
                   <SubmitButton
                     text={"Finish Evaluation"}
                     expanded={false}
-                    onClick={(event) =>
+                    onClick={() =>
                       finishEvaluationOfPhase(
                         phase.phaseid,
                         users,

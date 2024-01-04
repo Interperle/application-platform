@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import Logger from "@/logger/logger";
 import { getURL } from "@/utils/helpers";
@@ -6,7 +6,7 @@ import { initSupabaseRouteNew } from "@/utils/supabaseServerClients";
 
 const log = new Logger("auth/admin/callback/route");
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const options: { redirectTo: string; scopes?: string } = {
     redirectTo: `${getURL()}/auth/admin/callback`,
   };

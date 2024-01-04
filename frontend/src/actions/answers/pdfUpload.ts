@@ -114,7 +114,6 @@ export async function fetchPdfUploadAnswer(questionid: string) {
 
   if (pdfUploadError) {
     if (pdfUploadError.code == "PGRST116") {
-      log.debug("No PDF Entries");
       return null;
     }
     log.error(JSON.stringify(pdfUploadError));

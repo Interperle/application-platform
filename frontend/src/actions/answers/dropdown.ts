@@ -65,7 +65,6 @@ export async function fetchDropdownAnswer(
     .single<DropdownAnswerResponse>();
   if (dropdownError) {
     if (dropdownError.code == "PGRST116") {
-      log.debug("No Dropdown Entries");
       return initialstate;
     }
     log.error(JSON.stringify(dropdownError));

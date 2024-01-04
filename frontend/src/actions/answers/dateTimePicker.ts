@@ -63,7 +63,6 @@ export async function fetchDateTimePickerAnswer(questionid: string) {
       .single<DateTimeAnswerResponse>();
   if (dateTimePickerError) {
     if (dateTimePickerError.code == "PGRST116") {
-      log.debug("No DateTime Entries");
       return initialstate;
     }
     log.error(JSON.stringify(dateTimePickerError));

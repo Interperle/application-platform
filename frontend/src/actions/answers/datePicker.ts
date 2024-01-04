@@ -62,7 +62,6 @@ export async function fetchDatePickerAnswer(questionid: string) {
     .single<DateAnswerResponse>();
   if (datePickerError) {
     if (datePickerError.code == "PGRST116") {
-      log.debug("No DatePicker Entries");
       return initialstate;
     }
     log.error(JSON.stringify(datePickerError));

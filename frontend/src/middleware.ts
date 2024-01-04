@@ -95,6 +95,9 @@ export async function middleware(request: NextRequest) {
       .select("isactive")
       .eq("userid", user!.id)
       .single();
+    if (roleError) {
+      console.error(roleError);
+    }
     if (roleData && !roleData.isactive) {
       console.log(`The User ${user.email} is not active. Redirect to /403`);
       return NextResponse.redirect(new URL("/403", request.url));

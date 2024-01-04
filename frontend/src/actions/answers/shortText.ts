@@ -65,7 +65,6 @@ export async function fetchShortTextAnswer(
     .single<ShortTextAnswerResponse>();
   if (shortTextError) {
     if (shortTextError.code == "PGRST116") {
-      log.debug("No ShortText Entries");
       return initialstate;
     }
     log.error(JSON.stringify(shortTextError));

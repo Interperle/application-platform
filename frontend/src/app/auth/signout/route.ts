@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import { getURL } from "@/utils/helpers";
 import { initSupabaseRoute } from "@/utils/supabaseServerClients";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const supabase = initSupabaseRoute();
 
   const {

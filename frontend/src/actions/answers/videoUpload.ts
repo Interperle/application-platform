@@ -114,7 +114,6 @@ export async function fetchVideoUploadAnswer(questionid: string) {
 
   if (videoUploadError) {
     if (videoUploadError.code == "PGRST116") {
-      log.debug("No Image Entries");
       return null;
     }
     log.error(JSON.stringify(videoUploadError));

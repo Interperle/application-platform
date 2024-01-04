@@ -64,7 +64,6 @@ export async function fetchLongTextAnswer(
     .single<LongTextAnswerResponse>();
   if (longTextError) {
     if (longTextError.code == "PGRST116") {
-      log.debug("No LongText Entries");
       return initialstate;
     }
     log.error(JSON.stringify(longTextError));

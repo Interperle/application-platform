@@ -114,7 +114,6 @@ export async function fetchImageUploadAnswer(questionid: string) {
 
   if (imageUploadError) {
     if (imageUploadError.code == "PGRST116") {
-      log.debug("No Image Entries");
       return null;
     }
     log.error(JSON.stringify(imageUploadError));

@@ -4,9 +4,7 @@ import { SupabaseClient, User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 import { Question } from "@/components/questions";
-import {
-  QuestionType,
-} from "@/components/questiontypes/utils/questiontype_selector";
+import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
 import Logger from "@/logger/logger";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
