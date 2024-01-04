@@ -1,34 +1,37 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
 
+const log = new Logger("actions/ansers/checkBox");
+
 export async function saveCheckBoxAnswer(checked: boolean, questionid: string) {
   if (!checked) {
-    await deleteAnswer(questionid, "checkbox_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertCheckBoxAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("checkbox_answer_table")
         .insert({
           answerid: answerid,
           checked: checked,
         });
-      if (insertCheckBoxAnswerResponse) {
-        console.log(insertCheckBoxAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateCheckboxAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("checkbox_answer_table")
         .update({
           checked: checked,
         })
         .eq("answerid", answerid);
-      if (updateCheckboxAnswerResponse) {
-        console.log(updateCheckboxAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
@@ -59,10 +62,10 @@ export async function fetchCheckBoxAnswer(
     .single<LongTextAnswerResponse>();
   if (checkBoxError) {
     if (checkBoxError.code == "PGRST116") {
+      log.debug("No Checkbox Entries");
       return initialstate;
     }
-    console.log("checkBoxError:");
-    console.log(checkBoxError);
+    log.error(JSON.stringify(checkBoxError));
   }
   return checkBoxData || initialstate;
 }

@@ -61,17 +61,20 @@ export async function fetchAllUsers() {
 
 export async function toggleStatusOfUser(currUser: userData) {
   try {
-    const { error: userProfileError } =
-      await supabaseServiceRole
-        .from("user_profiles_table")
-        .update({ isactive: !currUser.isactive })
-        .eq("userid", currUser.id);
+    const { error: userProfileError } = await supabaseServiceRole
+      .from("user_profiles_table")
+      .update({ isactive: !currUser.isactive })
+      .eq("userid", currUser.id);
 
     if (userProfileError) {
       log.error(JSON.stringify(userProfileError));
       throw userProfileError;
     }
-    log.info(`Changed Status of User (${currUser.email} to '${currUser.isactive ? "inactive" : "active"}')`);
+    log.info(
+      `Changed Status of User (${currUser.email} to '${
+        currUser.isactive ? "inactive" : "active"
+      }')`,
+    );
     return { ...currUser, isactive: !currUser.isactive };
   } catch (error) {
     log.error(`Error toggling user status: ${error}`);
@@ -81,11 +84,10 @@ export async function toggleStatusOfUser(currUser: userData) {
 
 export async function changeRoleOfUser(currUser: userData, role: UserRole) {
   try {
-    const { error: userProfileError } =
-      await supabaseServiceRole
-        .from("user_profiles_table")
-        .update({ userrole: role.valueOf() })
-        .eq("userid", currUser.id);
+    const { error: userProfileError } = await supabaseServiceRole
+      .from("user_profiles_table")
+      .update({ userrole: role.valueOf() })
+      .eq("userid", currUser.id);
 
     if (userProfileError) {
       log.error(JSON.stringify(userProfileError));
@@ -112,7 +114,7 @@ export async function fetchAllApplicantsStatus(): Promise<ApplicantsStatus[]> {
   const { data: applicantsStatusData, error: applicantsStatusError } =
     await initSupabaseActions().from("phase_outcome_table").select("*");
   if (applicantsStatusError) {
-    log.error(JSON.stringify(applicantsStatusError))
+    log.error(JSON.stringify(applicantsStatusError));
     throw applicantsStatusError;
   }
   return applicantsStatusData;
@@ -127,8 +129,9 @@ export async function saveApplicationOutcome(
 ) {
   const supabase = initSupabaseActions();
   if (applicantStatus === undefined) {
-    const { error: applicantStatusError } =
-      await supabase.from("phase_outcome_table").insert({
+    const { error: applicantStatusError } = await supabase
+      .from("phase_outcome_table")
+      .insert({
         phase_id: phase_id,
         user_id: user_id,
         outcome: outcome == undefined ? true : outcome,
@@ -136,36 +139,46 @@ export async function saveApplicationOutcome(
         review_date: createCurrentTimestamp(),
       });
     if (applicantStatusError) {
-      log.error(JSON.stringify(applicantStatusError))
+      log.error(JSON.stringify(applicantStatusError));
       throw applicantStatusError;
     }
   } else {
-    const { error: applicantStatusError } =
-      await supabase
-        .from("phase_outcome_table")
-        .update({
-          outcome: !applicantStatus.outcome,
-          reviewed_by: admin_id,
-          review_date: createCurrentTimestamp(),
-        })
-        .eq("outcome_id", applicantStatus.outcome_id);
+    const { error: applicantStatusError } = await supabase
+      .from("phase_outcome_table")
+      .update({
+        outcome: !applicantStatus.outcome,
+        reviewed_by: admin_id,
+        review_date: createCurrentTimestamp(),
+      })
+      .eq("outcome_id", applicantStatus.outcome_id);
     if (applicantStatusError) {
-      log.error(JSON.stringify(applicantStatusError))
+      log.error(JSON.stringify(applicantStatusError));
       throw applicantStatusError;
     }
   }
-
 }
 
-export async function finishEvaluationOfPhase(phase_id: string, users: userData[], applicantsState: ApplicantsStateType, previousPhaseId: string | null, isFirstPhase: boolean, admin_id: string) {
-  const allPhaseOutcomes = await fetchAllApplicantsStatus()
+export async function finishEvaluationOfPhase(
+  phase_id: string,
+  users: userData[],
+  applicantsState: ApplicantsStateType,
+  previousPhaseId: string | null,
+  isFirstPhase: boolean,
+  admin_id: string,
+) {
+  const allPhaseOutcomes = await fetchAllApplicantsStatus();
 
   users.forEach(async (user) => {
     if (user.userrole > 1) {
       return null;
     }
 
-    if (allPhaseOutcomes.find((phaseOutcome) => (phaseOutcome.user_id == user.id && phaseOutcome.phase_id == phase_id)) != undefined) {
+    if (
+      allPhaseOutcomes.find(
+        (phaseOutcome) =>
+          phaseOutcome.user_id == user.id && phaseOutcome.phase_id == phase_id,
+      ) != undefined
+    ) {
       return null;
     }
 
@@ -175,22 +188,28 @@ export async function finishEvaluationOfPhase(phase_id: string, users: userData[
         : { status: undefined, reviewer: undefined };
 
     const userIsInPhase =
-      isFirstPhase ||
-      previousPhaseApplicantState.status?.outcome;
+      isFirstPhase || previousPhaseApplicantState.status?.outcome;
 
     if (userIsInPhase) {
-      log.info(`Set Application Outcome of ${user.email} in Phase ${phase_id} to failed.`)
-      await saveApplicationOutcome(phase_id, user.id, undefined, admin_id, false)
+      log.info(
+        `Set Application Outcome of ${user.email} in Phase ${phase_id} to failed.`,
+      );
+      await saveApplicationOutcome(
+        phase_id,
+        user.id,
+        undefined,
+        admin_id,
+        false,
+      );
     }
-  })
-  const { error: applicantStatusError } =
-    await supabaseServiceRole
-      .from("phase_table")
-      .update({ finished_evaluation: createCurrentTimestamp() })
-      .eq("phaseid", phase_id);
-  if (applicantStatusError){
-    log.error(JSON.stringify(applicantStatusError))
+  });
+  const { error: applicantStatusError } = await supabaseServiceRole
+    .from("phase_table")
+    .update({ finished_evaluation: createCurrentTimestamp() })
+    .eq("phaseid", phase_id);
+  if (applicantStatusError) {
+    log.error(JSON.stringify(applicantStatusError));
     throw applicantStatusError;
   }
-  log.info(`Finished Evaluation of Phase ${phase_id}`)
+  log.info(`Finished Evaluation of Phase ${phase_id}`);
 }

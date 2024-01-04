@@ -14,7 +14,7 @@ export default async function getOverviewPageText() {
   const phases_status = await fetch_phases_status();
   phases_status.sort((a, b) => b.phase.phaseorder - a.phase.phaseorder);
   const last_phase_status = phases_status[0];
-  var markdownFilePath: string;
+  let markdownFilePath: string;
   if (currentPhase.phaseorder == -1) {
     markdownFilePath = path.join("public", "texts", "welcome.md");
   } else if (

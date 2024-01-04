@@ -5,6 +5,7 @@ import {
   fetchNumberPickerAnswer,
   saveNumberPickerAnswer,
 } from "@/actions/answers/numberPicker";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
@@ -17,6 +18,8 @@ export interface NumberPickerQuestionTypeProps
   minnumber: number;
   maxnumber: number;
 }
+
+const log = new Logger("NumberPickerQuestionType");
 
 const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
   phasename,
@@ -46,7 +49,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
         const savedAnswer = await fetchNumberPickerAnswer(questionid);
         updateAnswerState(savedAnswer.pickednumber, savedAnswer.answerid);
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +71,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
     if (!iseditable) {
       return;
     }
-    let inputNumber: number = +event.target.value;
+    const inputNumber: number = +event.target.value;
     if (
       isNaN(inputNumber) &&
       event.target.value != "+" &&

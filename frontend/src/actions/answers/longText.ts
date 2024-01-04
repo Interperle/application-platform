@@ -1,38 +1,39 @@
 "use server";
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/longText");
 
 export async function saveLongTextAnswer(
   answertext: string,
   questionid: string,
 ) {
   if (answertext == "") {
-    await deleteAnswer(questionid, "long_text_answer_table");
+    await deleteAnswer(questionid);
     return "";
   }
   const { supabase, answerid, reqtype } = await saveAnswer(questionid);
   if (reqtype == "created") {
-    const insertLongTextAnswerResponse = await supabase
+    const { error: insertAnswerError } = await supabase
       .from("long_text_answer_table")
       .insert({
         answerid: answerid,
         answertext: answertext,
       });
-    if (insertLongTextAnswerResponse) {
-      console.log("Inserted Long Text");
-      console.log(insertLongTextAnswerResponse);
+    if (insertAnswerError) {
+      log.error(JSON.stringify(insertAnswerError));
     }
   } else if (reqtype == "updated") {
-    const updateLongTextAnswerResponse = await supabase
+    const { error: updateAnswerError } = await supabase
       .from("long_text_answer_table")
       .update({
         answertext: answertext,
       })
       .eq("answerid", answerid);
-    if (updateLongTextAnswerResponse) {
-      console.log("Updated Long Text");
-      console.log(updateLongTextAnswerResponse);
+    if (updateAnswerError) {
+      log.error(JSON.stringify(updateAnswerError));
     }
   }
   return answerid;
@@ -63,10 +64,10 @@ export async function fetchLongTextAnswer(
     .single<LongTextAnswerResponse>();
   if (longTextError) {
     if (longTextError.code == "PGRST116") {
+      log.debug("No LongText Entries");
       return initialstate;
     }
-    console.log("longTextError:");
-    console.log(longTextError);
+    log.error(JSON.stringify(longTextError));
   }
   return longTextData || initialstate;
 }

@@ -6,6 +6,7 @@ import { ExtendedAnswerType } from "@/actions/answers/answers";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import Logger from "@/logger/logger";
 import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
@@ -28,6 +29,8 @@ export interface DefaultQuestion {
   selectedCondChoice: string | null;
   depends_on: string | null;
 }
+
+const log = new Logger("components/questions");
 
 export interface Question extends DefaultQuestion {
   params: any;
@@ -95,7 +98,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             phaseQuestion.questiontype,
           );
           if (!QuestionComponent) {
-            console.log(`Unknown question type: ${phaseQuestion.questiontype}`);
+            log.error(`Unknown question type: ${phaseQuestion.questiontype}`);
             return null;
           }
           return (

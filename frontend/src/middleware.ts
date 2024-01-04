@@ -1,13 +1,12 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { isAuthorized } from "./actions/auth";
+import { isAuthorized } from "./actions/middleware";
 import { UserRole } from "./utils/userRole";
-import Logger from "./logger/logger";
+
+// Can't use own Logger in middleware, because of https://nextjs.org/docs/messages/node-module-in-edge-runtime
 
 export async function middleware(request: NextRequest) {
-  const log = new Logger("Middleware");
-
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -69,7 +68,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   if (!user) {
     if (pathname != "/login") {
-      log.info("Not logged in! Redirect to /login");
+      console.log("Not logged in! Redirect to /login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
     return response;
@@ -84,7 +83,9 @@ export async function middleware(request: NextRequest) {
   }
 
   if (redirectUrl) {
-    log.info(`The User ${user.email} is not authorized to access ${pathname}. Redirect to ${redirectUrl}`);
+    console.log(
+      `The User ${user.email} is not authorized to access ${pathname}. Redirect to ${redirectUrl}`,
+    );
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 
@@ -95,7 +96,7 @@ export async function middleware(request: NextRequest) {
       .eq("userid", user!.id)
       .single();
     if (roleData && !roleData.isactive) {
-      log.info(`The User ${user.email} is not active. Redirect to /403`);
+      console.log(`The User ${user.email} is not active. Redirect to /403`);
       return NextResponse.redirect(new URL("/403", request.url));
     }
 

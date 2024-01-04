@@ -1,9 +1,12 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { storageSaveName } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/imageUpload");
 
 export async function saveVideoUploadAnswer(
   questionid: string,
@@ -18,44 +21,51 @@ export async function saveVideoUploadAnswer(
   if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertVideoUploadAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("video_upload_answer_table")
         .insert({
           answerid: answerid,
           videoname: uploadFile.name,
         });
-      if (insertVideoUploadAnswerResponse) {
-        console.log("Inserted Video");
-        console.log(insertVideoUploadAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
-      const createBucketEntry = await supabase.storage
+      const { error: bucketError } = await supabase.storage
         .from(bucket_name)
         .upload(
           `${(await supabase.auth.getUser()).data.user!.id}_${uploadFile.name}`,
           uploadFile,
         );
+      if (bucketError) {
+        log.error(JSON.stringify(bucketError));
+      }
     } else if (reqtype == "updated") {
-      const getOldVideoUploadAnswerResponse = await supabase
+      const { data: oldVideoData, error: oldVideoError } = await supabase
         .from("video_upload_answer_table")
         .select("videoname")
         .eq("answerid", answerid)
         .single();
-      const updateVideoUploadAnswerResponse = await supabase
+      if (oldVideoError) {
+        log.error(JSON.stringify(oldVideoError));
+      }
+      const { error: updatedVideoError } = await supabase
         .from("video_upload_answer_table")
         .update({ videoname: uploadFile.name })
         .eq("answerid", answerid);
-      if (updateVideoUploadAnswerResponse) {
-        console.log("Updated Video: " + uploadFile.name);
-        console.log(updateVideoUploadAnswerResponse);
+      if (updatedVideoError) {
+        log.error(JSON.stringify(updatedVideoError));
       }
-      const createBucketEntry = await supabase.storage
+      const { error: updatedBucketError } = await supabase.storage
         .from(bucket_name)
         .update(
           `${
             (await supabase.auth.getUser()).data.user!.id
-          }_${getOldVideoUploadAnswerResponse.data?.videoname}`,
+          }_${oldVideoData?.videoname}`,
           uploadFile,
         );
+      if (updatedBucketError) {
+        log.error(JSON.stringify(updatedBucketError));
+      }
     }
   }
 }
@@ -69,12 +79,17 @@ export async function deleteVideoUploadAnswer(questionid: string) {
       user_id: user.id,
     })
     .single<VideoAnswerResponse>();
+  if (videoUploadError) {
+    log.error(JSON.stringify(videoUploadError));
+  }
   const bucket_name = "video-" + questionid;
-  const { data: videoDeleteData, error: videoDeleteError } =
-    await supabase.storage
-      .from(bucket_name)
-      .remove([`${user.id}_${videoUploadData?.videoname}`]);
-  await deleteAnswer(questionid, "video_upload_answer_table");
+  const { error: videoDeleteError } = await supabase.storage
+    .from(bucket_name)
+    .remove([`${user.id}_${videoUploadData?.videoname}`]);
+  if (videoDeleteError) {
+    log.error(JSON.stringify(videoDeleteError));
+  }
+  await deleteAnswer(questionid);
 }
 
 interface VideoAnswerResponse {
@@ -85,6 +100,9 @@ interface VideoAnswerResponse {
 export async function fetchVideoUploadAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) {
+    log.error(JSON.stringify(userError));
+  }
   const user_id = userData.user!.id;
 
   const { data: videoUploadData, error: videoUploadError } = await supabase
@@ -96,10 +114,10 @@ export async function fetchVideoUploadAnswer(questionid: string) {
 
   if (videoUploadError) {
     if (videoUploadError.code == "PGRST116") {
+      log.debug("No Image Entries");
       return null;
     }
-    console.log("videoUploadError:");
-    console.log(videoUploadError);
+    log.error(JSON.stringify(videoUploadError));
     return null;
   }
   return { ...videoUploadData, userid: user_id };

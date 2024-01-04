@@ -1,36 +1,39 @@
 "use server";
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/dateTimePicker");
 
 export async function saveDateTimePickerAnswer(
   pickeddatetime: string,
   questionid: string,
 ) {
   if (pickeddatetime == "" || pickeddatetime == "Invalid date") {
-    await deleteAnswer(questionid, "datetime_picker_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertDateTimePickerAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("datetime_picker_answer_table")
         .insert({
           answerid: answerid,
           pickeddatetime: new Date(pickeddatetime),
         });
-      if (insertDateTimePickerAnswerResponse) {
-        console.log(insertDateTimePickerAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "update") {
-      const updateDateTimePickerAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("datetime_picker_answer_table")
         .update({
           pickeddatetime: new Date(pickeddatetime),
         })
         .eq("answerid", answerid);
-      if (updateDateTimePickerAnswerResponse) {
-        console.log(updateDateTimePickerAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
@@ -60,10 +63,10 @@ export async function fetchDateTimePickerAnswer(questionid: string) {
       .single<DateTimeAnswerResponse>();
   if (dateTimePickerError) {
     if (dateTimePickerError.code == "PGRST116") {
+      log.debug("No DateTime Entries");
       return initialstate;
     }
-    console.log("dateTimePickerError:");
-    console.log(dateTimePickerError);
+    log.error(JSON.stringify(dateTimePickerError));
   }
   return dateTimePickerData || initialstate;
 }

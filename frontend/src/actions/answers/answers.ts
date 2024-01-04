@@ -5,9 +5,9 @@ import { redirect } from "next/navigation";
 
 import { Question } from "@/components/questions";
 import {
-  AnswerTypeTable,
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import Logger from "@/logger/logger";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
@@ -29,10 +29,12 @@ export interface Answer {
   created: string;
 }
 
+const log = new Logger("actions/ansers/answers");
+
 export async function getCurrentUser(supabase: SupabaseClient) {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) {
-    console.log("Error: " + userError);
+    log.error(JSON.stringify(userError));
     redirect("/");
   }
   return userData.user;
@@ -48,7 +50,7 @@ export async function getApplicationIdOfCurrentUser(
     .eq("userid", user.id)
     .single();
   if (applicationError) {
-    console.log(applicationError);
+    log.error(JSON.stringify(applicationError));
   }
   return applicationData?.applicationid;
 }
@@ -66,7 +68,7 @@ export async function fetchAnswerId(
     .eq("applicationid", applicationid);
 
   if (answerError) {
-    console.log(answerError);
+    log.error(JSON.stringify(answerError));
   }
   if (answerData!.length == 0) {
     return "";
@@ -91,10 +93,10 @@ export async function fetchAllAnswersOfApplication(): Promise<
 
   if (answerError) {
     if (answerError.code == "PGRST116") {
-      console.log("answerError:");
-      console.log(answerError);
-      return [];
+      log.error(JSON.stringify(answerError));
+      throw answerError;
     }
+    log.error(JSON.stringify(answerError));
   }
   const answerIds = answerData!.map((answer) => answer.answerid);
   const { data: answerConditionalData, error: answerConditionalError } =
@@ -105,11 +107,10 @@ export async function fetchAllAnswersOfApplication(): Promise<
 
   if (answerConditionalError) {
     if (answerConditionalError.code == "PGRST116") {
-      console.log("answerConditionalError:");
-      console.log(answerConditionalError);
+      log.debug(JSON.stringify(answerConditionalError));
       return [];
     }
-    console.log(answerError);
+    log.debug(JSON.stringify(answerConditionalError));
   }
 
   return (
@@ -132,7 +133,7 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
 
   let reqtype = "";
   if (answerid == "") {
-    const insertAnswerResponse = await supabase
+    const { data: insertAnswerData, error: insertAnswerError } = await supabase
       .from("answer_table")
       .insert({
         questionid: questionid,
@@ -142,10 +143,13 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
       })
       .select()
       .single();
-    answerid = insertAnswerResponse!.data!.answerid;
+    if (insertAnswerError) {
+      log.error(JSON.stringify(insertAnswerError));
+    }
+    answerid = insertAnswerData.answerid;
     reqtype = "created";
   } else {
-    const updateAnswerResponse = await supabase
+    const { data: updateAnswerData, error: updateAnswerError } = await supabase
       .from("answer_table")
       .update({
         lastupdated: now,
@@ -154,23 +158,34 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
       .eq("applicationid", applicationid)
       .select()
       .single();
-    answerid = updateAnswerResponse!.data!.answerid;
+    if (updateAnswerError) {
+      log.error(JSON.stringify(updateAnswerError));
+    }
+    answerid = updateAnswerData.answerid;
     reqtype = "updated";
   }
   return { supabase: supabase, answerid: answerid, reqtype: reqtype };
 }
 
-export async function deleteAnswer(questionid: string, answertype: string) {
+export async function deleteAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
+  const answerid = await fetchAnswerId(
+    supabase,
+    user,
+    applicationid,
+    questionid,
+  );
   if (answerid != "") {
-    const deleteAnswerResponse = await supabase
+    const { error: deleteAnswerError } = await supabase
       .from("answer_table")
       .delete()
       .eq("questionid", questionid)
       .eq("applicationid", applicationid);
+    if (deleteAnswerError) {
+      log.error(JSON.stringify(deleteAnswerError));
+    }
   }
 }
 
@@ -183,12 +198,7 @@ export async function deleteAnswersOfQuestions(questions: Question[]) {
     } else if (question.questiontype == QuestionType.PDFUpload) {
       await deletePdfUploadAnswer(question.questionid);
     } else {
-      await deleteAnswer(
-        question.questionid,
-        AnswerTypeTable[
-          `${question.questiontype.toUpperCase()}AnswerTable` as keyof typeof AnswerTypeTable
-        ],
-      );
+      await deleteAnswer(question.questionid);
     }
   }
 }

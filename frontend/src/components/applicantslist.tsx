@@ -61,7 +61,7 @@ const ApplicantsList: React.FC<{
       });
     });
     setApplicantsState(newState);
-  }, [applicantsStatus, phases]);
+  }, [applicantsStatus, phases, users]);
 
   const handleToggle = async (
     phase_id: string,
@@ -112,7 +112,7 @@ const ApplicantsList: React.FC<{
     <div className="overflow-x-auto">
       {phases.map((phase, index) => {
         const isFirstPhase = index === 0;
-        let previousPhaseId = index > 0 ? phases[index - 1].phaseid : null;
+        const previousPhaseId = index > 0 ? phases[index - 1].phaseid : null;
         if (phase.finished_evaluation !== null || !renderedUnfinishedPhase) {
           if (phase.finished_evaluation === null) {
             renderedUnfinishedPhase = true;
@@ -204,7 +204,16 @@ const ApplicantsList: React.FC<{
                   <SubmitButton
                     text={"Finish Evaluation"}
                     expanded={false}
-                    onClick={(event) => finishEvaluationOfPhase(phase.phaseid, users, applicantsState, previousPhaseId, isFirstPhase, currentAdminId)}
+                    onClick={(event) =>
+                      finishEvaluationOfPhase(
+                        phase.phaseid,
+                        users,
+                        applicantsState,
+                        previousPhaseId,
+                        isFirstPhase,
+                        currentAdminId,
+                      )
+                    }
                   />
                 </div>
               )}

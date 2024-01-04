@@ -9,6 +9,7 @@ import {
   fetchImageUploadAnswer,
   saveImageUploadAnswer,
 } from "@/actions/answers/imageUpload";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { downloadFile } from "@/utils/helpers";
@@ -21,6 +22,8 @@ export interface ImageUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
   maxfilesizeinmb: number;
 }
+
+const log = new Logger("ImageUploadQuestionType");
 
 const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
   phasename,
@@ -68,7 +71,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
         }
         setTempAnswer("");
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }
@@ -143,7 +146,7 @@ const ImageUploadQuestionType: React.FC<ImageUploadQuestionTypeProps> = ({
     try {
       await saveImageUploadAnswer(questionid, formData);
     } catch (error) {
-      console.error("Failed to upload image", error);
+      log.error(JSON.stringify(error));
     }
     updateAnswerState(tempAnswer);
     setTempAnswer("");

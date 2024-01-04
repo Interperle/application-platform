@@ -7,6 +7,7 @@ import {
   fetchPdfUploadAnswer,
   savePdfUploadAnswer,
 } from "@/actions/answers/pdfUpload";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { downloadFile } from "@/utils/helpers";
@@ -18,6 +19,8 @@ import { SubmitButton } from "../submitButton";
 export interface PDFUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxfilesizeinmb: number;
 }
+
+const log = new Logger("PDFUploadQuestionType");
 
 const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
   phasename,
@@ -66,7 +69,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
         }
         setTempAnswer("");
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }
@@ -143,7 +146,7 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
     try {
       await savePdfUploadAnswer(questionid, formData);
     } catch (error) {
-      console.error("Failed to upload image", error);
+      log.error(JSON.stringify(error));
     }
     updateAnswerState(tempAnswer);
     setTempAnswer("");

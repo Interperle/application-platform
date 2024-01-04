@@ -7,6 +7,7 @@ import {
   saveVideoUploadAnswer,
   fetchVideoUploadAnswer,
 } from "@/actions/answers/videoUpload";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { downloadFile } from "@/utils/helpers";
@@ -18,6 +19,8 @@ import { SubmitButton } from "../submitButton";
 export interface VideoUploadQuestionTypeProps extends DefaultQuestionTypeProps {
   maxfilesizeinmb: number;
 }
+
+const log = new Logger("VideoUploadQuestionType");
 
 const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
   phasename,
@@ -66,7 +69,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
         }
         setTempAnswer("");
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }
@@ -144,8 +147,7 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
       await saveVideoUploadAnswer(questionid, formData);
       // Handle success (e.g., showing a success message, resetting states)
     } catch (error) {
-      // Handle error (e.g., showing an error message)
-      console.error("Failed to upload image", error);
+      log.error(JSON.stringify(error));
     }
     updateAnswerState(tempAnswer);
     setTempAnswer("");

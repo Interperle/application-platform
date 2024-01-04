@@ -5,6 +5,7 @@ import {
   fetchDateTimePickerAnswer,
   saveDateTimePickerAnswer,
 } from "@/actions/answers/dateTimePicker";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setToPrefferedTimeZone } from "@/utils/helpers";
@@ -18,6 +19,8 @@ export interface DatetimePickerQuestionTypeProps
   mindatetime: Date;
   maxdatetime: Date;
 }
+
+const log = new Logger("DatetimePickerQuestionType");
 
 const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
   phasename,
@@ -50,7 +53,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
           savedAnswer.answerid,
         );
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }

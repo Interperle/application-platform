@@ -1,40 +1,40 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/conditional");
 
 export async function saveConditionalAnswer(
   answertext: string,
   questionid: string,
 ) {
-  console.log(answertext);
   if (answertext == "") {
-    await deleteAnswer(questionid, "conditional_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-    console.log(answerid);
-    console.log(reqtype);
     if (reqtype == "created") {
-      const insertConditionalAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("conditional_answer_table")
         .insert({
           answerid: answerid,
           selectedchoice: answertext,
         });
-      if (insertConditionalAnswerResponse) {
-        console.log(insertConditionalAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateConditionalAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("conditional_answer_table")
         .update({
           selectedchoice: answertext,
         })
         .eq("answerid", answerid);
-      if (updateConditionalAnswerResponse) {
-        console.log(updateConditionalAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
@@ -64,10 +64,10 @@ export async function fetchConditionalAnswer(questionid: string) {
       .single<ConditionalAnswerResponse>();
   if (conditionalTextError) {
     if (conditionalTextError.code == "PGRST116") {
+      log.debug("No Conditional Entries");
       return initialstate;
     }
-    console.log("conditionalTextError:");
-    console.log(conditionalTextError);
+    log.error(JSON.stringify(conditionalTextError));
   }
   return conditionalTextData || initialstate;
 }

@@ -4,7 +4,6 @@ import { getURL } from "@/utils/helpers";
 import { initSupabaseRoute } from "@/utils/supabaseServerClients";
 
 export async function POST(request: NextRequest) {
-  console.log("Enter");
   const supabase = initSupabaseRoute();
 
   const {

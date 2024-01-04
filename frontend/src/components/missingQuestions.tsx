@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 
 import { AnswerState } from "@/store/slices/answerSlice";
 import { useAppSelector } from "@/store/store";

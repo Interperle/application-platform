@@ -7,6 +7,7 @@ import {
   QuestionType,
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import Logger from "@/logger/logger";
 import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
 import {
   createCurrentTimestamp,
@@ -18,15 +19,13 @@ import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,
 } from "./answers/answers";
-import Logger from "@/logger/logger";
 
 type IdType = {
   questionid: string;
   [key: string]: any;
 };
 
-const log = new Logger("Overview Page");
-
+const log = new Logger("actions/phase");
 
 export async function fetch_question_type_table(questions: DefaultQuestion[]) {
   const result: Record<QuestionType, any> = {
@@ -52,10 +51,12 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
       ];
 
     if (!tableName) {
-      console.log(
+      log.error(
         `Table for question type "${questionType}" is missing. Skipping...`,
       );
-      continue;
+      throw Error(
+        `Table for question type "${questionType}" is missing. Skipping...`,
+      );
     }
 
     const { data: questionTypeData, error: questionTypeError } =
@@ -70,13 +71,12 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
         );
 
     if (questionTypeError) {
-      console.log("QuestionType Error: Return Null");
-      console.error(questionTypeError);
+      log.error(JSON.stringify(questionTypeError));
       result[questionType] = [{}];
     } else if (questionTypeData) {
       result[questionType] = questionTypeData;
     } else {
-      console.log("No data found for question type: " + questionType);
+      log.debug(`No data found for question type: ${questionType}`);
       result[questionType] = [{}];
     }
   }
@@ -87,7 +87,7 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
 export async function fetchAdditionalParams(
   questiontype: QuestionType,
 ): Promise<Record<string, any>> {
-  var table_name = "";
+  let table_name = "";
   if (questiontype == QuestionType.MultipleChoice) {
     table_name = "multiple_choice_question_choice_table";
   } else if (questiontype == QuestionType.Dropdown) {
@@ -95,7 +95,10 @@ export async function fetchAdditionalParams(
   } else if (questiontype == QuestionType.Conditional) {
     table_name = "conditional_question_choice_table";
   } else {
-    console.error("Not possible for others");
+    log.debug(
+      `Can't call fetchAdditionalParams() for QuestionType ${questiontype}`,
+    );
+    return {};
   }
 
   const { data: paramsData, error } = await initSupabaseActions()
@@ -103,7 +106,7 @@ export async function fetchAdditionalParams(
     .select("*");
 
   if (error) {
-    console.error("Error fetching multiple choice choices:", error);
+    log.error(JSON.stringify(error));
     return {};
   }
 
@@ -172,20 +175,22 @@ async function append_params(
 export async function fetch_question_table(
   phaseId: string,
 ): Promise<Question[]> {
-  const { data: questionData, error: errorData } = await initSupabaseActions()
-    .from("question_table")
-    .select("*")
-    .eq("phaseid", phaseId);
+  const { data: questionData, error: questionError } =
+    await initSupabaseActions()
+      .from("question_table")
+      .select("*")
+      .eq("phaseid", phaseId);
 
-  if (errorData) {
-    console.log("Error:" && errorData);
+  if (questionError) {
+    log.error(JSON.stringify(questionError));
     redirect("/404", RedirectType.replace);
   }
 
   if (!questionData) {
-    console.log("No Data");
+    log.error(`No questions defined for ${phaseId}`);
     redirect("/404", RedirectType.replace);
   }
+
   const questionTypesData = await fetch_question_type_table(questionData);
   const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice);
   const optionsData = await fetchAdditionalParams(QuestionType.Dropdown);
@@ -193,7 +198,7 @@ export async function fetch_question_table(
   const conditionalChoicesData = await fetchAdditionalParams(
     QuestionType.Conditional,
   );
-  const combinedQuestions = await questionData.map(
+  const combinedQuestions = questionData.map(
     async (question: DefaultQuestion) => {
       return await append_params(
         questionTypesData,
@@ -233,7 +238,7 @@ export async function fetch_conditional_questionid_mapping() {
       .from("conditional_question_choice_table")
       .select("*");
   if (conditionalError) {
-    console.log(JSON.stringify(conditionalError));
+    log.error(JSON.stringify(conditionalError));
     return {} as Record<string, string[]>;
   }
   return conditionalData?.reduce(
@@ -259,12 +264,12 @@ export async function fetch_phase_by_name(
     .single();
   // Redirection if error
   if (phaseError) {
-    console.log("Error: " + phaseError + " -> Redirect");
+    log.error(JSON.stringify(phaseError));
     redirect("/", RedirectType.replace);
   }
   // Redirection if no phaseName
   if (!phaseData) {
-    console.log("No data " + phaseData + " -> Redirect");
+    log.debug("No PhaseData -> Redirect to Overview");
     redirect("/", RedirectType.replace);
   }
   phaseData.startdate = setToPrefferedTimeZone(phaseData.startdate);
@@ -279,10 +284,10 @@ export async function fetch_all_phases(): Promise<PhaseData[]> {
     .from("phase_table")
     .select("*");
   if (phasesError) {
-    console.log("Error: " + JSON.stringify(phasesError, null, 2));
+    log.error(JSON.stringify(phasesError, null, 2));
   }
   if (!phasesData) {
-    console.log("No data: " + JSON.stringify(phasesData, null, 2));
+    log.warn("No Phases found");
   }
 
   return (
@@ -300,7 +305,7 @@ export async function extractCurrentPhase(
   const phasesData = await fetch_all_phases();
   const sortedPhases = phasesData!.sort((a, b) => a.phaseorder - b.phaseorder);
 
-  var previous_phase: PhaseData;
+  let previous_phase: PhaseData;
   previous_phase = {
     phaseid: "",
     phasename: "",
@@ -338,7 +343,7 @@ export async function fetch_answer_table(
     .eq("applicationid", applicationid);
 
   if (answerError) {
-    console.log("Error:" + answerError);
+    log.error(JSON.stringify(answerError));
   }
 
   return answerData ? answerData.length : 0;
@@ -353,18 +358,12 @@ export async function fetch_first_phase_over(): Promise<boolean> {
     .single();
 
   if (phaseError) {
-    console.log(
-      "Error Fetch First Phase: " +
-        JSON.stringify(phaseError, null, 2) +
-        " -> Redirect",
-    );
+    log.error(JSON.stringify(phaseError, null, 2));
     return true;
   }
 
   if (!phaseData) {
-    console.log(
-      "No Data: " + JSON.stringify(phaseData, null, 2) + " -> Redirect",
-    );
+    log.debug("No PhaseData found");
     return true;
   }
   const currentDate = new Date(createCurrentTimestamp());
@@ -381,10 +380,10 @@ export async function fetch_sections_by_phase(
     .select("*")
     .eq("phaseid", phaseId);
   if (sectionsError) {
-    console.log("Error: " + JSON.stringify(sectionsError));
+    log.error(JSON.stringify(sectionsError));
   }
   if (!sectionsData) {
-    console.log("No data " + JSON.stringify(sectionsData));
+    log.debug("No sectionsData found");
   }
   return sectionsData as SectionData[];
 }
@@ -405,21 +404,12 @@ export type PhaseOutcome = {
 };
 
 export async function fetch_phases_status(): Promise<PhaseOutcome[]> {
-  log.info("Fetch Phase Status")
-
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const all_phases = await fetch_all_phases();
   const { data, error } = await supabase
     .from("phase_outcome_table")
-    .select(
-      `
-          outcome_id,
-          outcome,
-          review_date,
-          phase_id
-        `,
-    )
+    .select("outcome_id, outcome, review_date, phase_id")
     .eq("user_id", user.id);
   const transformedData = data?.map((item) => {
     const matchingPhase = all_phases.find(
@@ -434,7 +424,5 @@ export async function fetch_phases_status(): Promise<PhaseOutcome[]> {
   });
 
   transformedData?.sort((a, b) => a.phase?.phaseorder - b.phase?.phaseorder);
-
-  console.log(transformedData);
   return (transformedData as PhaseOutcome[]) || [];
 }

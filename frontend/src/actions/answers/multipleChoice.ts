@@ -1,37 +1,40 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/multipleChoice");
 
 export async function saveMultipleChoiceAnswer(
   answertext: string,
   questionid: string,
 ) {
   if (answertext == "") {
-    await deleteAnswer(questionid, "multiple_choice_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertMultipleChoiceAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("multiple_choice_answer_table")
         .insert({
           answerid: answerid,
           selectedchoice: answertext,
         });
-      if (insertMultipleChoiceAnswerResponse) {
-        console.log(insertMultipleChoiceAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateMultipleChoiceAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("multiple_choice_answer_table")
         .update({
           selectedchoice: answertext,
         })
         .eq("answerid", answerid);
-      if (updateMultipleChoiceAnswerResponse) {
-        console.log(updateMultipleChoiceAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
@@ -63,10 +66,10 @@ export async function fetchMultipleChoiceAnswer(
       .single<MultipleChoiceAnswerResponse>();
   if (multipleChoiceError) {
     if (multipleChoiceError.code == "PGRST116") {
+      log.debug("No MultipleChoice Entries");
       return initialstate;
     }
-    console.log("multipleChoiceError:");
-    console.log(multipleChoiceError);
+    log.error(JSON.stringify(multipleChoiceError));
   }
   return multipleChoiceData || initialstate;
 }

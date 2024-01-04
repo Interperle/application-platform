@@ -5,6 +5,7 @@ import {
   fetchDropdownAnswer,
   saveDropdownAnswer,
 } from "@/actions/answers/dropdown";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
@@ -19,6 +20,8 @@ export interface DropdownQuestionTypeProps extends DefaultQuestionTypeProps {
   maxanswers: number;
   userinput: boolean;
 }
+
+const log = new Logger("DropdownQuestionType");
 
 const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   phasename,
@@ -50,7 +53,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
         const savedAnswer = await fetchDropdownAnswer(questionid);
         updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid);
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }

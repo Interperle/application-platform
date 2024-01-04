@@ -98,7 +98,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
                 <UserSpecificRoleDropdown
                   user={user}
                   onRoleChange={(newRole: UserRole) =>
-                    handleRoleChange(user, newRole).catch(console.error)
+                    handleRoleChange(user, newRole)
                   }
                 />
               </td>

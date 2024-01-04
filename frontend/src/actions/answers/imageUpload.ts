@@ -1,9 +1,12 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { storageSaveName } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, getCurrentUser, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/imageUpload");
 
 export async function saveImageUploadAnswer(
   questionid: string,
@@ -18,46 +21,51 @@ export async function saveImageUploadAnswer(
   if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertImageUploadAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("image_upload_answer_table")
         .insert({
           answerid: answerid,
           imagename: uploadFile.name,
         });
-      if (insertImageUploadAnswerResponse) {
-        console.log("Inserted Image");
-        console.log(insertImageUploadAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
-      const createBucketEntry = await supabase.storage
+      const { error: bucketError } = await supabase.storage
         .from(bucket_name)
         .upload(
           `${(await supabase.auth.getUser()).data.user!.id}_${uploadFile.name}`,
           uploadFile,
         );
-      console.log(createBucketEntry);
+      if (bucketError) {
+        log.error(JSON.stringify(bucketError));
+      }
     } else if (reqtype == "updated") {
-      const getOldImageUploadAnswerResponse = await supabase
+      const { data: oldImageData, error: oldImageError } = await supabase
         .from("image_upload_answer_table")
         .select("imagename")
         .eq("answerid", answerid)
         .single();
-      const updateImageUploadAnswerResponse = await supabase
+      if (oldImageError) {
+        log.error(JSON.stringify(oldImageError));
+      }
+      const { error: updatedImageError } = await supabase
         .from("image_upload_answer_table")
         .update({ imagename: uploadFile.name })
         .eq("answerid", answerid);
-      if (updateImageUploadAnswerResponse) {
-        console.log("Updated Image");
-        console.log(updateImageUploadAnswerResponse);
+      if (updatedImageError) {
+        log.error(JSON.stringify(updatedImageError));
       }
-      const createBucketEntry = await supabase.storage
+      const { error: updatedBucketError } = await supabase.storage
         .from(bucket_name)
         .update(
           `${
             (await supabase.auth.getUser()).data.user!.id
-          }_${getOldImageUploadAnswerResponse.data?.imagename}`,
+          }_${oldImageData?.imagename}`,
           uploadFile,
         );
-      console.log(createBucketEntry);
+      if (updatedBucketError) {
+        log.error(JSON.stringify(updatedBucketError));
+      }
     }
   }
 }
@@ -71,12 +79,17 @@ export async function deleteImageUploadAnswer(questionid: string) {
       user_id: user.id,
     })
     .single<ImageAnswerResponse>();
+  if (imageUploadError) {
+    log.error(JSON.stringify(imageUploadError));
+  }
   const bucket_name = "image-" + questionid;
-  const { data: imageDeleteData, error: imageDeleteError } =
-    await supabase.storage
-      .from(bucket_name)
-      .remove([`${user.id}_${imageUploadData?.imagename}`]);
-  await deleteAnswer(questionid, "image_upload_answer_table");
+  const { error: imageDeleteError } = await supabase.storage
+    .from(bucket_name)
+    .remove([`${user.id}_${imageUploadData?.imagename}`]);
+  if (imageDeleteError) {
+    log.error(JSON.stringify(imageDeleteError));
+  }
+  await deleteAnswer(questionid);
 }
 
 interface ImageAnswerResponse {
@@ -87,6 +100,9 @@ interface ImageAnswerResponse {
 export async function fetchImageUploadAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) {
+    log.error(JSON.stringify(userError));
+  }
   const user_id = userData.user!.id;
 
   const { data: imageUploadData, error: imageUploadError } = await supabase
@@ -98,10 +114,10 @@ export async function fetchImageUploadAnswer(questionid: string) {
 
   if (imageUploadError) {
     if (imageUploadError.code == "PGRST116") {
+      log.debug("No Image Entries");
       return null;
     }
-    console.log("imageUploadError:");
-    console.log(imageUploadError);
+    log.error(JSON.stringify(imageUploadError));
     return null;
   }
   return { ...imageUploadData, userid: user_id };

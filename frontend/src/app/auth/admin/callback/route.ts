@@ -1,23 +1,26 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
+import Logger from "@/logger/logger";
 import { getURL } from "@/utils/helpers";
 import {
   initSupabaseRouteNew,
   supabaseServiceRole,
 } from "@/utils/supabaseServerClients";
 
+const log = new Logger("auth/admin/callback/route");
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
 
-  var subdomain = "";
+  let subdomain = "";
   if (code) {
     const supabase = initSupabaseRouteNew();
     try {
       await supabase.auth.exchangeCodeForSession(code);
     } catch (error) {
-      console.log(error);
+      log.error(JSON.stringify(error));
       return NextResponse.redirect(`${getURL()}`);
     }
     const {
@@ -31,22 +34,19 @@ export async function GET(req: NextRequest) {
 
     if (roleError) {
       if (roleError.code == "PGRST116") {
-        console.log("No Role yet");
+        log.debug("User has no Role yet");
       } else {
-        console.log("RoleError:");
-        console.log(roleError);
+        log.error(JSON.stringify(roleError));
       }
     }
     if (!roleData) {
-      const { data: userProfileData, error: userProfileError } =
-        await supabaseServiceRole
-          .from("user_profiles_table")
-          .insert({ userid: user!.id, userrole: 2, isactive: true });
+      const { error: userProfileError } = await supabaseServiceRole
+        .from("user_profiles_table")
+        .insert({ userid: user!.id, userrole: 2, isactive: true });
       if (userProfileError) {
-        console.log("userProfileError");
-        console.log(userProfileError);
+        log.error(JSON.stringify(userProfileError));
       } else {
-        console.log("Created Reviewer Role...");
+        log.debug("Created Reviewer Role");
       }
       subdomain = "review";
     } else if (!roleData.isactive) {
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
       subdomain = "admin";
     }
   }
-  console.log(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`);
+  log.debug(`Auth/Admin/Callback Redirect To: ${getURL()}${subdomain}`);
 
   return NextResponse.redirect(`${getURL()}${subdomain}`);
 }

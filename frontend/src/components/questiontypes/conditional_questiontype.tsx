@@ -10,6 +10,7 @@ import {
   fetchConditionalAnswer,
   saveConditionalAnswer,
 } from "@/actions/answers/conditional";
+import Logger from "@/logger/logger";
 import { AnswerState, UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { numberToLetter } from "@/utils/helpers";
@@ -34,6 +35,8 @@ export interface ConditionalQuestionTypeProps extends DefaultQuestionTypeProps {
   choices: conditionalChoicesProps[];
   phaseAnswers: ExtendedAnswerType[];
 }
+
+const log = new Logger("ConditionalQuestionType");
 
 const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
   phasename,
@@ -75,7 +78,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
         const savedAnswer = await fetchConditionalAnswer(questionid);
         updateAnswerState(savedAnswer.selectedchoice, savedAnswer.answerid);
       } catch (error) {
-        console.log("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }
@@ -204,7 +207,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
                   condQuestion.questiontype,
                 );
                 if (!QuestionComponent) {
-                  console.log(
+                  log.error(
                     `Unknown question type: ${condQuestion.questiontype}`,
                   );
                   return null;

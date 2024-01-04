@@ -3,13 +3,13 @@
 import React, { useEffect } from "react";
 
 import { ExtendedAnswerType } from "@/actions/answers/answers";
+import { PhaseOutcome } from "@/actions/phase";
 import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
 import { PhaseData } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
 
 import PhaseOverview from "./phaseOverview";
 import { Question } from "./questions";
-import { PhaseOutcome } from "@/actions/phase";
 
 const ApplicationOverview: React.FC<{
   phasesData: PhaseData[];
@@ -42,7 +42,7 @@ const ApplicationOverview: React.FC<{
       }),
     );
   };
-  let failedPhase:boolean = false;
+  let failedPhase: boolean = false;
   return (
     <>
       {phasesData
@@ -52,9 +52,11 @@ const ApplicationOverview: React.FC<{
           const mandatoryPhaseQuestionIds = phaseQuestions
             .filter((q) => q.mandatory)
             .map((q) => q.questionid);
-          const phaseOutcome = phasesOutcome.find((thisPhase) => thisPhase.phase.phaseid == phase.phaseid)
-          if (phaseOutcome !== undefined && !phaseOutcome.outcome){
-            failedPhase = true
+          const phaseOutcome = phasesOutcome.find(
+            (thisPhase) => thisPhase.phase.phaseid == phase.phaseid,
+          );
+          if (phaseOutcome !== undefined && !phaseOutcome.outcome) {
+            failedPhase = true;
           }
           return (
             <PhaseOverview

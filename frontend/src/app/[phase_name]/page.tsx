@@ -26,16 +26,18 @@ export default async function Page({
   const phaseName = params.phase_name;
   const phaseData = await cached_fetch_phase_by_name(phaseName);
   const phasesOutcome = await fetch_phases_status();
-  let failedPhase: boolean = false
+  let failedPhase: boolean = false;
   phasesOutcome.forEach((thisPhase) => {
-    if (thisPhase.phase.phaseorder < phaseData.phaseorder){
-      if (!thisPhase.outcome){
-        failedPhase = true
+    if (thisPhase.phase.phaseorder < phaseData.phaseorder) {
+      if (!thisPhase.outcome) {
+        failedPhase = true;
       }
     }
-  })
-  const phaseOutcome = phasesOutcome.find((thisPhase) => thisPhase.phase.phaseid == phaseData.phaseid)
-  if (phaseOutcome == undefined && failedPhase){
+  });
+  const phaseOutcome = phasesOutcome.find(
+    (thisPhase) => thisPhase.phase.phaseid == phaseData.phaseid,
+  );
+  if (phaseOutcome == undefined && failedPhase) {
     return redirect("/", RedirectType.replace);
   }
   const currentDate = new Date(createCurrentTimestamp());

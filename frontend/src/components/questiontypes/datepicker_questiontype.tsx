@@ -5,11 +5,14 @@ import {
   fetchDatePickerAnswer,
   saveDatePickerAnswer,
 } from "@/actions/answers/datePicker";
+import Logger from "@/logger/logger";
 import { UpdateAnswer } from "@/store/slices/answerSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
 import { AwaitingChild } from "../layout/awaiting";
+
+const log = new Logger("DatePickerQuestionType");
 
 export interface DatePickerQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
@@ -45,7 +48,7 @@ const DatePickerQuestionType: React.FC<DatePickerQuestionTypeProps> = ({
         const savedAnswer = await fetchDatePickerAnswer(questionid);
         updateAnswerState(savedAnswer.pickeddate, savedAnswer.answerid);
       } catch (error) {
-        console.log("Failed to fetch answer");
+        log.error(JSON.stringify(error));
       } finally {
         setIsLoading(false);
       }

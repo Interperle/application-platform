@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
+import { PhaseOutcome } from "@/actions/phase";
 import {
   calcPhaseStatus,
   transformReadableDate,
@@ -18,7 +19,6 @@ import {
 
 import { ProgressBar } from "./progressbar";
 import { Question } from "./questions";
-import { PhaseOutcome } from "@/actions/phase";
 
 const PhaseOverview: React.FC<{
   phaseId: string;
@@ -48,9 +48,9 @@ const PhaseOverview: React.FC<{
     router.push(`/${phaseName}`);
   };
   const phaseStatus = calcPhaseStatus(phaseStart, phaseEnd);
-  const previousFailed = (phaseOutcome == undefined && failedPhase)
+  const previousFailed = phaseOutcome == undefined && failedPhase;
   const statusIcon = (previousFailed: boolean = false) => {
-    switch (previousFailed ? "STOP": phaseStatus) {
+    switch (previousFailed ? "STOP" : phaseStatus) {
       case "STOP":
         return <NoSymbolIcon className="h-6 w-6 text-secondary" />;
       case "UPCOMING":
@@ -91,12 +91,11 @@ const PhaseOverview: React.FC<{
               phaseQuestions={phaseQuestions}
               endDate={phaseEnd}
             />
-          ) : (phaseStatus == "UPCOMING") ? (
+          ) : phaseStatus == "UPCOMING" ? (
             `Phase startet am ${transformReadableDate(phaseStart)}`
-          ) : (previousFailed) && (
-            'Vorherige Phase leider nicht bestanden!'
-          )
-        }
+          ) : (
+            previousFailed && "Vorherige Phase leider nicht bestanden!"
+          )}
         </div>
         {previousFailed ? (
           <button

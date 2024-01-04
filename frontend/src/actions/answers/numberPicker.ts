@@ -1,37 +1,39 @@
 "use server";
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/number");
 
 export async function saveNumberPickerAnswer(
   pickednumber: string,
   questionid: string,
 ) {
-  console.log(pickednumber);
   if (pickednumber == "") {
-    await deleteAnswer(questionid, "number_picker_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertNumberPickerAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("number_picker_answer_table")
         .insert({
           answerid: answerid,
           pickednumber: Number(pickednumber),
         });
-      if (insertNumberPickerAnswerResponse) {
-        console.log(insertNumberPickerAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateNumberPickerAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("number_picker_answer_table")
         .update({
           pickednumber: pickednumber,
         })
         .eq("answerid", answerid);
-      if (updateNumberPickerAnswerResponse) {
-        console.log(updateNumberPickerAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
@@ -62,10 +64,10 @@ export async function fetchNumberPickerAnswer(
     .single<NumberPickerAnswerResponse>();
   if (numberPickerError) {
     if (numberPickerError.code == "PGRST116") {
+      log.debug("No Number Entries");
       return initialstate;
     }
-    console.log("numberPickerError:");
-    console.log(numberPickerError);
+    log.error(JSON.stringify(numberPickerError));
   }
   return numberPickerData || initialstate;
 }

@@ -10,7 +10,7 @@ import "github-markdown-css/github-markdown-light.css";
 
 export default async function Home() {
   const log = new Logger("Overview Page");
-  log.info("Render Overview Page")
+  log.debug("Render Overview Page");
   const contentHtml = await getOverviewPageText();
   const phasesData = await fetch_all_phases();
   const phasesOutcome = await fetch_phases_status();

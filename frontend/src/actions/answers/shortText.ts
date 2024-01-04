@@ -1,37 +1,40 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
 
 import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/shortText");
 
 export async function saveShortTextAnswer(
   answertext: string,
   questionid: string,
 ) {
   if (answertext == "") {
-    await deleteAnswer(questionid, "short_text_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertShortTextAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("short_text_answer_table")
         .insert({
           answerid: answerid,
           answertext: answertext,
         });
-      if (insertShortTextAnswerResponse) {
-        console.log(insertShortTextAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateShortTextAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("short_text_answer_table")
         .update({
           answertext: answertext,
         })
         .eq("answerid", answerid);
-      if (updateShortTextAnswerResponse) {
-        console.log(updateShortTextAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
@@ -62,10 +65,10 @@ export async function fetchShortTextAnswer(
     .single<ShortTextAnswerResponse>();
   if (shortTextError) {
     if (shortTextError.code == "PGRST116") {
+      log.debug("No ShortText Entries");
       return initialstate;
     }
-    console.log("shortTextError:");
-    console.log(shortTextError);
+    log.error(JSON.stringify(shortTextError));
   }
   return shortTextData || initialstate;
 }

@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import Logger from "@/logger/logger";
 import { getURL } from "@/utils/helpers";
 import { initSupabaseRouteNew } from "@/utils/supabaseServerClients";
 
+const log = new Logger("auth/admin/callback/route");
+
 export async function GET(req: NextRequest) {
-  let options: { redirectTo: string; scopes?: string } = {
+  const options: { redirectTo: string; scopes?: string } = {
     redirectTo: `${getURL()}/auth/admin/callback`,
   };
 
@@ -14,7 +17,10 @@ export async function GET(req: NextRequest) {
     options,
   });
 
-  if (error) throw error;
+  if (error) {
+    log.error(JSON.stringify(error));
+    throw error;
+  }
 
   return NextResponse.redirect(data.url);
 }
