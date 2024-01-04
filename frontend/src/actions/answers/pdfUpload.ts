@@ -17,7 +17,7 @@ export async function savePdfUploadAnswer(
     type: file.type,
     lastModified: file.lastModified,
   });
-  const bucket_name = "pdf-" + questionid;
+  const bucket_name = `pdf-${questionid}`;
   if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
@@ -82,7 +82,7 @@ export async function deletePdfUploadAnswer(questionid: string) {
   if (pdfUploadError) {
     log.error(JSON.stringify(pdfUploadError));
   }
-  const bucket_name = "pdf-" + questionid;
+  const bucket_name = `pdf-${questionid}`;
   const { error: pdfDeleteError } = await supabase.storage
     .from(bucket_name)
     .remove([`${user.id}_${pdfUploadData?.pdfname}`]);

@@ -148,7 +148,7 @@ export async function signInUser(prevState: any, formData: FormData) {
         return { message: "Deine Login Daten sind ungültig!" };
       }
       log.error(JSON.stringify(userError));
-      return { message: "Fehler: " + userError.message };
+      return { message: `Fehler: ${userError.message}` };
     }
     const { data: profileData, error: profileError } = await supabase
       .from("user_profiles_table")
@@ -157,7 +157,7 @@ export async function signInUser(prevState: any, formData: FormData) {
       .single();
     if (profileError) {
       log.error(JSON.stringify(profileError));
-      return { message: "Fehler: " + profileError.message };
+      return { message: `Fehler: ${profileError.message}` };
     }
     if (profileData && !profileData.isactive) {
       log.error(`Deactivated User (${userData.user.email}) tried to login`);

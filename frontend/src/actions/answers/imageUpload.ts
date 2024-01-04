@@ -17,7 +17,7 @@ export async function saveImageUploadAnswer(
     type: file.type,
     lastModified: file.lastModified,
   });
-  const bucket_name = "image-" + questionid;
+  const bucket_name = `image-${questionid}`;
   if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
@@ -82,7 +82,7 @@ export async function deleteImageUploadAnswer(questionid: string) {
   if (imageUploadError) {
     log.error(JSON.stringify(imageUploadError));
   }
-  const bucket_name = "image-" + questionid;
+  const bucket_name = `image-${questionid}`;
   const { error: imageDeleteError } = await supabase.storage
     .from(bucket_name)
     .remove([`${user.id}_${imageUploadData?.imagename}`]);

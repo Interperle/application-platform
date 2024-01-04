@@ -98,13 +98,13 @@ const MultipleChoiceQuestionType: React.FC<MultipleChoiceQuestionTypeProps> = ({
             .filter((selected) => selected !== choice.choiceid)
             .join(", "),
         );
-        alert("Du kannst maximal " + maxanswers + " auswählen!");
+        alert(`Du kannst maximal ${maxanswers} auswählen!`);
         return;
       } /*else if (selectedChoices.length > 0 && selectedChoices.length - 1 < minanswers && mandatory) {
         setSelectedChoices(
           selectedChoices.filter((selected) => selected !== choice.choiceid),
         );
-        alert("Du musst mindestens " + minanswers + " auswählen!");
+        alert(`Du musst mindestens {minanswers} auswählen!`);
         return;
       }*/
     }

@@ -98,11 +98,7 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
     } else {
       updateAnswerState(selectedOptions.join(", "));
       alert(
-        "Du musst mindestens " +
-          minanswers +
-          " und kannst maximal " +
-          maxanswers +
-          " Antworten auswählen!",
+        `Du musst mindestens ${minanswers} und kannst maximal ${maxanswers} Antworten auswählen!`,
       );
     }
   };

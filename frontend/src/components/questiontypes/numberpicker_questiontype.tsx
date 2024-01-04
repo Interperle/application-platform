@@ -93,13 +93,7 @@ const NumberPickerQuestionType: React.FC<NumberPickerQuestionTypeProps> = ({
       updateAnswerState(event.target.value);
     } else {
       alert(
-        "Deine Zahl " +
-          inputNumber +
-          " muss zwischen " +
-          minnumber +
-          " und " +
-          maxnumber +
-          " liegen.",
+        `Deine Zahl ${inputNumber} muss zwischen ${minnumber} und ${maxnumber} liegen.`,
       );
     }
   };

@@ -102,12 +102,7 @@ const DatetimePickerQuestionType: React.FC<DatetimePickerQuestionTypeProps> = ({
       updateAnswerState("");
       await saveDateTimePickerAnswer("", questionid);
       alert(
-        "Dein ausgewählter Zeitpunkt " +
-          selectedDate.toDateString() +
-          " liegt nicht zwischen " +
-          mindatetime +
-          " und " +
-          maxdatetime,
+        `Dein ausgewählter Zeitpunkt ${selectedDate.toDateString()} liegt nicht zwischen ${mindatetime} und ${maxdatetime}`,
       );
     }
   };

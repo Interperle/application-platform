@@ -17,7 +17,7 @@ export async function saveVideoUploadAnswer(
     type: file.type,
     lastModified: file.lastModified,
   });
-  const bucket_name = "video-" + questionid;
+  const bucket_name = `video-${questionid}`;
   if (uploadFile) {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
@@ -82,7 +82,7 @@ export async function deleteVideoUploadAnswer(questionid: string) {
   if (videoUploadError) {
     log.error(JSON.stringify(videoUploadError));
   }
-  const bucket_name = "video-" + questionid;
+  const bucket_name = `video-${questionid}`;
   const { error: videoDeleteError } = await supabase.storage
     .from(bucket_name)
     .remove([`${user.id}_${videoUploadData?.videoname}`]);
