@@ -69,26 +69,33 @@ class Logger {
     const details = this.getDetails(msg, userId);
     if (getURL() == "http://localhost:3000/"){
       console.info(details);
+    } else {
+      this.logger.info(details);
     }
-    this.logger.info(details);
   }
 
   warn(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
     console.warn(JSON.stringify(details))
-    this.logger.warn(details);
+    if (getURL() != "http://localhost:3000/"){
+      this.logger.warn(details);
+    }
   }
 
   error(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
     console.error(JSON.stringify(details))
-    this.logger.error(details);
+    if (getURL() != "http://localhost:3000/"){
+      this.logger.error(details);
+    }
   }
 
   fatal(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
     console.error(JSON.stringify(details))
-    this.logger.fatal(details);
+    if (getURL() != "http://localhost:3000/"){
+      this.logger.fatal(details);
+    }
   }
 }
 
