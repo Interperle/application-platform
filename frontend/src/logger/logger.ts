@@ -1,3 +1,4 @@
+import { getURL } from "@/utils/helpers";
 import pino from "pino";
 import { createPinoBrowserSend, createWriteStream } from "pino-logflare";
 
@@ -54,32 +55,39 @@ class Logger {
       msg: msg,
     };
     if (userId) details.userId = userId;
-
     return details;
   }
 
   debug(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    console.debug(details);
+    if (getURL() == "http://localhost:3000/"){
+      console.debug(details);
+    }
   }
 
   info(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
+    if (getURL() == "http://localhost:3000/"){
+      console.info(details);
+    }
     this.logger.info(details);
   }
 
   warn(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
+    console.warn(JSON.stringify(details))
     this.logger.warn(details);
   }
 
   error(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
+    console.error(JSON.stringify(details))
     this.logger.error(details);
   }
 
   fatal(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
+    console.error(JSON.stringify(details))
     this.logger.fatal(details);
   }
 }
