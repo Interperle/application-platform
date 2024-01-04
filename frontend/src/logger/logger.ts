@@ -11,6 +11,7 @@ interface LogDetails {
 class Logger {
   module: string;
   logger: pino.Logger;
+  is_locally: boolean;
 
   constructor(module: string) {
     const apiKey = process.env.NEXT_PUBLIC_LOGFLARE_API_TOKEN;
@@ -47,6 +48,7 @@ class Logger {
       },
       stream,
     );
+    this.is_locally = (getURL() == "http://localhost:3000/")
   }
 
   private getDetails(msg: string, userId?: string) {
@@ -60,14 +62,14 @@ class Logger {
 
   debug(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    if (getURL() == "http://localhost:3000/"){
+    if (this.is_locally){
       console.debug(details);
     }
   }
 
   info(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    if (getURL() == "http://localhost:3000/"){
+    if (this.is_locally){
       console.info(details);
     } else {
       this.logger.info(details);
@@ -85,7 +87,7 @@ class Logger {
   error(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
     console.error(JSON.stringify(details))
-    if (getURL() != "http://localhost:3000/"){
+    if (!this.is_locally){
       this.logger.error(details);
     }
   }
@@ -93,7 +95,7 @@ class Logger {
   fatal(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
     console.error(JSON.stringify(details))
-    if (getURL() != "http://localhost:3000/"){
+    if (!this.is_locally){
       this.logger.fatal(details);
     }
   }
