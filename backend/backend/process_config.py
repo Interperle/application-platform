@@ -1,6 +1,7 @@
 from datetime import datetime
+from backend.utils.utils_datetime import convert_to_timezone
 from backend.logger import Logger
-from backend.utils.consts import DATETIME_FORMAT, REGEX_TO_DESCRIPTION
+from backend.utils.consts import REGEX_TO_DESCRIPTION
 from backend.utils.utils_file import read_yaml_file
 from backend.utils.utils_supabase import init_supabase
 from backend.enums.question_type import QuestionType
@@ -107,8 +108,8 @@ def create_data_phase_table(phasename: str, phaselabel: str, ordernumber: int, s
         'phasename': phasename,
         'phaselabel': phaselabel,
         'phaseorder': ordernumber,
-        'startdate': startdate.strftime(DATETIME_FORMAT),
-        'enddate': enddate.strftime(DATETIME_FORMAT),
+        'startdate': convert_to_timezone(startdate),
+        'enddate': convert_to_timezone(enddate),
         'sectionsenabled': sectionsenabled,
     }
 
