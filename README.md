@@ -157,3 +157,58 @@ log.debug("MSG", "USER_ID");
 
 Marib: Erstellt Github Issues
 Gereon: Baut Worker, kümmert sich um Supabase, Docker Compose
+
+
+## Frontend Deployment
+1. Prerequisites:
+- Ubuntu Server
+- Docker Compose
+- 2 URLs (one for Frontend and one for your proxy)
+
+2. Set URLs to IP Adresses:
+- Frontend URL (e.g. bewerbung.generation-d.org)
+- Proxy/Nginx URL (e.g. bewerbung-proxy.generation-d.org)
+- Set A -> IPv4 and AAAA -> IPv6
+
+3. Create and copy files from repository into server:
+- custom-nginx.conf
+- docker-compose.yml
+
+4. Login into Github Container Registry:
+https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+
+5. Call docker compose up -d
+
+6. Setup Nginx
+- Go to YOUR_IP:81
+- Default Credentials: 
+    - email: admin@example.com
+    - password: changeme
+- Update Credentials
+- Check on a page, like https://dnschecker.org/ if your A and AAAA entries are already set for both URLs
+- Go to Dashboard -> Proxy Hosts
+- Add first Proxy Host:
+  - Details:
+    - Domain Names=YOUR_PROXY_DOMAIN (e.g. `bewerbung-proxy.generation-d.org`, no protocoll/port)
+    - Forward Hostname/IP=`127.0.0.1`
+    - Forward Port=`81`
+    - Block Common Exploits: On
+  - SSL:
+    - Request a new SSL Certificate
+    - Force SSL: On
+    - HTTP/2 Support: On
+    - HSTS Enabled: On
+    - Agree to Terms of Service
+- Add Second Proxy Host:
+  - Details:
+    - Domain Names=YOUR_FRONTEND_DOMAIN (e.g. `bewerbung.generation-d.org`, no protocoll/port)
+    - Forward Hostname/IP=`frontend`
+    - Forward Port=`3000`
+    - Block Common Exploits: On
+    - Websockets Support: On
+  - SSL:
+    - Request a new SSL Certificate
+    - Force SSL: On
+    - HTTP/2 Support: On
+    - HSTS Enabled: On
+    - Agree to Terms of Service
