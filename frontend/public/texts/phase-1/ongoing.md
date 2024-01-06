@@ -7,7 +7,7 @@ Wir freuen uns sehr, dass ihr bei Generation-D dabei seid!
 Aktuell läuft die **erste Bewerbungsphase**, in welcher es darum geht einige Fragen zu eurem Start-up/Projekt zu beantworten. Die erste Bewerbungsphase ist zweigeteilt:
 
 - Im **ersten** Teil dieser Bewerbung beantwortet ihr die bewertungsrelevanten Fragen zu eurer Idee und dem/den bearbeiteten SDG(s).
-- Im **zweiten** Teil geht es um die nicht in die Bewertung einfließenden statistischen Details und euren Kontakt!
+- Im **zweiten** Teil geht es um die nicht in die Bewertung einfließenden statistischen Details und euren Kontakt.
 
 ## Hinweise zur Bewerbung
 

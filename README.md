@@ -161,8 +161,7 @@ Gereon: Baut Worker, kümmert sich um Supabase, Docker Compose
 
 ## Frontend Deployment
 1. Prerequisites:
-- Ubuntu Server
-- Docker Compose
+- Ubuntu Server with Docker Image and Docker Compose
 - 2 URLs (one for Frontend and one for your proxy)
 
 2. Set URLs to IP Adresses:
@@ -185,7 +184,7 @@ https://docs.github.com/en/packages/working-with-a-github-packages-registry/work
     - email: admin@example.com
     - password: changeme
 - Update Credentials
-- Check on a page, like https://dnschecker.org/ if your A and AAAA entries are already set for both URLs
+- Check on a page, like https://dnschecker.org/ if your A and AAAA entries are already set for both URLs, if not wait, else proceed
 - Go to Dashboard -> Proxy Hosts
 - Add first Proxy Host:
   - Details:
