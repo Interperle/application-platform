@@ -2,7 +2,7 @@
 
 Wir freuen uns sehr, dass Ihr Euch bei Generation-D bewerben möchtet.
 
-Aktuell läuft die erste Bewerbungsphase, in welcher es darum geht einige Fragen zu Euerem Start-up/Projekt zu beantworten und zu jedem Teammitglied einen Lebenslauf hochzuladen.
+Aktuell läuft die erste Bewerbungsphase, in welcher es darum geht einige Fragen zu Eurem Start-up/Projekt zu beantworten und zu jedem Teammitglied einen Lebenslauf hochzuladen.
 
 **Seid Euch bewusst, dass Generation-D keine Bewerbungen akzeptieren kann…**
 
