@@ -15,7 +15,7 @@ questions:
       - name: Allgemein
         description: Wir benötigen diese Informationen um ABC auszuwerten
       - name: Euer Team
-        description: Hier fragen wir Informationen zu euerer Teamstruktur ab
+        description: Hier fragen wir Informationen zu eurer Teamstruktur ab
     questions:
       - questionType: shortText
         order: 1

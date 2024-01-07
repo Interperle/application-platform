@@ -129,7 +129,7 @@ const ConditionalQuestionType: React.FC<ConditionalQuestionTypeProps> = ({
     setChoiceHelper(choice.choiceid);
 
     setMessage(
-      `Es sind ${dependingQuestions[answer].length} Unterfragen sind von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
+      `Es sind ${dependingQuestions[answer].length} Unterfragen von dieser Auswahl abhängig. Mit dem Auswählen einer anderen Option werden deine Antworten auf diese Unterfrage(-n) gelöscht. Trotzdem fortfahren?`,
     );
     setPopupOpen(true);
   };
