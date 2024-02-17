@@ -185,3 +185,20 @@ def create_file_storage(filetype: str, questionid: str, fileSizeLimitInMB: int, 
         "allowed_mime_types": allowedMimeTypes
     })
     log.info(str(response))
+
+
+def add_phase_questions():
+    config_data = read_yaml_file('apl_config_gend.yml')
+    run_structure_checks(config_data)
+
+    supabase = init_supabase()
+
+    for phase_counter, (phase_name, phase) in enumerate(config_data['questions'].items()):
+        if phase_counter != 1:
+            continue
+        phase_sections = {}
+        phase_id = "3b5b420c-8ede-49f0-b1cd-4f3fd5282cc2"
+
+        for question in phase['questions']:
+            process_question(question, phase_id, phase_sections, supabase)
+    log.info(f'Processed Phase {phase} successfully')

@@ -214,7 +214,9 @@ const PDFUploadQuestionType: React.FC<PDFUploadQuestionTypeProps> = ({
                     <p className="font-semibold">Zum Uploaden klicken</p> oder
                     per Drag and Drop
                   </p>
-                  <p className="text-xs text-secondary">PDF (MAX. 2MB)</p>
+                  <p className="text-xs text-secondary">
+                    PDF (MAX. {maxfilesizeinmb}MB)
+                  </p>
                 </div>
                 <input
                   type="file"
