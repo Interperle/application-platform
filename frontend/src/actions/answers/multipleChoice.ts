@@ -1,54 +1,74 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import {
-  deleteAnswer,
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
-  saveAnswer,
-} from "./answers";
+
+import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/multipleChoice");
 
 export async function saveMultipleChoiceAnswer(
   answertext: string,
   questionid: string,
 ) {
   if (answertext == "") {
-    await deleteAnswer(questionid, "multiple_choice_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertMultipleChoiceAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("multiple_choice_answer_table")
         .insert({
           answerid: answerid,
           selectedchoice: answertext,
         });
-      if (insertMultipleChoiceAnswerResponse) {
-        console.log(insertMultipleChoiceAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateMultipleChoiceAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("multiple_choice_answer_table")
         .update({
           selectedchoice: answertext,
         })
         .eq("answerid", answerid);
-      if (updateMultipleChoiceAnswerResponse) {
-        console.log(updateMultipleChoiceAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
 }
 
-export async function fetchMultipleChoiceAnswer(answerid: string) {
+interface MultipleChoiceAnswerResponse {
+  answerid: string;
+  selectedchoice: string;
+}
+
+const initialstate: MultipleChoiceAnswerResponse = {
+  answerid: "",
+  selectedchoice: "",
+};
+
+export async function fetchMultipleChoiceAnswer(
+  questionid: string,
+): Promise<MultipleChoiceAnswerResponse> {
   const supabase = initSupabaseActions();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data: multipleChoiceData, error: multipleChoiceError } =
     await supabase
-      .from("multiple_choice_answer_table")
-      .select("selectedchoice")
-      .eq("answerid", answerid)
-      .single();
-  return multipleChoiceData!.selectedchoice;
+      .rpc("fetch_multiple_choice_answer_table", {
+        question_id: questionid,
+        user_id: user?.id,
+      })
+      .single<MultipleChoiceAnswerResponse>();
+  if (multipleChoiceError) {
+    if (multipleChoiceError.code == "PGRST116") {
+      return initialstate;
+    }
+    log.error(JSON.stringify(multipleChoiceError));
+  }
+  return multipleChoiceData || initialstate;
 }

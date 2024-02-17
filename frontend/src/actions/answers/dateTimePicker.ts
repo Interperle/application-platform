@@ -1,54 +1,71 @@
 "use server";
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import {
-  deleteAnswer,
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
-  saveAnswer,
-} from "./answers";
+
+import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/dateTimePicker");
 
 export async function saveDateTimePickerAnswer(
   pickeddatetime: string,
   questionid: string,
 ) {
   if (pickeddatetime == "" || pickeddatetime == "Invalid date") {
-    await deleteAnswer(questionid, "datetime_picker_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-    console.log(answerid);
     if (reqtype == "created") {
-      const insertDateTimePickerAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("datetime_picker_answer_table")
         .insert({
           answerid: answerid,
           pickeddatetime: new Date(pickeddatetime),
         });
-      if (insertDateTimePickerAnswerResponse) {
-        console.log(insertDateTimePickerAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "update") {
-      const updateDateTimePickerAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("datetime_picker_answer_table")
         .update({
           pickeddatetime: new Date(pickeddatetime),
         })
         .eq("answerid", answerid);
-      if (updateDateTimePickerAnswerResponse) {
-        console.log(updateDateTimePickerAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
 }
 
-export async function fetchDateTimePickerAnswer(answerid: string) {
+interface DateTimeAnswerResponse {
+  answerid: string;
+  pickeddatetime: string;
+}
+
+const initialstate: DateTimeAnswerResponse = {
+  answerid: "",
+  pickeddatetime: "",
+};
+
+export async function fetchDateTimePickerAnswer(questionid: string) {
   const supabase = initSupabaseActions();
-  const { data: datetimePickerData, error: datetimePickerError } =
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: dateTimePickerData, error: dateTimePickerError } =
     await supabase
-      .from("datetime_picker_answer_table")
-      .select("pickeddatetime")
-      .eq("answerid", answerid)
-      .single();
-  return datetimePickerData!.pickeddatetime;
+      .rpc("fetch_datetime_picker_answer_table", {
+        question_id: questionid,
+        user_id: user?.id,
+      })
+      .single<DateTimeAnswerResponse>();
+  if (dateTimePickerError) {
+    if (dateTimePickerError.code == "PGRST116") {
+      return initialstate;
+    }
+    log.error(JSON.stringify(dateTimePickerError));
+  }
+  return dateTimePickerData || initialstate;
 }

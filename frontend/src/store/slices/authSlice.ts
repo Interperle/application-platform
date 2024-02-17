@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { RESET_STATE } from "../actionTypes";
+
 type InitialState = {
   value: AuthState;
 };
@@ -32,6 +34,9 @@ export const auth = createSlice({
         },
       };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(RESET_STATE, () => initialState);
   },
 });
 

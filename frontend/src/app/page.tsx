@@ -1,50 +1,42 @@
+import { fetchAllAnswersOfApplication } from "@/actions/answers/answers";
+import { fetch_all_phases, fetch_phases_status } from "@/actions/phase";
+import ApplicationOverview from "@/components/applicationOverview";
+import Apl_Header from "@/components/layout/header";
+import { Question } from "@/components/questions";
 import Logger from "@/logger/logger";
-import Apl_Header from "@/components/header";
+import { cached_fetch_phase_questions } from "@/utils/cached";
 import getOverviewPageText from "@/utils/getMarkdownText";
-import {
-  fetch_all_phases,
-  fetch_all_questions,
-  fetch_answer_table,
-} from "@/actions/phase";
-import PhaseOverview from "@/components/phaseOverview";
+import "github-markdown-css/github-markdown-light.css";
 
 export default async function Home() {
   const log = new Logger("Overview Page");
+  log.debug("Render Overview Page");
   const contentHtml = await getOverviewPageText();
   const phasesData = await fetch_all_phases();
-  const phase_questions = await fetch_all_questions();
-
-  const mandatoryQuestions = phase_questions.filter((q) => q.mandatory);
+  const phasesOutcome = await fetch_phases_status();
+  const phasesQuestions: Record<string, Question[]> = {};
+  for (const phase of phasesData) {
+    phasesQuestions[phase.phaseid] = await cached_fetch_phase_questions(
+      phase.phaseid,
+    );
+  }
+  const phaseAnswers = await fetchAllAnswersOfApplication();
 
   return (
     <>
       <div className="flex flex-col items-start justify-between space-y-4">
         <Apl_Header />
         <div
-          className="markdown-content"
+          className="markdown-body"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
       </div>
-      {phasesData
-        .sort((a, b) => a.phaseorder - b.phaseorder)
-        .map(async (phase) => {
-          const mandatoryPhaseQuestionIds = mandatoryQuestions
-            .filter((q) => q.phaseid == phase.phaseid)
-            .map((q) => q.questionid);
-          const alreadyAnsweredPhaseQuestions = await fetch_answer_table(
-            mandatoryPhaseQuestionIds,
-          );
-          return (
-            <PhaseOverview
-              key={phase.phaseid}
-              phaseName={phase.phasename}
-              phaseStart={phase.startdate}
-              phaseEnd={phase.enddate}
-              mandatoryQuestionIds={mandatoryPhaseQuestionIds}
-              numAnswers={alreadyAnsweredPhaseQuestions}
-            />
-          );
-        })}
+      <ApplicationOverview
+        phasesData={phasesData}
+        phasesQuestions={phasesQuestions}
+        phaseAnswers={phaseAnswers}
+        phasesOutcome={phasesOutcome}
+      />
     </>
   );
 }

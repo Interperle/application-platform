@@ -1,17 +1,18 @@
 version: '3.8'
-
 services:
-  application-platform:
-    image: ghcr.io/generation-d/application-platform-dev:latest
+  frontend:
+    image: 'ghcr.io/generation-d/application-platform-dev:latest'
+    container_name: frontend
     ports:
-      - "3000:3000"  # Map the port from your container to host if needed
-    environment:
-      - NEXT_PUBLIC_SUPABASE_URL=""
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=""
-      - SUPABASE_SERVICE_ROLE_KEY=""
-      - NEXT_PUBLIC_LOGFLARE_API_TOKEN=""
-      - NEXT_PUBLIC_LOGFLARE_CLIENT_TOKEN=""
-      - SMTP_HOST=""
-      - SMTP_PORT=""
-      - SMTP_USER=""
-      - SMTP_PASSWORD=""
+      - '3000:3000'
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./nginx-data:/data
+      - ./nginx-letsencrypt:/etc/letsencrypt
+      - ./custom-nginx.conf:/etc/nginx/conf.d/custom-settings.conf

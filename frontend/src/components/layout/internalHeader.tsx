@@ -1,22 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import React from "react";
-import { useFormState } from "react-dom";
-import { signOutUser } from "@/actions/auth";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { toggle } from "@/store/slices/menuSlice";
-import { SubmitButton } from "./submitButton";
 
-const Apl_Header: React.FC = () => {
-  const initialState = {
-    message: "",
-    status: "",
-  };
-  const [state, signOutAction] = useFormState(signOutUser, initialState);
+import Image from "next/image";
+import Link from "next/link";
+
+import { RESET_STATE } from "@/store/actionTypes";
+import { toggle } from "@/store/slices/menuSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+
+import { SubmitButton } from "../submitButton";
+
+const InternalHeader: React.FC = () => {
   const isMenuOpen = useAppSelector((state) => state.menuReducer.isOpen);
   const dispatch = useAppDispatch();
+
+  function handleSubmit(): void {
+    dispatch({ type: RESET_STATE });
+  }
 
   return (
     <div className="w-full bg-white h-24 flex items-center justify-between p-4 md:p-6">
@@ -35,6 +36,7 @@ const Apl_Header: React.FC = () => {
       </div>
       <div className="md:hidden">
         <button
+          type="button"
           onClick={() => dispatch(toggle())}
           className="p-2 focus:outline-none focus:shadow-outline"
         >
@@ -50,21 +52,17 @@ const Apl_Header: React.FC = () => {
             : "hidden md:flex items-center"
         } space-x-4`}
       >
-        <Link href="/faqs">
-          <span className="text-secondary block text-center">FAQs</span>
-        </Link>
-        <Link href="/settings">
+        <Link href="/admin/settings">
           <span className="text-secondary block text-center">
             Einstellungen
           </span>
         </Link>
-        <form action={signOutAction}>
+        <form action="/auth/signout" method="post" onSubmit={handleSubmit}>
           <SubmitButton text={"Ausloggen"} expanded={false} />
-          <div className={`italic text-red-600`}>{state?.message}</div>
         </form>
       </div>
     </div>
   );
 };
 
-export default Apl_Header;
+export default InternalHeader;

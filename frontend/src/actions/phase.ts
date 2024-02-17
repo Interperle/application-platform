@@ -1,13 +1,20 @@
 "use server";
 
+import { RedirectType, redirect } from "next/navigation";
+
 import { DefaultQuestion, Question } from "@/components/questions";
 import {
   QuestionType,
   QuestionTypeTable,
 } from "@/components/questiontypes/utils/questiontype_selector";
-import { PhaseData } from "@/store/slices/phaseSlice";
+import Logger from "@/logger/logger";
+import { PhaseData, SectionData } from "@/store/slices/phaseSlice";
+import {
+  createCurrentTimestamp,
+  setToPrefferedTimeZone,
+} from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import { RedirectType, redirect } from "next/navigation";
+
 import {
   getApplicationIdOfCurrentUser,
   getCurrentUser,
@@ -18,18 +25,22 @@ type IdType = {
   [key: string]: any;
 };
 
+const log = new Logger("actions/phase");
+
 export async function fetch_question_type_table(questions: DefaultQuestion[]) {
   const result: Record<QuestionType, any> = {
-    [QuestionType.ShortText]: {},
-    [QuestionType.LongText]: {},
-    [QuestionType.NumberPicker]: {},
-    [QuestionType.DatetimePicker]: {},
-    [QuestionType.DatePicker]: {},
-    [QuestionType.ImageUpload]: {},
-    [QuestionType.VideoUpload]: {},
-    [QuestionType.PDFUpload]: {},
-    [QuestionType.MultipleChoice]: {},
-    [QuestionType.Dropdown]: {},
+    [QuestionType.ShortText]: [{}],
+    [QuestionType.LongText]: [{}],
+    [QuestionType.NumberPicker]: [{}],
+    [QuestionType.DatetimePicker]: [{}],
+    [QuestionType.DatePicker]: [{}],
+    [QuestionType.ImageUpload]: [{}],
+    [QuestionType.VideoUpload]: [{}],
+    [QuestionType.PDFUpload]: [{}],
+    [QuestionType.MultipleChoice]: [{}],
+    [QuestionType.Dropdown]: [{}],
+    [QuestionType.CheckBox]: [{}],
+    [QuestionType.Conditional]: [{}],
   };
   for (const questionType of Object.values(QuestionType)) {
     const tableName =
@@ -38,11 +49,14 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
           1,
         )}QuestionTable` as keyof typeof QuestionTypeTable
       ];
+
     if (!tableName) {
-      console.log(
+      log.error(
         `Table for question type "${questionType}" is missing. Skipping...`,
       );
-      continue;
+      throw Error(
+        `Table for question type "${questionType}" is missing. Skipping...`,
+      );
     }
 
     const { data: questionTypeData, error: questionTypeError } =
@@ -57,13 +71,12 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
         );
 
     if (questionTypeError) {
-      console.log("QuestionType Error: Return Null");
-      console.error(questionTypeError);
+      log.error(JSON.stringify(questionTypeError));
       result[questionType] = [{}];
     } else if (questionTypeData) {
       result[questionType] = questionTypeData;
     } else {
-      console.log("No data found for question type: " + questionType);
+      log.debug(`No data found for question type: ${questionType}`);
       result[questionType] = [{}];
     }
   }
@@ -74,13 +87,18 @@ export async function fetch_question_type_table(questions: DefaultQuestion[]) {
 export async function fetchAdditionalParams(
   questiontype: QuestionType,
 ): Promise<Record<string, any>> {
-  var table_name = "";
+  let table_name = "";
   if (questiontype == QuestionType.MultipleChoice) {
     table_name = "multiple_choice_question_choice_table";
   } else if (questiontype == QuestionType.Dropdown) {
     table_name = "dropdown_question_option_table";
+  } else if (questiontype == QuestionType.Conditional) {
+    table_name = "conditional_question_choice_table";
   } else {
-    console.error("Not possible for others");
+    log.debug(
+      `Can't call fetchAdditionalParams() for QuestionType ${questiontype}`,
+    );
+    return {};
   }
 
   const { data: paramsData, error } = await initSupabaseActions()
@@ -88,7 +106,7 @@ export async function fetchAdditionalParams(
     .select("*");
 
   if (error) {
-    console.error("Error fetching multiple choice choices:", error);
+    log.error(JSON.stringify(error));
     return {};
   }
 
@@ -99,6 +117,7 @@ export async function fetchAdditionalParams(
       choicetext?: string;
       optionid?: string;
       optiontext?: string;
+      choicevalue?: string;
     }>
   > = {};
 
@@ -116,6 +135,11 @@ export async function fetchAdditionalParams(
         optionid: param.optionid,
         optiontext: param.optiontext,
       });
+    } else if (questiontype == QuestionType.Conditional) {
+      paramsDict[param.questionid].push({
+        choiceid: param.choiceid,
+        choicevalue: param.choicevalue,
+      });
     }
   });
   return paramsDict;
@@ -126,6 +150,7 @@ async function append_params(
   question: DefaultQuestion,
   choicesData: Record<string, string[]>,
   optionsData: Record<string, string[]>,
+  conditionalChoicesData: Record<string, string[]>,
 ) {
   const question_type_questions =
     question_types_questions[question.questiontype];
@@ -133,12 +158,13 @@ async function append_params(
     question_type_questions!.find(
       (params: IdType) => params.questionid === question.questionid,
     ) || {};
-  console.log("Questiontext: " + question.questiontext);
   const { questionid, ...rest } = question_type_params;
   if (question.questiontype === QuestionType.MultipleChoice) {
     rest["choices"] = choicesData[question.questionid];
   } else if (question.questiontype === QuestionType.Dropdown) {
     rest["options"] = optionsData[question.questionid];
+  } else if (question.questiontype === QuestionType.Conditional) {
+    rest["choices"] = conditionalChoicesData[question.questionid];
   }
   return {
     ...question,
@@ -149,36 +175,82 @@ async function append_params(
 export async function fetch_question_table(
   phaseId: string,
 ): Promise<Question[]> {
-  const { data: questionData, error: errorData } = await initSupabaseActions()
-    .from("question_table")
-    .select("*")
-    .eq("phaseid", phaseId);
+  const { data: questionData, error: questionError } =
+    await initSupabaseActions()
+      .from("question_table")
+      .select("*")
+      .eq("phaseid", phaseId);
 
-  if (errorData) {
-    console.log("Error:" && errorData);
+  if (questionError) {
+    log.error(JSON.stringify(questionError));
     redirect("/404", RedirectType.replace);
   }
 
   if (!questionData) {
-    console.log("No Data");
+    log.error(`No questions defined for ${phaseId}`);
     redirect("/404", RedirectType.replace);
   }
 
   const questionTypesData = await fetch_question_type_table(questionData);
   const choicesData = await fetchAdditionalParams(QuestionType.MultipleChoice);
   const optionsData = await fetchAdditionalParams(QuestionType.Dropdown);
-  const combinedQuestions = await questionData.map(
+
+  const conditionalChoicesData = await fetchAdditionalParams(
+    QuestionType.Conditional,
+  );
+  const combinedQuestions = questionData.map(
     async (question: DefaultQuestion) => {
       return await append_params(
         questionTypesData,
         question,
         choicesData,
         optionsData,
+        conditionalChoicesData,
       );
     },
   );
+  const awaitedQuestions = await Promise.all(combinedQuestions);
+  const standaloneQuestions = awaitedQuestions.filter(
+    (q: Question) => q.depends_on == null,
+  );
+  const dependingQuestions = awaitedQuestions.filter(
+    (q: Question) => q.depends_on != null,
+  );
+  const finishedQuestions = standaloneQuestions.map((question: Question) => {
+    if (question.questiontype != QuestionType.Conditional) {
+      return question;
+    }
+    question.params.choices.map((choice: Record<string, any>) => {
+      choice["questions"] = dependingQuestions.filter(
+        (q: Question) => q.depends_on == choice.choiceid,
+      );
+      return choice;
+    });
+    return question;
+  });
 
-  return await Promise.all(combinedQuestions);
+  return finishedQuestions as Question[];
+}
+
+export async function fetch_conditional_questionid_mapping() {
+  const { data: conditionalData, error: conditionalError } =
+    await initSupabaseActions()
+      .from("conditional_question_choice_table")
+      .select("*");
+  if (conditionalError) {
+    log.error(JSON.stringify(conditionalError));
+    return {} as Record<string, string[]>;
+  }
+  return conditionalData?.reduce(
+    (
+      acc: Record<string, string>,
+      question: { choiceid: string; questionid: string; choicevalue: string },
+    ) => {
+      acc[question.choiceid] = question.questionid;
+      return acc;
+    },
+    {} as Record<string, string[]>,
+  );
 }
 
 export async function fetch_phase_by_name(
@@ -192,15 +264,16 @@ export async function fetch_phase_by_name(
     .single();
   // Redirection if error
   if (phaseError) {
-    console.log("Error: " + phaseError + " -> Redirect");
+    log.error(JSON.stringify(phaseError));
     redirect("/", RedirectType.replace);
   }
   // Redirection if no phaseName
   if (!phaseData) {
-    console.log("No data " + phaseData + " -> Redirect");
+    log.debug("No PhaseData -> Redirect to Overview");
     redirect("/", RedirectType.replace);
   }
-
+  phaseData.startdate = setToPrefferedTimeZone(phaseData.startdate);
+  phaseData.enddate = setToPrefferedTimeZone(phaseData.enddate);
   return phaseData;
 }
 
@@ -211,38 +284,41 @@ export async function fetch_all_phases(): Promise<PhaseData[]> {
     .from("phase_table")
     .select("*");
   if (phasesError) {
-    console.log("Error: " + phasesError);
+    log.error(JSON.stringify(phasesError, null, 2));
   }
   if (!phasesData) {
-    console.log("No data " + phasesData);
+    log.warn("No Phases found");
   }
-  return phasesData || [];
+
+  return (
+    phasesData?.map((phase) => ({
+      ...phase,
+      startdate: setToPrefferedTimeZone(phase.startdate),
+      enddate: setToPrefferedTimeZone(phase.enddate),
+    })) || []
+  );
 }
 
-type Phase = {
-  phaseid: string;
-  phasename: string;
-  phaseorder: number;
-  startdate: string;
-  enddate: string;
-};
-
-export async function extractCurrentPhase(currentTime: Date): Promise<Phase> {
+export async function extractCurrentPhase(
+  currentTime: Date,
+): Promise<PhaseData> {
   const phasesData = await fetch_all_phases();
   const sortedPhases = phasesData!.sort((a, b) => a.phaseorder - b.phaseorder);
 
-  var previous_phase: Phase;
+  let previous_phase: PhaseData;
   previous_phase = {
     phaseid: "",
     phasename: "",
+    phaselabel: "",
     phaseorder: -1,
     startdate: "",
     enddate: "",
+    sectionsenabled: false,
+    finished_evaluation: "",
   };
   for (const phase of sortedPhases) {
     const startDate = new Date(phase.startdate);
     const endDate = new Date(phase.enddate);
-
     if (currentTime < startDate) {
       return previous_phase;
     } else if (currentTime >= startDate && currentTime <= endDate) {
@@ -267,25 +343,89 @@ export async function fetch_answer_table(
     .eq("applicationid", applicationid);
 
   if (answerError) {
-    console.log("Error:" && answerError);
+    log.error(JSON.stringify(answerError));
   }
 
   return answerData ? answerData.length : 0;
 }
 
-export async function fetch_all_questions(): Promise<DefaultQuestion[]> {
-  const { data: questionData, error: errorData } = await initSupabaseActions()
-    .from("question_table")
-    .select("*");
+export async function fetch_first_phase_over(): Promise<boolean> {
+  const supabase = initSupabaseActions();
+  const { data: phaseData, error: phaseError } = await supabase
+    .from("phase_table")
+    .select("enddate")
+    .eq("phaseorder", 0)
+    .single();
 
-  if (errorData) {
-    console.log("Error:" && errorData);
+  if (phaseError) {
+    log.error(JSON.stringify(phaseError, null, 2));
+    return true;
   }
 
-  if (!questionData) {
-    console.log("No Data");
-    return [];
+  if (!phaseData) {
+    log.debug("No PhaseData found");
+    return true;
   }
+  const currentDate = new Date(createCurrentTimestamp());
+  const endDate = new Date(setToPrefferedTimeZone(phaseData!.enddate));
+  return currentDate < endDate;
+}
 
-  return questionData as DefaultQuestion[];
+export async function fetch_sections_by_phase(
+  phaseId: string,
+): Promise<SectionData[]> {
+  const supabase = initSupabaseActions();
+  const { data: sectionsData, error: sectionsError } = await supabase
+    .from("sections_table")
+    .select("*")
+    .eq("phaseid", phaseId);
+  if (sectionsError) {
+    log.error(JSON.stringify(sectionsError));
+  }
+  if (!sectionsData) {
+    log.debug("No sectionsData found");
+  }
+  return sectionsData as SectionData[];
+}
+
+export type PhaseOutcome = {
+  outcome_id: string;
+  outcome: boolean;
+  review_date: string;
+  phase: {
+    phaseid: string;
+    phasename: string;
+    phaselabel: string;
+    phaseorder: number;
+    startdate: string;
+    enddate: string;
+    finished_evaluation: string;
+  };
+};
+
+export async function fetch_phases_status(): Promise<PhaseOutcome[]> {
+  const supabase = initSupabaseActions();
+  const user = await getCurrentUser(supabase);
+  const all_phases = await fetch_all_phases();
+  const { data, error } = await supabase
+    .from("phase_outcome_table")
+    .select("outcome_id, outcome, review_date, phase_id")
+    .eq("user_id", user.id);
+  if (error) {
+    log.error(JSON.stringify(error));
+  }
+  const transformedData = data?.map((item) => {
+    const matchingPhase = all_phases.find(
+      (phaseToFind) => phaseToFind.phaseid == item.phase_id,
+    )!;
+    return {
+      ...item,
+      phase: {
+        ...matchingPhase,
+      },
+    };
+  });
+
+  transformedData?.sort((a, b) => a.phase?.phaseorder - b.phase?.phaseorder);
+  return (transformedData as PhaseOutcome[]) || [];
 }

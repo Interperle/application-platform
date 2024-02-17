@@ -1,53 +1,73 @@
 "use server";
 
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import {
-  deleteAnswer,
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
-  saveAnswer,
-} from "./answers";
+
+import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/dropdown");
 
 export async function saveDropdownAnswer(
   answertext: string,
   questionid: string,
 ) {
   if (answertext == "" || answertext == "empty" || answertext == "invalid") {
-    await deleteAnswer(questionid, "dropdown_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertDropdownAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("dropdown_answer_table")
         .insert({
           answerid: answerid,
           selectedoptions: answertext,
         });
-      if (insertDropdownAnswerResponse) {
-        console.log(insertDropdownAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateDropdownAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("dropdown_answer_table")
         .update({
           selectedoptions: answertext,
         })
         .eq("answerid", answerid);
-      if (updateDropdownAnswerResponse) {
-        console.log(updateDropdownAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
 }
 
-export async function fetchDropdownAnswer(answerid: string) {
+interface DropdownAnswerResponse {
+  answerid: string;
+  selectedoptions: string;
+}
+
+const initialstate: DropdownAnswerResponse = {
+  answerid: "",
+  selectedoptions: "",
+};
+
+export async function fetchDropdownAnswer(
+  questionid: string,
+): Promise<DropdownAnswerResponse> {
   const supabase = initSupabaseActions();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data: dropdownData, error: dropdownError } = await supabase
-    .from("dropdown_answer_table")
-    .select("selectedoptions")
-    .eq("answerid", answerid)
-    .single();
-  return dropdownData!.selectedoptions;
+    .rpc("fetch_dropdown_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
+    .single<DropdownAnswerResponse>();
+  if (dropdownError) {
+    if (dropdownError.code == "PGRST116") {
+      return initialstate;
+    }
+    log.error(JSON.stringify(dropdownError));
+  }
+  return dropdownData || initialstate;
 }

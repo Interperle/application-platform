@@ -1,5 +1,8 @@
-import { userData } from "@/actions/admin";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
+import { userData } from "@/actions/admin";
+
+import { RESET_STATE } from "../actionTypes";
 
 interface UsersState {
   users: userData[];
@@ -35,6 +38,9 @@ export const usersSlice = createSlice({
         state.users[index].userrole = newRole;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(RESET_STATE, () => initialState);
   },
 });
 

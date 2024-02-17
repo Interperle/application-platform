@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
+
 import { CircularProgress } from "@mui/material";
 
 export default function Awaiting(isLoading: boolean, input: any) {

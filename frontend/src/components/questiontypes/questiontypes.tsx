@@ -6,6 +6,11 @@ export interface DefaultQuestionTypeProps {
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
+  questionorder: number;
+  iseditable: boolean;
+  selectedSection?: string | null;
+  selectedCondChoice?: string | null;
+  questionsuborder?: string;
 }
 
 interface QuestionTypesProps extends DefaultQuestionTypeProps {
@@ -17,6 +22,8 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
   mandatory,
   questiontext,
   questionnote,
+  questionorder,
+  questionsuborder,
   children,
 }) => {
   return (
@@ -26,7 +33,13 @@ const QuestionTypes: React.FC<QuestionTypesProps> = ({
         className="block font-semibold text-secondary py-3"
       >
         <h4 className="py-1 text-base">
-          {questiontext}
+          {questionsuborder
+            ? `${questionorder} ${questionsuborder}) `
+            : `${questionorder}. `}
+          <span
+            className="break-after-avoid"
+            dangerouslySetInnerHTML={{ __html: questiontext }}
+          ></span>
           {mandatory && <span className="text-red-500">*</span>}
         </h4>
         {questionnote && (

@@ -1,9 +1,17 @@
 "use server";
 
+import { SupabaseClient, User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
+
+import { Question } from "@/components/questions";
+import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
+import Logger from "@/logger/logger";
 import { createCurrentTimestamp } from "@/utils/helpers";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import { SupabaseClient, User, UserResponse } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
+
+import { deleteImageUploadAnswer } from "./imageUpload";
+import { deletePdfUploadAnswer } from "./pdfUpload";
+import { deleteVideoUploadAnswer } from "./videoUpload";
 
 export interface saveAnswerType {
   supabase: SupabaseClient;
@@ -19,10 +27,12 @@ export interface Answer {
   created: string;
 }
 
+const log = new Logger("actions/ansers/answers");
+
 export async function getCurrentUser(supabase: SupabaseClient) {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) {
-    console.log(userError);
+    log.error(JSON.stringify(userError));
     redirect("/");
   }
   return userData.user;
@@ -38,7 +48,7 @@ export async function getApplicationIdOfCurrentUser(
     .eq("userid", user.id)
     .single();
   if (applicationError) {
-    console.log(applicationError);
+    log.error(JSON.stringify(applicationError));
   }
   return applicationData?.applicationid;
 }
@@ -56,7 +66,7 @@ export async function fetchAnswerId(
     .eq("applicationid", applicationid);
 
   if (answerError) {
-    console.log(answerError);
+    log.error(JSON.stringify(answerError));
   }
   if (answerData!.length == 0) {
     return "";
@@ -64,7 +74,13 @@ export async function fetchAnswerId(
   return answerData![0].answerid;
 }
 
-export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
+export interface ExtendedAnswerType extends Answer {
+  answervalue?: string | null;
+}
+
+export async function fetchAllAnswersOfApplication(): Promise<
+  ExtendedAnswerType[]
+> {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
@@ -74,9 +90,36 @@ export async function fetchAllAnswersOfApplication(): Promise<Answer[]> {
     .eq("applicationid", applicationid);
 
   if (answerError) {
-    console.log(answerError);
+    if (answerError.code == "PGRST116") {
+      log.error(JSON.stringify(answerError));
+      throw answerError;
+    }
+    log.error(JSON.stringify(answerError));
   }
-  return answerData as Answer[];
+  const answerIds = answerData!.map((answer) => answer.answerid);
+  const { data: answerConditionalData, error: answerConditionalError } =
+    await supabase
+      .from("conditional_answer_table")
+      .select("*")
+      .in("answerid", answerIds);
+
+  if (answerConditionalError) {
+    if (answerConditionalError.code == "PGRST116") {
+      log.debug(JSON.stringify(answerConditionalError));
+      return [];
+    }
+    log.debug(JSON.stringify(answerConditionalError));
+  }
+
+  return (
+    answerData?.map((answer: ExtendedAnswerType) => {
+      const conditionalAnswer = answerConditionalData?.find(
+        (condAnswer) => condAnswer.answerid === answer.answerid,
+      );
+      answer.answervalue = conditionalAnswer?.selectedchoice;
+      return answer;
+    }) || []
+  );
 }
 
 export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
@@ -88,87 +131,72 @@ export async function saveAnswer(questionid: string): Promise<saveAnswerType> {
 
   let reqtype = "";
   if (answerid == "") {
-    const insertAnswerResponse = await supabase.from("answer_table").insert({
-      questionid: questionid,
-      applicationid: applicationid,
-      created: now,
-      lastupdated: now,
-    });
-
-    if (insertAnswerResponse) {
-      console.log(insertAnswerResponse);
-    }
-
-    const selectAnswerResponse = await supabase
+    const { data: insertAnswerData, error: insertAnswerError } = await supabase
       .from("answer_table")
-      .select("answerid")
-      .eq("applicationid", applicationid)
-      .eq("questionid", questionid)
+      .insert({
+        questionid: questionid,
+        applicationid: applicationid,
+        created: now,
+        lastupdated: now,
+      })
+      .select()
       .single();
-
-    if (selectAnswerResponse) {
-      console.log(selectAnswerResponse);
+    if (insertAnswerError) {
+      log.error(JSON.stringify(insertAnswerError));
     }
-    answerid = selectAnswerResponse!.data!.answerid;
+    answerid = insertAnswerData.answerid;
     reqtype = "created";
   } else {
+    const { data: updateAnswerData, error: updateAnswerError } = await supabase
+      .from("answer_table")
+      .update({
+        lastupdated: now,
+      })
+      .eq("questionid", questionid)
+      .eq("applicationid", applicationid)
+      .select()
+      .single();
+    if (updateAnswerError) {
+      log.error(JSON.stringify(updateAnswerError));
+    }
+    answerid = updateAnswerData.answerid;
     reqtype = "updated";
   }
-
   return { supabase: supabase, answerid: answerid, reqtype: reqtype };
 }
 
-export async function deleteAnswer(questionid: string, answertype: string) {
+export async function deleteAnswer(questionid: string) {
   const supabase = initSupabaseActions();
   const user = await getCurrentUser(supabase);
   const applicationid = await getApplicationIdOfCurrentUser(supabase, user);
-  let answerid = await fetchAnswerId(supabase, user, applicationid, questionid);
-  console.log(answerid);
+  const answerid = await fetchAnswerId(
+    supabase,
+    user,
+    applicationid,
+    questionid,
+  );
   if (answerid != "") {
-    const deleteAnswerResponse = await supabase
+    const { error: deleteAnswerError } = await supabase
       .from("answer_table")
       .delete()
       .eq("questionid", questionid)
       .eq("applicationid", applicationid);
-    console.log(deleteAnswerResponse);
-    const deleteAnswerTypeResponse = await supabase
-      .from(answertype)
-      .delete()
-      .eq("answerid", answerid);
-    console.log(deleteAnswerTypeResponse);
+    if (deleteAnswerError) {
+      log.error(JSON.stringify(deleteAnswerError));
+    }
   }
 }
 
-export async function saveDatePickerAnswer(
-  pickeddate: Date,
-  questionid: string,
-) {
-  const { supabase, answerid } = await saveAnswer(questionid);
-
-  const insertDatePickerAnswerResponse = await supabase
-    .from("date_picker_answer_table")
-    .insert({
-      answerid: answerid,
-      pickeddate: pickeddate,
-    });
-  if (insertDatePickerAnswerResponse) {
-    console.log(insertDatePickerAnswerResponse);
-  }
-}
-
-export async function saveDateTimePickerAnswer(
-  pickeddatetime: string,
-  questionid: string,
-) {
-  const { supabase, answerid } = await saveAnswer(questionid);
-
-  const insertDatePickerAnswerResponse = await supabase
-    .from("datetime_picker_answer_table")
-    .insert({
-      answerid: answerid,
-      pickeddatetime: pickeddatetime,
-    });
-  if (insertDatePickerAnswerResponse) {
-    console.log(insertDatePickerAnswerResponse);
+export async function deleteAnswersOfQuestions(questions: Question[]) {
+  for (const question of questions) {
+    if (question.questiontype == QuestionType.ImageUpload) {
+      await deleteImageUploadAnswer(question.questionid);
+    } else if (question.questiontype == QuestionType.VideoUpload) {
+      await deleteVideoUploadAnswer(question.questionid);
+    } else if (question.questiontype == QuestionType.PDFUpload) {
+      await deletePdfUploadAnswer(question.questionid);
+    } else {
+      await deleteAnswer(question.questionid);
+    }
   }
 }

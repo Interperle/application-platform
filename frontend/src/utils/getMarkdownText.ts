@@ -1,34 +1,64 @@
 "use server";
 
-import path from "path";
 import fs from "fs";
+import path from "path";
+
+import { extractCurrentPhase, fetch_phases_status } from "@/actions/phase";
+
+import { createCurrentTimestamp } from "./helpers";
 import markdownToHtml from "./markdownToHtml";
-import { extractCurrentPhase } from "@/actions/phase";
 
 export default async function getOverviewPageText() {
-  const currentTime = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "Etc/GMT-2" }),
-  );
-
+  const currentTime = new Date(createCurrentTimestamp());
   const currentPhase = await extractCurrentPhase(currentTime);
-
-  var markdownFilePath: string;
+  const phases_status = await fetch_phases_status();
+  phases_status.sort((a, b) => b.phase.phaseorder - a.phase.phaseorder);
+  const last_phase_status = phases_status[0];
+  let markdownFilePath: string;
   if (currentPhase.phaseorder == -1) {
     markdownFilePath = path.join("public", "texts", "welcome.md");
-  } else if (new Date(currentPhase.enddate) < currentTime) {
+  } else if (
+    last_phase_status !== undefined &&
+    last_phase_status.outcome == false &&
+    last_phase_status.phase.finished_evaluation != null &&
+    currentPhase.phaseid != last_phase_status.phase.phaseid
+  ) {
     markdownFilePath = path.join(
       "public",
       "texts",
-      currentPhase.phasename,
-      "evaluating.md",
+      last_phase_status.phase.phasename,
+      "failed.md",
     );
-  } else {
+  } else if (new Date(currentPhase.enddate) >= currentTime) {
     markdownFilePath = path.join(
       "public",
       "texts",
       currentPhase.phasename,
       "ongoing.md",
     );
+  } else if (currentPhase.finished_evaluation == null) {
+    markdownFilePath = path.join(
+      "public",
+      "texts",
+      currentPhase.phasename,
+      "evaluating.md",
+    );
+  } else if (last_phase_status.outcome == false) {
+    markdownFilePath = path.join(
+      "public",
+      "texts",
+      currentPhase.phasename,
+      "failed.md",
+    );
+  } else if (last_phase_status.outcome == true) {
+    markdownFilePath = path.join(
+      "public",
+      "texts",
+      currentPhase.phasename,
+      "passed.md",
+    );
+  } else {
+    markdownFilePath = path.join("public", "texts", "error.md");
   }
   const markdownContent = fs.readFileSync(markdownFilePath, "utf8");
   const contentHtml = await markdownToHtml(markdownContent);

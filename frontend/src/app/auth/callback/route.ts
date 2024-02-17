@@ -1,48 +1,25 @@
-import { getURL } from "@/utils/helpers";
-import {
-  initSupabaseRoute,
-  supabaseServiceRole,
-} from "@/utils/supabaseServerClients";
 import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-export async function GET(request: Request) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
-  console.log(requestUrl);
+import Logger from "@/logger/logger";
+import { getURL } from "@/utils/helpers";
+import { initSupabaseRouteNew } from "@/utils/supabaseServerClients";
 
-  const supabase = initSupabaseRoute();
+const log = new Logger("auth/callback/route");
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "";
 
   if (code) {
-    const data = await supabase.auth.exchangeCodeForSession(code);
-    console.log(data);
+    const supabase = initSupabaseRouteNew();
+    try {
+      await supabase.auth.exchangeCodeForSession(code);
+    } catch (error) {
+      log.error(JSON.stringify(error));
+      return NextResponse.redirect(`${getURL()}`);
+    }
   }
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { data: roleData, error: roleError } = await supabase
-    .from("user_profiles_table")
-    .select("*")
-    .eq("userid", user!.id)
-    .single();
-
-  if (roleError) {
-    console.log(roleError);
-  }
-  var subdomain = "";
-  if (!roleData) {
-    const { data: userProfileData, error: userProfileError } =
-      await supabaseServiceRole
-        .from("user_profiles_table")
-        .insert({ userid: user!.id, userrole: 2, isactive: true });
-    subdomain = "review";
-  } else if (!roleData.isactive) {
-    subdomain = "auth/auth-code-error";
-    await supabase.auth.signOut();
-  } else if (roleData.userrole == 2) {
-    subdomain = "review";
-  } else if (roleData.userrole == 3) {
-    subdomain = "admin";
-  }
-  return NextResponse.redirect(`${getURL()}${subdomain}/`);
+  return NextResponse.redirect(`${getURL()}${next}`);
 }

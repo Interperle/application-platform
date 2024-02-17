@@ -1,24 +1,22 @@
 "use client";
 
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabaseBrowserClient";
+
+import CircularProgress from "@mui/material/CircularProgress";
 import { User } from "@supabase/supabase-js";
-import { updatePassword } from "@/actions/auth";
-import { useFormState } from "react-dom";
-import Apl_Header from "@/components/header";
-import OverviewButton from "@/components/overviewButton";
-import { useAppDispatch } from "@/store/store";
-import { openPopup } from "@/store/slices/popupSlice";
+
+import SendPasswordResetForm from "@/components/forms/sendPasswordReset-form";
 import SubmitDeletionForm from "@/components/forms/submitDeletionForm";
-import Popup from "@/components/popup";
-import { SubmitButton } from "@/components/submitButton";
-import Awaiting from "@/components/awaiting";
+import Awaiting from "@/components/layout/awaiting";
+import Apl_Header from "@/components/layout/header";
+import Popup from "@/components/layout/popup";
+import OverviewButton from "@/components/overviewButton";
+import { supabase } from "@/utils/supabaseBrowserClient";
 
 const SettingsPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [isPopupOpen, setPopupOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,14 +29,9 @@ const SettingsPage: React.FC = () => {
     fetchUser();
   }, []);
 
-  const initialState = {
-    message: "",
+  const togglePopup = () => {
+    setPopupOpen(!isPopupOpen);
   };
-
-  const [state, updatePasswordAction] = useFormState(
-    updatePassword,
-    initialState,
-  );
 
   return (
     <span className="w-full">
@@ -46,50 +39,31 @@ const SettingsPage: React.FC = () => {
         <Apl_Header />
         <OverviewButton />
         <h1 className="text-2xl font-bold mb-4">Einstellungen</h1>
-        <Popup />
-
+        {isPopupOpen && (
+          <Popup onClose={togglePopup}>
+            <SubmitDeletionForm email={user?.email || ""} />
+          </Popup>
+        )}
         <div>
           <label>Email: {Awaiting(isLoading, user?.email)}</label>
         </div>
-        <form action={updatePasswordAction} className="my-4">
-          {/* 
+        <h3 className="py-2 text-xl">Ändere dein Passwort</h3>
         <div>
-            <label>Old Password</label>
-            <input type="password" name='old_password' id='old_password' />
-        </div> 
-        */}
-          <h3 className="py-2 text-xl">Ändere dein Passwort</h3>
-          <div>
-            <h4 className="py-1 text-base">Neues Passwort</h4>
-            <input
-              type="password"
-              placeholder="********"
-              name="new_password"
-              id="new_password"
-              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
-            />
-          </div>
-          <div className="mb-4">
-            <h4 className="py-1 text-base">Passwort bestätigen</h4>
-            <input
-              type="password"
-              placeholder="********"
-              name="reenter_password"
-              id="reenter_password"
-              className="shadow appearance-none border rounded-md w-full py-2 px-3 text-secondary leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
-            />
-          </div>
-          <SubmitButton text={"Passwort ändern"} expanded={true} />
-        </form>
+          <h2>
+            Dir wird zum Zurücksetzen deines Passworts an die oben genannte
+            Email-Adresse ein Link gesendet.
+          </h2>
+          {user?.email == undefined ? (
+            <CircularProgress size={"1rem"} />
+          ) : (
+            <SendPasswordResetForm email={user!.email!} />
+          )}
+        </div>
         <h4 className="py-2 text-xl mb-3">Lösche deinen Account</h4>
         <button
           type="submit"
           className="apl-alert-button-fixed-big"
-          onClick={() =>
-            dispatch(
-              openPopup(<SubmitDeletionForm email={user?.email || ""} />),
-            )
-          }
+          onClick={togglePopup}
         >
           Account löschen
         </button>

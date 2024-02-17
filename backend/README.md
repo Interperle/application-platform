@@ -42,6 +42,7 @@ erDiagram
     PHASE-TABLE {
         int phaseid PK
         string phasename
+        string phaselabel
         int phaseorder
         datetime startdate
         datetime enddate
@@ -73,6 +74,7 @@ erDiagram
     QUESTION-TABLE ||--|{ SHORT-TEXT-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ LONG-TEXT-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ MULTIPLE-CHOICE-QUESTION-TABLE : is_type
+    QUESTION-TABLE ||--|{ CHECKBOX-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ VIDEO-UPLOAD-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ DATE-PICKER-QUESTION-TABLE : is_type
     QUESTION-TABLE ||--|{ DATETIME-PICKER-QUESTION-TABLE : is_type
@@ -105,6 +107,10 @@ erDiagram
         int minanswers
         int maxanswers
         boolean userinput
+    }
+
+    MULTIPLE-CHOICE-QUESTION-TABLE {
+        string questionid FK
     }
 
     MULTIPLE-CHOICE-QUESTION-CHOICES-TABLE {
@@ -167,6 +173,7 @@ erDiagram
     ANSWER-TABLE ||--|{ SHORT-TEXT-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ LONG-TEXT-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ MULTIPLE-CHOICE-ANSWER-TABLE : is_type
+    ANSWER-TABLE ||--|{ CHECKBOX-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ VIDEO-UPLOAD-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ DATE-PICKER-ANSWER-TABLE : is_type
     ANSWER-TABLE ||--|{ DATETIME-PICKER-ANSWER-TABLE : is_type
@@ -195,6 +202,11 @@ erDiagram
     MULTIPLE-CHOICE-ANSWER-TABLE {
         string answerid FK
         string[] selectedchoice
+    }
+
+    CHECKBOX-ANSWER-TABLE {
+        string answerid FK
+        boolean checked
     }
 
     VIDEO-UPLOAD-ANSWER-TABLE {

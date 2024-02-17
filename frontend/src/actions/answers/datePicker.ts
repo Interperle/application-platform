@@ -1,56 +1,70 @@
 "use server";
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import {
-  deleteAnswer,
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
-  saveAnswer,
-} from "./answers";
+
+import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/datePicker");
 
 export async function saveDatePickerAnswer(
   pickeddate: string,
   questionid: string,
 ) {
-  console.log("%" + pickeddate + "%");
   if (pickeddate == "") {
-    await deleteAnswer(questionid, "date_picker_answer_table");
+    await deleteAnswer(questionid);
     return;
   } else {
     const { supabase, answerid, reqtype } = await saveAnswer(questionid);
     if (reqtype == "created") {
-      const insertDatePickerAnswerResponse = await supabase
+      const { error: insertAnswerError } = await supabase
         .from("date_picker_answer_table")
         .insert({
           answerid: answerid,
           pickeddate: new Date(pickeddate),
         });
-      if (insertDatePickerAnswerResponse) {
-        console.log(insertDatePickerAnswerResponse);
+      if (insertAnswerError) {
+        log.error(JSON.stringify(insertAnswerError));
       }
     } else if (reqtype == "updated") {
-      const updateDatePickerAnswerResponse = await supabase
+      const { error: updateAnswerError } = await supabase
         .from("date_picker_answer_table")
         .update({
           pickeddate: new Date(pickeddate),
         })
         .eq("answerid", answerid);
-      if (updateDatePickerAnswerResponse) {
-        console.log(updateDatePickerAnswerResponse);
+      if (updateAnswerError) {
+        log.error(JSON.stringify(updateAnswerError));
       }
     }
   }
 }
 
-export async function fetchDatePickerAnswer(answerid: string) {
+interface DateAnswerResponse {
+  answerid: string;
+  pickeddate: string;
+}
+
+const initialstate: DateAnswerResponse = {
+  answerid: "",
+  pickeddate: "",
+};
+
+export async function fetchDatePickerAnswer(questionid: string) {
   const supabase = initSupabaseActions();
-  if (answerid) {
-    const { data: datePickerData, error: datePickerError } = await supabase
-      .from("date_picker_answer_table")
-      .select("pickeddate")
-      .eq("answerid", answerid)
-      .single();
-    return datePickerData!.pickeddate;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: datePickerData, error: datePickerError } = await supabase
+    .rpc("fetch_date_picker_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
+    .single<DateAnswerResponse>();
+  if (datePickerError) {
+    if (datePickerError.code == "PGRST116") {
+      return initialstate;
+    }
+    log.error(JSON.stringify(datePickerError));
   }
-  return "";
+  return datePickerData || initialstate;
 }

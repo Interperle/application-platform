@@ -1,22 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+
+import { ExtendedAnswerType } from "@/actions/answers/answers";
 import getQuestionComponent, {
   QuestionType,
 } from "@/components/questiontypes/utils/questiontype_selector";
+import Logger from "@/logger/logger";
+import { INIT_PLACEHOLDER, UpdateAnswer } from "@/store/slices/answerSlice";
 import { PhaseData, setPhase } from "@/store/slices/phaseSlice";
 import { useAppDispatch } from "@/store/store";
-import { Answer } from "@/actions/answers/answers";
+
+import { InformationBox } from "./informationBox";
 
 export interface DefaultQuestion {
   questionid: string;
   questiontype: QuestionType;
   questionorder: number;
+  questionsuborder?: string;
   phaseid: string;
   mandatory: boolean;
   questiontext: string;
   questionnote: string;
+  sectionid: string | null;
+  preinformationbox: string | null;
+  postinformationbox: string | null;
+  selectedSection: string | null;
+  selectedCondChoice: string | null;
+  depends_on: string | null;
 }
+
+const log = new Logger("components/questions");
 
 export interface Question extends DefaultQuestion {
   params: any;
@@ -25,13 +39,19 @@ export interface Question extends DefaultQuestion {
 interface QuestionnaireProps {
   phaseData: PhaseData;
   phaseQuestions: Question[];
-  phaseAnswers: Answer[];
+  phaseAnswers: ExtendedAnswerType[];
+  iseditable: boolean;
+  selectedSection: string | null;
+  selectedCondChoice: string | null;
 }
 
 const Questionnaire: React.FC<QuestionnaireProps> = ({
   phaseData,
   phaseQuestions,
   phaseAnswers,
+  iseditable,
+  selectedSection,
+  selectedCondChoice,
 }) => {
   const dispatch = useAppDispatch();
   // need a copy, so I can modify it beneath
@@ -45,8 +65,32 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
       phasequestions: phaseQuestions,
     }),
   );
+  useEffect(() => {
+    phaseAnswers.forEach((answer) => {
+      updateAnswerState(
+        answer.questionid,
+        answer.answerid,
+        answer?.answervalue,
+      );
+    });
+  }, [phaseAnswers]);
+
+  const updateAnswerState = (
+    questionid: string,
+    answerid?: string,
+    answervalue?: string | null,
+  ) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue || INIT_PLACEHOLDER,
+        answerid: answerid || "",
+      }),
+    );
+  };
+
   return (
-    <div>
+    <div className="mt-5 mb-7 border-b border-r rounded-xl shadow shadow-secondary p-5">
       {copyPhaseQuestions
         .sort((a, b) => a.questionorder - b.questionorder)
         .map((phaseQuestion) => {
@@ -54,29 +98,45 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({
             phaseQuestion.questiontype,
           );
           if (!QuestionComponent) {
-            console.error(
-              `Unknown question type: ${phaseQuestion.questiontype}`,
-            );
+            log.error(`Unknown question type: ${phaseQuestion.questiontype}`);
             return null;
           }
           return (
-            <QuestionComponent
-              key={phaseQuestion.questionid}
-              phasename={phaseData.phasename}
-              questionid={phaseQuestion.questionid}
-              mandatory={phaseQuestion.mandatory}
-              questiontext={phaseQuestion.questiontext}
-              questionnote={phaseQuestion.questionnote}
-              answerid={
-                phaseAnswers.find(
-                  (answer) => answer.questionid == phaseQuestion.questionid,
-                )?.answerid
-              }
-              {...phaseQuestion.params}
-            />
+            <React.Fragment key={phaseQuestion.questionid}>
+              {phaseQuestion.preinformationbox && (
+                <InformationBox
+                  key={`${phaseQuestion.questionid}_pre_infobox`}
+                  text={phaseQuestion.preinformationbox}
+                />
+              )}
+              <QuestionComponent
+                key={phaseQuestion.questionid}
+                phasename={phaseData.phasename}
+                questionid={phaseQuestion.questionid}
+                mandatory={phaseQuestion.mandatory}
+                questiontext={phaseQuestion.questiontext}
+                questionnote={phaseQuestion.questionnote}
+                questionorder={phaseQuestion.questionorder}
+                iseditable={iseditable}
+                selectedSection={selectedSection}
+                selectedCondChoice={selectedCondChoice}
+                answerid={
+                  phaseAnswers.find(
+                    (answer) => answer.questionid == phaseQuestion.questionid,
+                  )?.answerid
+                }
+                phaseAnswers={phaseAnswers}
+                {...phaseQuestion.params}
+              />
+              {phaseQuestion.postinformationbox && (
+                <InformationBox
+                  key={`${phaseQuestion.questionid}_post_infobox`}
+                  text={phaseQuestion.postinformationbox}
+                />
+              )}
+            </React.Fragment>
           );
         })}
-      <button type="submit">Speichern</button>
     </div>
   );
 };

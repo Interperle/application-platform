@@ -1,5 +1,6 @@
-import { fetch_phase_by_name, fetch_question_table } from "@/actions/phase";
 import { cache } from "react";
+
+import { fetch_phase_by_name, fetch_question_table } from "@/actions/phase";
 
 export const revalidate = 3600;
 

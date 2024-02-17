@@ -5,7 +5,6 @@ import {
   toggleStatusOfUser,
   userData,
 } from "@/actions/admin";
-import ToggleSwitch from "./fields/toggleswitch";
 import {
   toggleUserActive,
   changeUserRole,
@@ -13,7 +12,9 @@ import {
 } from "@/store/slices/usersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { UserRole } from "@/utils/userRole";
+
 import { UserSpecificRoleDropdown } from "./fields/dropdown";
+import ToggleSwitch from "./fields/toggleswitch";
 
 interface UserListProps {
   users: userData[];
@@ -34,7 +35,6 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
   };
 
   const handleRoleChange = async (user: userData, newRoleId: UserRole) => {
-    console.log("Trigger");
     const updatedUser = await changeRoleOfUser(user, newRoleId);
     if (updatedUser) {
       dispatch(
@@ -98,7 +98,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
                 <UserSpecificRoleDropdown
                   user={user}
                   onRoleChange={(newRole: UserRole) =>
-                    handleRoleChange(user, newRole).catch(console.error)
+                    handleRoleChange(user, newRole)
                   }
                 />
               </td>

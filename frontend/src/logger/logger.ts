@@ -1,6 +1,8 @@
 import pino from "pino";
 import { createPinoBrowserSend, createWriteStream } from "pino-logflare";
 
+import { getURL } from "@/utils/helpers";
+
 interface LogDetails {
   module: string;
   msg: string;
@@ -10,6 +12,7 @@ interface LogDetails {
 class Logger {
   module: string;
   logger: pino.Logger;
+  is_localhost: boolean;
 
   constructor(module: string) {
     const apiKey = process.env.NEXT_PUBLIC_LOGFLARE_API_TOKEN;
@@ -46,6 +49,7 @@ class Logger {
       },
       stream,
     );
+    this.is_localhost = getURL() == "http://localhost:3000/";
   }
 
   private getDetails(msg: string, userId?: string) {
@@ -54,33 +58,63 @@ class Logger {
       msg: msg,
     };
     if (userId) details.userId = userId;
-
     return details;
   }
 
   debug(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    console.debug(details);
+    if (this.is_localhost) {
+      console.debug(`DEBUG: ${JSON.stringify(details)}`);
+    }
   }
 
   info(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    this.logger.info(details);
+    if (this.is_localhost) {
+      console.info(`INFO: ${JSON.stringify(details)}`);
+    } else {
+      try {
+        this.logger.info(details);
+      } catch (error) {
+        console.error(`Logger failed with ${JSON.stringify(error)}`);
+      }
+    }
   }
 
   warn(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    this.logger.warn(details);
+    console.warn(`WARN: ${JSON.stringify(details)}`);
+    if (getURL() != "http://localhost:3000/") {
+      try {
+        this.logger.warn(details);
+      } catch (error) {
+        console.error(`Logger failed with ${JSON.stringify(error)}`);
+      }
+    }
   }
 
   error(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    this.logger.error(details);
+    console.error(`ERROR: ${JSON.stringify(details)}`);
+    if (!this.is_localhost) {
+      try {
+        this.logger.error(details);
+      } catch (error) {
+        console.error(`Logger failed with ${JSON.stringify(error)}`);
+      }
+    }
   }
 
   fatal(msg: string, userId?: string): void {
     const details = this.getDetails(msg, userId);
-    this.logger.fatal(details);
+    console.error(`FATAL: ${JSON.stringify(details)}`);
+    if (!this.is_localhost) {
+      try {
+        this.logger.fatal(details);
+      } catch (error) {
+        console.error(`Logger failed with ${JSON.stringify(error)}`);
+      }
+    }
   }
 }
 

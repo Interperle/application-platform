@@ -1,13 +1,26 @@
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import { Question } from "@/components/questions";
-import { QuestionType } from "@/components/questiontypes/utils/questiontype_selector";
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+import { RESET_STATE } from "../actionTypes";
 
 export interface PhaseData {
   phaseid: string;
   phasename: string;
+  phaselabel: string;
   phaseorder: number;
   startdate: string;
   enddate: string;
+  sectionsenabled: boolean;
+  finished_evaluation: string | null;
+}
+
+export interface SectionData {
+  sectionid: string;
+  sectionname: string;
+  sectiondescription: string;
+  sectionorder: number;
+  phaseid: string;
 }
 
 export interface PhasesDataQuestions {
@@ -40,6 +53,9 @@ export const phaseSlice = createSlice({
       const { phasename, phasedata, phasequestions } = action.payload;
       state.phases[phasename] = { data: phasedata, questions: phasequestions };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(RESET_STATE, () => initialState);
   },
 });
 

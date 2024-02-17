@@ -2,9 +2,13 @@
 
 import nodemailer from "nodemailer";
 
+import Logger from "@/logger/logger";
+
+const log = new Logger("actions/smtp");
+
 export async function sendEmail(to: string, subject: string, html: string) {
   try {
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
       tls: {
@@ -23,6 +27,6 @@ export async function sendEmail(to: string, subject: string, html: string) {
       html, // HTML body content
     });
   } catch (error) {
-    console.log(error);
+    log.error(JSON.stringify(error));
   }
 }

@@ -2,15 +2,19 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import Apl_Footer from "@/components/layout/footer";
 import { ReduxProvider } from "@/store/provider";
-import Apl_Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Generation-D Bewerbung",
   description: "Bewirb dich beim Social Startup Wettbewerb Generation-D.",
-  icons: "/favicon.ico",
+  icons: [
+    "/favicon.ico",
+    "/apple-touch-icon.png",
+    "/apple-touch-icon-precomposed.png",
+  ],
 };
 
 export default function RootLayout({

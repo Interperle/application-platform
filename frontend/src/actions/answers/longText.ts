@@ -1,53 +1,72 @@
 "use server";
+import Logger from "@/logger/logger";
 import { initSupabaseActions } from "@/utils/supabaseServerClients";
-import {
-  deleteAnswer,
-  fetchAnswerId,
-  getApplicationIdOfCurrentUser,
-  getCurrentUser,
-  saveAnswer,
-} from "./answers";
+
+import { deleteAnswer, saveAnswer } from "./answers";
+
+const log = new Logger("actions/ansers/longText");
 
 export async function saveLongTextAnswer(
   answertext: string,
   questionid: string,
 ) {
-  console.log(answertext);
   if (answertext == "") {
-    await deleteAnswer(questionid, "long_text_answer_table");
-    return;
-  } else {
-    const { supabase, answerid, reqtype } = await saveAnswer(questionid);
-    if (reqtype == "created") {
-      const insertLongTextAnswerResponse = await supabase
-        .from("long_text_answer_table")
-        .insert({
-          answerid: answerid,
-          answertext: answertext,
-        });
-      if (insertLongTextAnswerResponse) {
-        console.log(insertLongTextAnswerResponse);
-      }
-    } else if (reqtype == "updated") {
-      const updateLongTextAnswerResponse = await supabase
-        .from("long_text_answer_table")
-        .update({
-          answertext: answertext,
-        })
-        .eq("answerid", answerid);
-      if (updateLongTextAnswerResponse) {
-        console.log(updateLongTextAnswerResponse);
-      }
+    await deleteAnswer(questionid);
+    return "";
+  }
+  const { supabase, answerid, reqtype } = await saveAnswer(questionid);
+  if (reqtype == "created") {
+    const { error: insertAnswerError } = await supabase
+      .from("long_text_answer_table")
+      .insert({
+        answerid: answerid,
+        answertext: answertext,
+      });
+    if (insertAnswerError) {
+      log.error(JSON.stringify(insertAnswerError));
+    }
+  } else if (reqtype == "updated") {
+    const { error: updateAnswerError } = await supabase
+      .from("long_text_answer_table")
+      .update({
+        answertext: answertext,
+      })
+      .eq("answerid", answerid);
+    if (updateAnswerError) {
+      log.error(JSON.stringify(updateAnswerError));
     }
   }
+  return answerid;
 }
 
-export async function fetchLongTextAnswer(answerid: string) {
+interface LongTextAnswerResponse {
+  answerid: string;
+  answertext: string;
+}
+
+const initialstate: LongTextAnswerResponse = {
+  answerid: "",
+  answertext: "",
+};
+
+export async function fetchLongTextAnswer(
+  questionid: string,
+): Promise<LongTextAnswerResponse> {
   const supabase = initSupabaseActions();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { data: longTextData, error: longTextError } = await supabase
-    .from("long_text_answer_table")
-    .select("answertext")
-    .eq("answerid", answerid)
-    .single();
-  return longTextData!.answertext;
+    .rpc("fetch_long_text_answer_table", {
+      question_id: questionid,
+      user_id: user?.id,
+    })
+    .single<LongTextAnswerResponse>();
+  if (longTextError) {
+    if (longTextError.code == "PGRST116") {
+      return initialstate;
+    }
+    log.error(JSON.stringify(longTextError));
+  }
+  return longTextData || initialstate;
 }

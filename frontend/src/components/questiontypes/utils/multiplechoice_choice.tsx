@@ -4,39 +4,52 @@ export interface ChoiceProps {
   choiceid: string;
   choicetext: string;
   isSelected: boolean;
-  mandatory: boolean;
-  onChange: () => void;
+  iseditable: boolean;
+  minanswers: number;
+  maxanswers: number;
+  onSingleChange: () => void;
+  onMultiChange: () => void;
 }
 
 export const Choice: React.FC<ChoiceProps> = ({
   choiceid,
   choicetext,
   isSelected,
-  mandatory,
-  onChange,
+  iseditable,
+  minanswers,
+  maxanswers,
+  onSingleChange,
+  onMultiChange,
 }) => {
   return (
-    <div key={choiceid} className="flex items-center mb-2">
-      {mandatory ? (
+    <div key={choiceid} className="flex items-center mb-4">
+      {maxanswers == 1 ? (
         <input
           id={choiceid}
           name={choiceid}
+          disabled={!iseditable}
+          aria-disabled={!iseditable}
           type="radio"
-          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+          className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 focus:secondary focus:ring-2"
           checked={isSelected}
-          onChange={onChange}
+          onChange={onSingleChange}
+          onClick={onSingleChange}
         />
       ) : (
         <input
+          id={choiceid}
+          name={choiceid}
+          disabled={!iseditable}
+          aria-disabled={!iseditable}
           type="checkbox"
           checked={isSelected}
-          onChange={onChange}
-          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+          onChange={onMultiChange}
+          className="w-5 h-4 text-secondary bg-gray-100 border-gray-300 rounded focus:ring-secondary focus:ring-2"
         />
       )}
       <label
         htmlFor={choiceid}
-        className="ml-3 block text-sm font-medium text-gray-700"
+        className="ml-3 block text-sm font-medium text-secondary"
       >
         {choicetext}
       </label>

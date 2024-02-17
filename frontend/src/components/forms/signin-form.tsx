@@ -1,10 +1,13 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
+
+import { useState } from "react";
+
+import { useFormState } from "react-dom";
+
 import { signInUser } from "@/actions/auth";
-import { JSX } from "react";
+
 import ForgottenPasswordForm from "./forgottenpassword-form";
-import { useAppDispatch } from "@/store/store";
-import { openPopup } from "@/store/slices/popupSlice";
+import Popup from "../layout/popup";
 import { SubmitButton } from "../submitButton";
 
 interface messageType {
@@ -17,11 +20,19 @@ const initialState: messageType = {
 
 export default function SignInForm() {
   const [state, formAction] = useFormState(signInUser, initialState);
+  const [isPopupOpen, setPopupOpen] = useState(false);
 
-  const dispatch = useAppDispatch();
+  const togglePopup = () => {
+    setPopupOpen(!isPopupOpen);
+  };
 
   return (
     <div>
+      {isPopupOpen && (
+        <Popup onClose={togglePopup}>
+          <ForgottenPasswordForm />
+        </Popup>
+      )}
       <form action={formAction} className="space-y-4">
         <div>
           <label
@@ -57,7 +68,7 @@ export default function SignInForm() {
         <div className="flex justify-end mt-1">
           <button
             type="button"
-            onClick={() => dispatch(openPopup(<ForgottenPasswordForm />))}
+            onClick={togglePopup}
             className="px-1 text-secondary"
           >
             Passwort vergessen?

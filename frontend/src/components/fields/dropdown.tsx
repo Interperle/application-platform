@@ -1,6 +1,7 @@
+import React from "react";
+
 import { userData } from "@/actions/admin";
 import { UserRole } from "@/utils/userRole";
-import React from "react";
 
 interface DropdownProps<T extends Record<string, string | number>> {
   enum: T;
@@ -14,7 +15,6 @@ function Dropdown<T extends Record<string, string | number>>({
   onChange,
 }: DropdownProps<T>) {
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("Dropdown onChange triggered");
     const selectedOption = parseInt(
       event.target.value,
       10,

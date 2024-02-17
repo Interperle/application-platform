@@ -1,17 +1,27 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
-import { DropdownOption, DropdownOptionProps } from "./utils/dropdown_option";
+
 import {
   fetchDropdownAnswer,
   saveDropdownAnswer,
 } from "@/actions/answers/dropdown";
-import { AwaitingChild } from "../awaiting";
+import Logger from "@/logger/logger";
+import { UpdateAnswer } from "@/store/slices/answerSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+
+import QuestionTypes, { DefaultQuestionTypeProps } from "./questiontypes";
+import { DropdownOption, DropdownOptionProps } from "./utils/dropdown_option";
+import { AwaitingChild } from "../layout/awaiting";
 
 export interface DropdownQuestionTypeProps extends DefaultQuestionTypeProps {
   answerid: string | null;
   options: DropdownOptionProps[];
+  minanswers: number;
+  maxanswers: number;
+  userinput: boolean;
 }
+
+const log = new Logger("DropdownQuestionType");
 
 const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   phasename,
@@ -19,33 +29,80 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
   mandatory,
   questiontext,
   questionnote,
-  answerid,
+  questionorder,
+  iseditable,
+  minanswers,
+  maxanswers,
+  userinput,
   options,
+  selectedSection,
+  selectedCondChoice,
+  questionsuborder,
 }) => {
-  const [answer, setAnswer] = useState("");
+  const dispatch = useAppDispatch();
+
+  const answer = useAppSelector<string>(
+    (state) => (state.answerReducer[questionid]?.answervalue as string) || "",
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadAnswer() {
+      setIsLoading(true);
       try {
-        if (answerid) {
-          const savedAnswer = await fetchDropdownAnswer(answerid);
-          setAnswer(savedAnswer || "");
-        }
-        setIsLoading(false);
+        const savedAnswer = await fetchDropdownAnswer(questionid);
+        updateAnswerState(savedAnswer.selectedoptions, savedAnswer.answerid);
       } catch (error) {
-        console.error("Failed to fetch answer", error);
+        log.error(JSON.stringify(error));
+      } finally {
+        setIsLoading(false);
       }
     }
     loadAnswer();
-  }, [questionid, answerid]);
+  }, [questionid, maxanswers, selectedSection, selectedCondChoice]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const updateAnswerState = (answervalue: string, answerid?: string) => {
+    dispatch(
+      UpdateAnswer({
+        questionid: questionid,
+        answervalue: answervalue,
+        answerid: answerid || "",
+      }),
+    );
+  };
+
+  const handleSingleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!iseditable) {
+      return;
+    }
     const selectedOption =
       event.target.options[event.target.selectedIndex].text;
     saveDropdownAnswer(selectedOption, questionid);
-    setAnswer(event.target.value);
+    updateAnswerState(event.target.value);
   };
+
+  const handleMultiChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!iseditable) {
+      return;
+    }
+    const selectedOptions = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value,
+    ).filter((value) => value !== "empty");
+    if (
+      (!mandatory || (selectedOptions.length >= minanswers && mandatory)) &&
+      selectedOptions.length <= maxanswers
+    ) {
+      saveDropdownAnswer(selectedOptions.join(", "), questionid);
+      updateAnswerState(selectedOptions.join(", "));
+    } else {
+      updateAnswerState(selectedOptions.join(", "));
+      alert(
+        `Du musst mindestens ${minanswers} und kannst maximal ${maxanswers} Antworten auswählen!`,
+      );
+    }
+  };
+
   return (
     <QuestionTypes
       phasename={phasename}
@@ -53,30 +110,72 @@ const DropdownQuestionType: React.FC<DropdownQuestionTypeProps> = ({
       mandatory={mandatory}
       questiontext={questiontext}
       questionnote={questionnote}
+      questionorder={questionorder}
+      iseditable={iseditable}
+      questionsuborder={questionsuborder}
     >
       <AwaitingChild isLoading={isLoading}>
-        <select
-          id={questionid}
-          name={questionid}
-          required={mandatory}
-          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          onChange={handleChange}
-          value={answer}
-        >
-          {answer === "" && (
-            <option key="invalid" value="" disabled hidden>
-              Bitte wähle eine Option
-            </option>
-          )}
-          {!mandatory && <option key="empty" value="empty"></option>}
-          {options.map((option) => (
-            <DropdownOption
-              key={option.optionid}
-              optionid={option.optionid}
-              optiontext={option.optiontext}
-            />
-          ))}
-        </select>
+        {maxanswers == 1 ? (
+          <select
+            id={questionid}
+            name={questionid}
+            required={mandatory}
+            disabled={!iseditable}
+            aria-disabled={!iseditable}
+            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            onChange={handleSingleChange}
+            value={answer}
+          >
+            {answer === "" && (
+              <option
+                key="invalid"
+                value=""
+                disabled
+                aria-disabled={true}
+                hidden
+              >
+                Bitte wähle eine Option
+              </option>
+            )}
+            {!mandatory && <option key="empty" value="empty"></option>}
+            {options.map((option) => (
+              <DropdownOption
+                key={option.optionid}
+                optionid={option.optionid}
+                optiontext={option.optiontext}
+                iseditable={iseditable}
+              />
+            ))}
+          </select>
+        ) : (
+          <>
+            <span className="italic text-gray-500 text-sm">
+              Um mehrere Optionen auszuwählen, bitte halte unter Windows die
+              `&quot;`Alt`&quot;` und unter Mac die `&quot;`CMD`&quot;` Taste
+              gedrückt.
+            </span>
+            <select
+              multiple
+              size={maxanswers}
+              id={questionid}
+              name={questionid}
+              required={mandatory}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={handleMultiChange}
+              value={answer.split(", ")}
+            >
+              {!mandatory && <option key="empty" value="empty"></option>}
+              {options.map((option) => (
+                <DropdownOption
+                  key={option.optionid}
+                  optionid={option.optionid}
+                  optiontext={option.optiontext}
+                  iseditable={iseditable}
+                />
+              ))}
+            </select>
+          </>
+        )}
       </AwaitingChild>
     </QuestionTypes>
   );
