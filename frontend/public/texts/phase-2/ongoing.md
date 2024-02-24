@@ -4,7 +4,7 @@ Um euer Projekt nun in der Tiefe kennenzulernen, bitten wir euch in dieser Phase
 
 Wir geben euch den Freiraum, eure Idee auf eure Art und Weise zu präsentieren, denn jedes Projekt oder Start-up ist individuell und das werden wir bei unserer Bewertung auch berücksichtigen. Ganz wichtig ist nur folgende Einschränkung:
 
-> Euer Foliensatz darf maximal 15 Folien umfassen, eine Deckfolie und eine Endfolie zählen nicht dazu. Externe und verlinkte Inhalte werden bei der Bewertung nicht berücksichtigt. Überschreitet ihr die Zahl von 15+2 Folien, werden wir eure Bewerbung nicht weiter berücksichtigen.
+**Euer Foliensatz darf maximal 15 Folien umfassen, eine Deckfolie und eine Endfolie zählen nicht dazu. Externe und verlinkte Inhalte werden bei der Bewertung nicht berücksichtigt. Überschreitet ihr die Zahl von 15+2 Folien, werden wir eure Bewerbung nicht weiter berücksichtigen.**
 
 Ansonsten bitten wir euch noch darum, eure Folien gedanklich in 4 Abschnitte zu gliedern und deren Reihenfolge einzuhalten. Das macht es uns beim Bewerten deutlich einfacher. Die Abschnitte und konkreten Fragen, die wir stellen, sind im Folgenden aufgeführt:
 
