@@ -197,8 +197,20 @@ def add_phase_questions():
         if phase_counter != 1:
             continue
         phase_sections = {}
-        phase_id = "3b5b420c-8ede-49f0-b1cd-4f3fd5282cc2"
+        phase_id = "5b103429-48cd-4f11-b081-d85fb496c520"
 
         for question in phase['questions']:
             process_question(question, phase_id, phase_sections, supabase)
     log.info(f'Processed Phase {phase} successfully')
+
+
+def add_test_user():
+    users = ["marib.aldoais@gmail.com"]
+    passwort = "HalloWelt2341"
+    supabase = init_supabase()
+    for user in users:
+        res_user  = supabase.auth.sign_up({"email": user, "password": passwort})
+        user_id = res_user.user.id
+        supabase.table("application_table").insert({"userid": user_id}).execute()
+        supabase.table("user_profiles_table").insert({"userid": user_id, "userrole": 1, "isactive": True}).execute()
+    print("Done")
