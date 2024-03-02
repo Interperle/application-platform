@@ -20,7 +20,7 @@ CREATE TABLE
     startdate TIMESTAMPTZ NOT NULL,
     enddate TIMESTAMPTZ NOT NULL,
     sectionsenabled BOOLEAN NOT NULL,
-    finished_evaluation TIMESTAMPTZ,
+    finished_evaluation TIMESTAMPTZ
   );
 
 ALTER TABLE

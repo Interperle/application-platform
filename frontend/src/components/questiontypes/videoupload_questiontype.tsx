@@ -215,7 +215,9 @@ const VideoUploadQuestionType: React.FC<VideoUploadQuestionTypeProps> = ({
                     <p className="font-semibold">Zum Uploaden klicken</p> oder
                     per Drag and Drop
                   </p>
-                  <p className="text-xs text-secondary">MP4 (MAX. 2MB)</p>
+                  <p className="text-xs text-secondary">
+                    MP4 (MAX. {maxfilesizeinmb}MB)
+                  </p>
                 </div>
                 <input
                   type="file"

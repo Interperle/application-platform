@@ -171,7 +171,7 @@ Gereon: Baut Worker, kümmert sich um Supabase, Docker Compose
 
 3. Create and copy files from repository into server:
 - custom-nginx.conf
-- docker-compose.yml
+- docker-compose.yml (change the docker image name, if not prd)
 
 4. Login into Github Container Registry:
 https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
