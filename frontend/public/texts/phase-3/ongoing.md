@@ -12,7 +12,7 @@ Am Anfang des Interviews erwartet euch eine kurze Begrüßung. Danach stellt Ihr
 
 Hierbei ist zu beachten, dass ihr euch an die <u>**vorgegebene Zeit**</u> haltet und der Pitch <u>**ohne**</u> Folien erfolgen muss. Gerne möchten wir den Pitch zur internen Verwendung aufnehmen, um Euer Projekt/Unternehmen dem gesamten Generation-D Team besser vorstellen zu können. Eure Juror*innen werden Euch am Anfang des Interviews fragen, ob Ihr der Videoaufnahme zustimmt. Das Einverständnis zur Videoaufnahme ist ganz euch überlassen und hat keinen Einfluss auf eure Chance zur Teilnahme am Finale. Wir würden uns über eure Einwilligung jedoch sehr freuen, um eine möglichst objektive Juryentscheidung zu ermöglichen. Nach Ende des Pitches beenden eure Juror*innen die Aufnahme und es folgt eine 20-25-minütige Fragerunde zu eurer Idee. 
 
-Außerdem benötigen wir zur Einordnung von euch die Lebensläufe von allen Mitgliedern des Gründungsteams. Bitte ladet diese in unser Bewerbungsportal bis zum **29.04.** hoch. Die Lebensläufe müssen keinen besonderen Anforderungen genügen, wichtig ist lediglich, dass für uns ersichtlich ist, wie eure Fähigkeiten und euer Lebensweg zu eurem Projekt passen.
+Außerdem benötigen wir zur Einordnung von euch die Lebensläufe von allen Mitgliedern des Gründungsteams. Bitte ladet diese in unser Bewerbungsportal bis zum **28.04.** hoch. Die Lebensläufe müssen keinen besonderen Anforderungen genügen, wichtig ist lediglich, dass für uns ersichtlich ist, wie eure Fähigkeiten und euer Lebensweg zu eurem Projekt passen.
 
 ### Hinweise zum Hochladen
 
@@ -21,6 +21,8 @@ Außerdem benötigen wir zur Einordnung von euch die Lebensläufe von allen Mitg
 - Bitte ladet alle eure Lebensläufe gesammelt in einer PDF-Datei hoch. 
 
 - Die PDF darf 25MB nicht überschreiten!
+
+- Beachtet die unterschiedlichen Deadlines für Interviews und Lebensläufe!
 
 
 ### Noch Fragen?
