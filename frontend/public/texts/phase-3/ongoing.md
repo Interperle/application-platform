@@ -18,7 +18,7 @@ Außerdem benötigen wir zur Einordnung von euch die Lebensläufe von allen Mitg
 
 - Alle eure Angaben werden **automatisch gespeichert**. Ihr könnt eure Antworten vor der Deadline so oft ihr wollt bearbeiten. Zur Überprüfung könnt ihr die Seite neu laden.
 
-- Bitte ladet alle eure Lebensläufe gesammelt in einer PDF-Datei hoch. 
+- Bitte ladet alle eure Lebensläufe gesammelt in einer PDF-Datei hoch.
 
 - Die PDF-Datei darf 25MB nicht überschreiten!
 
