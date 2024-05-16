@@ -4,7 +4,7 @@ Herzlichen Glückwunsch! Ihr habt es in die finale Phase geschafft! Euer Startup
 
 ### Wie geht es jetzt weiter?
 
-Wir befinden uns derzeit in der **finalen Bewerbungsphase**, in der wir die endgültige Auswahl der Finalisten treffen möchten. Diese Phase besteht aus zwei Teilen:
+Wir befinden uns derzeit in der **finalen Bewerbungsphase**, alles weitere wird also in persona bei Präsenzevents passieren.
 
 1. **Leaderpitch**: Der Leaderpitch findet am **22.06.2024** statt. Hier habt ihr die Gelegenheit, euer Startup vor Größen aus der Wirtschaft zu präsentieren und wertvolles Feedback für die Zukunft sowie für das Finale zu erhalten. Nähere Details erhaltet ihr in Kürze per Mail.
 
