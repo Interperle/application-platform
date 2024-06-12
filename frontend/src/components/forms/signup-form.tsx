@@ -91,7 +91,7 @@ export default function SignUpForm() {
             <span className="text-red-500">*</span>Ich habe die{" "}
             <Link
               className="underline"
-              href="https://generation-d.org/legal/"
+              href="https://www.adac.de/impressum-ev/"
               target="_blank"
             >
               Datenschutzerklärung

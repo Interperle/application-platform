@@ -76,7 +76,7 @@ def process_question(question, phase_id, phase_sections, supabase, depends_on=No
 
 
 def process_config():
-    config_data = read_yaml_file('apl_config_gend.yml')
+    config_data = read_yaml_file('apl_config.yml')
     run_structure_checks(config_data)
 
     supabase = init_supabase()
@@ -188,7 +188,7 @@ def create_file_storage(filetype: str, questionid: str, fileSizeLimitInMB: int, 
 
 
 def add_phase_questions():
-    config_data = read_yaml_file('apl_config_gend.yml')
+    config_data = read_yaml_file('apl_config.yml')
     run_structure_checks(config_data)
 
     supabase = init_supabase()

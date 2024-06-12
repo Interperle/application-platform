@@ -10,21 +10,21 @@ const Apl_Footer: React.FC = () => {
       <div className="items-end md:items-center justify-center flex flex-row md:flex-col space-y-8 md:space-x-8">
         <div className="flex flex-col md:flex-row space-x-0 md:space-x-8 space-y-4 md:space-y-0 text-secondary font-nunito">
           <Link
-            href="https://generation-d.org/legal/"
+            href="https://www.adac.de/impressum-ev/"
             target="_blank"
             className="m-0 p-0"
           >
             Impressum
           </Link>
           <Link
-            href="https://generation-d.org/legal/"
+            href="hhttps://www.adac.de/datenschutz/"
             target="_blank"
             className="m-0 p-0"
           >
             Disclaimer
           </Link>
           <Link
-            href="https://generation-d.org/legal/"
+            href="https://www.adac.de/datenschutz/"
             target="_blank"
             className="m-0 p-0"
           >
@@ -57,7 +57,7 @@ const Apl_Footer: React.FC = () => {
             />
           </Link>
           <Link
-            href="https://www.linkedin.com/company/generation-d.org?"
+            href="https://www.linkedin.com/company/adac/"
             target="_blank"
             className="m-0 p-0"
           >
@@ -70,7 +70,7 @@ const Apl_Footer: React.FC = () => {
             />
           </Link>
           <Link
-            href="https://generation-d.org/bewerber/#h-fragen-antworten"
+            href="https://www.adac.de/kontakt-zum-adac/"
             target="_blank"
             className="m-0 p-0"
           >
@@ -84,8 +84,8 @@ const Apl_Footer: React.FC = () => {
           </Link>
         </div>
       </div>
-      <div className="items-center justify-center text-secondary font-nunito flex flex-col ">
-        ©{new Date(Date.now()).getFullYear()} Generation-D. All rights
+      <div className="items-center justify-center text-secondary font-nunito flex flex-col">
+        ©{new Date(Date.now()).getFullYear()} ADAC. All rights
         reserved.
       </div>
     </footer>

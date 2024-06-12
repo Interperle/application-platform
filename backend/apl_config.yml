@@ -9,8 +9,8 @@
 questions:
   phase-1:
     phaseLabel: "Test Phase 1"
-    startDate: 2023-12-01  # format: %Y-%m-%d
-    endDate: 2024-12-10  # format: %Y-%m-%d
+    startDate: 2024-06-01  # format: %Y-%m-%d
+    endDate: 2024-08-10  # format: %Y-%m-%d
     sections:
       - name: Allgemein
         description: Wir benötigen diese Informationen um ABC auszuwerten
@@ -138,8 +138,8 @@ questions:
         sectionNumber: 2
   phase-2:
     phaseLabel: "Test Phase 2"
-    startDate: 2024-01-09
-    endDate: 2024-02-15
+    startDate: 2024-06-01
+    endDate: 2024-09-01
     questions:
       - questionType: shortText
         order: 1

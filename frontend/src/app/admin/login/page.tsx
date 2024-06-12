@@ -12,11 +12,11 @@ export default function Home() {
         src="/logos/gend_img.png"
         width={80}
         height={80}
-        alt="Generation-D Image Logo"
+        alt="ADAC Image Logo"
         className="max-w-50 max-h-50"
       />
       <h1 className="text-4xl text-secondary md:text-5xl text-center">
-        Generation-D Internal Login
+        ADAC Internal Login
       </h1>
       <form action={"/auth/slack"} method="GET">
         <button

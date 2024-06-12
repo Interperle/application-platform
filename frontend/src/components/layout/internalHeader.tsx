@@ -22,10 +22,10 @@ const InternalHeader: React.FC = () => {
   return (
     <div className="w-full bg-white h-24 flex items-center justify-between p-4 md:p-6">
       <div className="min-w-[20px] max-w-[200px] h-auto">
-        <Link href="https://generation-d.org" target="_blank">
+        <Link href="https://www.adac.de/" target="_blank">
           <Image
             src="/logos/gend_img_font.png"
-            alt="Generation-D Logo"
+            alt="ADAC Logo"
             className="max-w-full h-auto"
             priority={true}
             width={200}

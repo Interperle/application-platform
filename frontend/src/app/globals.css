@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #fdcc89;
-  --secondary-color: #153757;
+  --primary-color: #fecf00;
+  --secondary-color: #000000;
 }
 
 .apl-button-fixed-short {

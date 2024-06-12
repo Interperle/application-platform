@@ -21,11 +21,11 @@ export const LoginComponent: React.FC<{ signUpPossible: boolean }> = ({
         src="/logos/gend_img.png"
         width={80}
         height={80}
-        alt="Generation-D Image Logo"
+        alt="ADAC Image Logo"
         className="max-w-50 max-h-50 items-center"
       />
       <h1 className="md:text-5xl text-4xl text-secondary justify-center text-center">
-        Generation-D Bewerbung
+        ADAC Bewerbung
       </h1>
       {signUpPossible ? (
         <>

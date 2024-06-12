@@ -164,7 +164,7 @@ export async function signInUser(prevState: any, formData: FormData) {
       await supabase.auth.signOut();
       return {
         message:
-          "Dein User wurde deaktiviert, bitte kontaktiere uns über 'it-ressort@generation-d.org'!",
+          "Dein User wurde deaktiviert, bitte kontaktiere uns über 'it@adac.de'!",
       };
     }
     revalidatePath("/");
