@@ -85,8 +85,7 @@ const Apl_Footer: React.FC = () => {
         </div>
       </div>
       <div className="items-center justify-center text-secondary font-nunito flex flex-col">
-        ©{new Date(Date.now()).getFullYear()} ADAC. All rights
-        reserved.
+        ©{new Date(Date.now()).getFullYear()} ADAC. All rights reserved.
       </div>
     </footer>
   );

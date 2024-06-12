@@ -11,8 +11,8 @@ const Custom403: React.FC = async () => {
   }
   return (
     <div>
-      Dein Account wurde deaktiviert! Bitte wende dich an
-      it@adac.de für weitere Fragen.
+      Dein Account wurde deaktiviert! Bitte wende dich an it@adac.de für weitere
+      Fragen.
     </div>
   );
 };

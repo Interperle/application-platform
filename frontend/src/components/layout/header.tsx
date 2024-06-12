@@ -52,7 +52,10 @@ const Apl_Header: React.FC = () => {
             : "hidden md:flex items-center"
         } space-x-4`}
       >
-        <Link href="https://www.adac.de/der-adac/compliance-faq/" target="_blank">
+        <Link
+          href="https://www.adac.de/der-adac/compliance-faq/"
+          target="_blank"
+        >
           <span className="text-secondary block text-center">FAQs</span>
         </Link>
         <Link href="/settings">
